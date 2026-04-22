@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { LucideIcon } from 'lucide-react';
-import { FileCheck, Wand2, GitBranch, KeyRound, PackageDown, BookOpen } from 'lucide-react';
+import { FileCheck, Wand2, GitBranch, KeyRound, PackageOpen, BookOpen } from 'lucide-react';
 import { Hero } from '@/components/blocks/Hero';
 import { Features } from '@/components/blocks/Features';
 import { ComparisonTable } from '@/components/blocks/ComparisonTable';
@@ -64,7 +64,7 @@ const FEATURES: FeatureItem[] = [
       'Квалифицированная электронная подпись (КЭП) через КриптоПро CSP и Рутокен. Машиночитаемая доверенность (МЧД) по 63-ФЗ.',
   },
   {
-    icon: PackageDown,
+    icon: PackageOpen,
     title: 'Пакетный экспорт ИД в PDF/ZIP',
     description:
       'Весь комплект ИД по объекту или разделу — одной кнопкой. Архив с оглавлением, нумерацией и штампами. Экспорт XML для ИСУП Минстроя.',
