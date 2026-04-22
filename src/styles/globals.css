@@ -209,3 +209,236 @@ img {
   max-width: 100%;
   display: block;
 }
+
+/* ─── Layout utilities ─── */
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+}
+
+/* ─── Navigation bar ─── */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: color-mix(in oklch, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+@media (max-width: 640px) {
+  .nav-inner { padding: 0 16px; gap: 16px; }
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.brand-mark {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: var(--bg-invert);
+  color: var(--ink-invert);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.brand-dot {
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 12px;
+}
+
+@media (max-width: 767px) {
+  .nav-links { display: none; }
+}
+
+.nav-link {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.nav-link:hover {
+  background: var(--bg-inset);
+  color: var(--ink);
+}
+
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nav-desktop-only {
+  display: flex;
+}
+
+@media (max-width: 767px) {
+  .nav-desktop-only { display: none; }
+}
+
+.nav-mobile-only {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .nav-mobile-only { display: flex; }
+}
+
+/* ─── Shared button styles ─── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-inset);
+  color: var(--ink);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-invert);
+  background: var(--bg-invert);
+  border: 1px solid var(--bg-invert);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s;
+}
+
+.btn-primary:hover {
+  background: color-mix(in oklch, var(--bg-invert) 85%, var(--accent));
+}
+
+/* ─── Footer ─── */
+.footer-root {
+  border-top: 1px solid var(--border);
+  padding: 56px 0 32px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.foot-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(4, 1fr);
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 900px) {
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+
+@media (max-width: 480px) {
+  .foot-grid { grid-template-columns: 1fr; }
+}
+
+.foot-col h5 {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+.foot-col a {
+  display: block;
+  padding: 5px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color 0.12s;
+}
+
+.foot-col a:hover { color: var(--ink); }
+
+.foot-col p {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  line-height: 1.55;
+}
+
+.foot-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.foot-bottom a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  transition: color 0.12s;
+}
+
+.foot-bottom a:hover { color: var(--ink-soft); }
