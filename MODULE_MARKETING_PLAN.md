@@ -5,7 +5,9 @@
 > **Стек:** Next.js 15 App Router + TypeScript + Tailwind + MDX + shadcn/ui
 > **Цель:** SEO + AEO + GEO трафик для B2B (Team/Corporate) и B2C (Профи-пакеты из Модуля 15)
 > **Ориентир:** 3-4 недели от нуля до работающего сайта с первыми 15 статьями
-> **База дизайна:** `design/Komplid - Landing.html` + дизайн-токены из `stroydocs/src/app/globals.css`
+> **База дизайна:** `Komplid-Landing-updated.html` (в корне репозитория `komplid-marketing/design/`) — это **эталонный HTML с правильной палитрой, токенами OKLch, актуальными ценами и новыми блоками Профи-пакетов**. Сгенерирован в Claude Design и адаптирован под наш план.
+>
+> **Дизайн-токены:** OKLch-переменные из `:root` лендинга (палитра Steel, light/dark темы). Идентичны тем, что в `stroydocs/src/app/globals.css` — это специально, чтобы маркетинг-сайт и приложение выглядели единообразно.
 
 ---
 
@@ -43,7 +45,7 @@
 
 ```
 komplid.ru/
-├── /                          — главная (B2B focus, стиль Komplid - Landing.html)
+├── /                          — главная (B2B focus, стиль Komplid-Landing-updated.html)
 │
 ├── /smetchik                  — посадочная Сметчик-Студио (B2C)
 ├── /pto                       — посадочная ИД-Мастер (B2C)
@@ -295,12 +297,54 @@ export default withMDX(nextConfig);
 
 7. Создать пустую структуру папок из раздела 1.2.
 
-8. Первый коммит: "chore: initial Next.js 15 marketing project"
+8. **КРИТИЧНО: сохранить дизайн-эталон в проект.**
+
+Создай папку `design/` в корне проекта и положи туда файл `Komplid-Landing-updated.html`
+(пользователь предоставил его отдельно, он лежит рядом с файлами плана).
+
+```bash
+mkdir -p design
+cp /путь/к/Komplid-Landing-updated.html design/landing-reference.html
+```
+
+Этот HTML-файл — **единственный источник правды** для дизайна маркетингового сайта.
+Он содержит:
+- Полный набор OKLch-переменных (`:root` блок со всеми токенами)
+- Три палитры акцентов: Steel (основная), Cobalt, Lime
+- Light и Dark темы
+- Референс-реализацию всех 11 секций (Nav, Hero, Logos, Modules, Features, Metrics, Quote, Pricing, FAQ, CTA, Footer)
+- Актуальные цены (B2C 1 900/2 900, B2B 12 000/48 000)
+- AEO-оптимизированный FAQ (8 вопросов)
+
+При портировании каждой секции в React-компонент:
+1. Открой `design/landing-reference.html` в браузере — посмотри как секция выглядит
+2. Скопируй HTML-разметку из нужной секции
+3. Перенеси в React-компонент, заменив статические данные на props
+4. CSS НЕ копируй целиком — вместо этого используй Tailwind-классы, но **цвета и отступы бери из токенов лендинга**
+
+Токены OKLch (из `:root` лендинга) перенести в `src/styles/globals.css`:
+
+```css
+:root {
+  --bg:        oklch(0.985 0.002 85);
+  --bg-elev:   oklch(1 0 0);
+  --bg-inset:  oklch(0.965 0.003 85);
+  /* ... полный список — скопировать из landing-reference.html */
+}
+
+html[data-palette="steel"]  { --accent: oklch(0.72 0.16 62); ... }
+```
+
+Это гарантирует что цвета маркетинг-сайта идентичны тем, что в `stroydocs/src/app/globals.css`,
+и обе части бренда (сайт + приложение) смотрятся как одно целое.
+
+9. Первый коммит: "chore: initial Next.js 15 marketing project"
 
 ПРОВЕРКА:
 - npm run dev → http://localhost:3000 работает
 - npx tsc --noEmit → ноль ошибок
 - npm run build → успешная сборка
+- Файл design/landing-reference.html открывается в браузере и отображает полный лендинг
 ```
 
 ## Шаг 1.2 — Layout, Header, Footer
@@ -308,9 +352,10 @@ export default withMDX(nextConfig);
 ```
 📋 ЗАДАЧА: Базовый layout в стиле Komplid
 
-КОНТЕКСТ: Существующий design/Komplid - Landing.html содержит готовый дизайн
-с навигацией, палитрой Steel, тёмным footer. Переносим в Next.js как
-переиспользуемые компоненты.
+КОНТЕКСТ: В папке design/ лежит landing-reference.html (полный эталонный лендинг
+из Claude Design, уже адаптированный под наш план — с Профи-пакетами, правильными
+ценами, AEO-FAQ). Переносим его структуру в Next.js как переиспользуемые
+компоненты.
 
 1. src/app/layout.tsx — корневой layout:
 
@@ -400,20 +445,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 2. src/components/layout/MarketingHeader.tsx:
 
-Взять структуру из design/Komplid - Landing.html (секция <header class="nav">):
+Взять структуру из design/landing-reference.html (секция <header class="nav">):
 - Логотип Komplid (квадрат с K + "Komplid")
-- Навигация: Модули | Возможности | Тарифы | Блог | Сравнение
-- Правая часть: переключатель темы, "Войти" (→ app.komplid.ru), "Попробовать" (→ app.komplid.ru/signup)
-- Sticky при скролле
+- Навигация: Модули | Тарифы | Сравнение | Блог | FAQ
+  (якоря #modules, #pricing внутри главной; /sravnenie, /blog — отдельные страницы; #faq — якорь)
+- Правая часть: переключатель темы (light/dark), "Войти" (→ app.komplid.ru/login), "Попробовать" (→ app.komplid.ru/signup)
+- Sticky при скролле + backdrop-blur на фоне
 - На мобильных — гамбургер-меню через Sheet из shadcn/ui
 
 Использовать Link from 'next/link' для внутренних ссылок, обычные <a> для app.komplid.ru.
 
 3. src/components/layout/MarketingFooter.tsx:
 
-Из того же design/Komplid - Landing.html (секция <footer>):
-- 5-колоночная сетка: Бренд | Продукт | Решения | Ресурсы | Контакты
-- Нижняя полоса: "Соответствие 152-ФЗ" + "Политика · Оферта"
+Из того же design/landing-reference.html (секция <footer>):
+- 5-колоночная сетка: Бренд | Продукт | Для специалистов | Для компаний | Контакты
+- Колонка «Продукт»: Модули, Возможности, Тарифы, Блог, Шаблоны документов
+- Колонка «Для специалистов»: Сметчик-Студио (/smetchik), ИД-Мастер (/pto), Прораб-Журнал (/prorab), Калькуляторы (/kalkulyator)
+- Колонка «Для компаний»: Генподрядчику, Заказчику, Проектировщику, Технадзору, Сравнение с ЦУС/Exon
+- Колонка «Контакты»: email hello@komplid.ru, Telegram @komplid, «Работаем онлайн по всей России»
+- Нижняя полоса: «© 2026 Komplid · ИП ФИО · ОГРНИП {env}» + «Соответствие 152-ФЗ» + «Политика · Оферта»
+
+ВАЖНО: реквизиты ИП (ФИО, ОГРНИП) тянуть из env-переменных COMPANY_NAME, COMPANY_OGRNIP
+(эти переменные определены в SUBSCRIPTION_SYSTEM.md раздел 0.4.4). Это позволит
+при переходе на ООО в будущем просто поменять env, без правок кода.
 
 4. tailwind.config.ts — настроить под дизайн-токены:
 
@@ -833,7 +887,7 @@ INTERNAL_API_TOKEN=
 ```
 📋 ЗАДАЧА: Переиспользуемые блоки для сборки страниц
 
-Переносим основные блоки из design/Komplid - Landing.html в React-компоненты.
+Переносим основные блоки из design/landing-reference.html в React-компоненты.
 
 Создать в src/components/blocks/:
 
@@ -947,10 +1001,67 @@ export function Faq({ title, items }: {
 
 9. SocialProof.tsx — логотипы клиентов (пока с заглушками)
 
+10. ProfiPackagesTeaser.tsx — блок с 3 карточками B2C Профи-пакетов:
+
+```tsx
+// Используется на главной komplid.ru — показывает что кроме B2B-тарифов
+// есть и индивидуальные подписки от 1 900 ₽/мес
+//
+// Референс: в design/landing-reference.html секция "B2C PROFI PACKAGES"
+// внутри блока #pricing — 3 карточки Сметчик-Студио / ИД-Мастер / Прораб-Журнал
+// с hover-эффектом, ссылками на /smetchik /pto /prorab
+
+interface ProfiPackage {
+  slug: 'smetchik' | 'pto' | 'prorab';
+  eyebrow: string;
+  title: string;
+  description: string;
+  priceFrom: number;  // 1900
+}
+
+export function ProfiPackagesTeaser() {
+  const packages: ProfiPackage[] = [
+    {
+      slug: 'smetchik',
+      eyebrow: 'Сметчик-Студио',
+      title: 'Для сметчика',
+      description: 'Импорт из Гранд-Сметы, сравнение версий, публичные ссылки для заказчика, ФГИС ЦС',
+      priceFrom: 1900,
+    },
+    {
+      slug: 'pto',
+      eyebrow: 'ИД-Мастер',
+      title: 'Для ПТО-инженера',
+      description: 'АОСР, ОЖР, КС-2/КС-3 по приказу №344/пр, маршруты согласования, ЭЦП',
+      priceFrom: 1900,
+    },
+    {
+      slug: 'prorab',
+      eyebrow: 'Прораб-Журнал',
+      title: 'Для прораба',
+      description: 'Мобильный ОЖР, фото с GPS, дефекты, голосовой ввод, работает офлайн',
+      priceFrom: 1900,
+    },
+  ];
+
+  return (
+    <div className="...">
+      {/* Заголовок: "Для одиночных специалистов · Профи-пакеты от 1 900 ₽/мес" */}
+      {/* Grid 3 карточки → Link href={`/${pkg.slug}`} с hover:translate-y-[-2px] + border-accent */}
+    </div>
+  );
+}
+```
+
+Этот блок — ключевая дифференциация Komplid от ЦУС/Exon. Показывает что у нас есть B2C
+tier для одиночных специалистов (которого у конкурентов нет). Критично для конверсии
+с органического трафика «программа для сметчика онлайн», «приложение прораба» и т.п.
+
 Все блоки:
 - Используют дизайн-токены через var(--accent), var(--ink)
 - Responsive (mobile-first)
 - Принимают props, нулевой хардкод
+- **Разметка скопирована из design/landing-reference.html** — не придумывать с нуля
 
 ПРОВЕРКА:
 - Создать src/app/__test/page.tsx с использованием всех блоков
@@ -1405,7 +1516,7 @@ chmod +x deploy.sh
 ## Шаг 2.1 — Главная страница
 
 ```
-📋 ЗАДАЧА: Главная komplid.ru — B2B focus, в стиле Komplid-Landing.html
+📋 ЗАДАЧА: Главная komplid.ru — B2B focus, в стиле design/landing-reference.html
 
 ИЗМЕНЕНИЯ ОТ ОРИГИНАЛА:
 1. Цены актуальные из Модуля 15 + упоминание Профи-пакетов
