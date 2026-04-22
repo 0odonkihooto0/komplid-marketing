@@ -442,3 +442,147 @@ img {
 }
 
 .foot-bottom a:hover { color: var(--ink-soft); }
+
+/* ─── Marketing block utilities ─── */
+.section { padding: 96px 0; }
+
+.section--invert {
+  background: var(--bg-invert);
+  color: var(--ink-invert);
+}
+
+.section-head { max-width: 720px; margin-bottom: 48px; }
+
+.section-head h2 {
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  margin: 14px 0 14px;
+}
+
+.section-head p {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 620px;
+}
+
+.section--invert .section-head h2 { color: var(--ink-invert); }
+.section--invert .section-head p  { color: var(--ink-invert-mute); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 16px;
+  height: 1px;
+  background: var(--accent-strong);
+}
+
+.section--invert .eyebrow         { color: var(--accent); }
+.section--invert .eyebrow::before { background: var(--accent); }
+
+/* Accent button — used across blocks */
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.btn-accent:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.btn-outline:hover { background: var(--bg-hover); }
+
+/* Modules grid */
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 880px) {
+  .modules-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .modules-grid { grid-template-columns: 1fr; }
+}
+
+.mod-card {
+  background: var(--bg-elev);
+  padding: 24px 22px 26px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+}
+
+.mod-card:hover { background: var(--bg-hover); }
+
+/* Profi packages hover card */
+.profi-card {
+  display: block;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.profi-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
