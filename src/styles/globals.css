@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────
+   Komplid Design Tokens — OKLch palette
+   Source: design/landing-reference.html
+   Mirrors stroydocs/src/app/globals.css for brand
+   consistency between marketing site and app.
+───────────────────────────────────────────────── */
+
+:root {
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --font-sans: var(--font-ui);
+
+  /* Spacing scale */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px;
+  --s-12: 48px; --s-16: 64px; --s-20: 80px; --s-24: 96px;
+
+  /* Border radius */
+  --r-2: 6px; --r-3: 8px; --r-4: 12px; --r-pill: 999px;
+
+  /* Default to light theme */
+  --bg:        oklch(0.985 0.002 85);
+  --bg-elev:   oklch(1 0 0);
+  --bg-inset:  oklch(0.965 0.003 85);
+  --bg-hover:  oklch(0.955 0.004 85);
+  --bg-invert: oklch(0.17 0.008 255);
+  --ink:       oklch(0.22 0.008 255);
+  --ink-soft:  oklch(0.42 0.008 255);
+  --ink-mute:  oklch(0.58 0.007 255);
+  --ink-invert: oklch(0.95 0.004 255);
+  --ink-invert-mute: oklch(0.62 0.008 255);
+  --border:    oklch(0.91 0.004 255);
+  --border-strong: oklch(0.82 0.006 255);
+  --border-invert: oklch(0.28 0.008 255);
+  --shadow-1: 0 1px 2px rgba(17,24,39,0.04), 0 1px 3px rgba(17,24,39,0.03);
+  --shadow-2: 0 4px 12px rgba(17,24,39,0.06), 0 1px 2px rgba(17,24,39,0.04);
+  --shadow-3: 0 24px 60px rgba(17,24,39,0.10), 0 4px 12px rgba(17,24,39,0.06);
+  --ok:   oklch(0.65 0.14 155);
+  --warn: oklch(0.72 0.15 72);
+  --err:  oklch(0.62 0.18 27);
+  --info: oklch(0.62 0.12 250);
+
+  /* Default palette: Steel */
+  --accent:       oklch(0.72 0.16 62);
+  --accent-strong: oklch(0.62 0.18 55);
+  --accent-soft:  oklch(0.72 0.16 62 / 0.14);
+  --accent-ink:   #1a0f00;
+
+  /* shadcn/ui semantic tokens (mapped from design system) */
+  --background:          var(--bg);
+  --foreground:          var(--ink);
+  --card:                var(--bg-elev);
+  --card-foreground:     var(--ink);
+  --popover:             var(--bg-elev);
+  --popover-foreground:  var(--ink);
+  --primary:             var(--accent);
+  --primary-foreground:  var(--accent-ink);
+  --secondary:           var(--bg-inset);
+  --secondary-foreground: var(--ink-soft);
+  --muted:               var(--bg-inset);
+  --muted-foreground:    var(--ink-mute);
+  --accent-ui:           var(--bg-hover);
+  --accent-ui-foreground: var(--ink);
+  --destructive:         var(--err);
+  --destructive-foreground: oklch(1 0 0);
+  --border:              var(--border);
+  --input:               var(--border);
+  --ring:                var(--accent);
+  --radius: 0.5rem;
+}
+
+/* ─── Light theme ─── */
+html[data-theme="light"] {
+  --bg:        oklch(0.985 0.002 85);
+  --bg-elev:   oklch(1 0 0);
+  --bg-inset:  oklch(0.965 0.003 85);
+  --bg-hover:  oklch(0.955 0.004 85);
+  --bg-invert: oklch(0.17 0.008 255);
+  --ink:       oklch(0.22 0.008 255);
+  --ink-soft:  oklch(0.42 0.008 255);
+  --ink-mute:  oklch(0.58 0.007 255);
+  --ink-invert: oklch(0.95 0.004 255);
+  --ink-invert-mute: oklch(0.62 0.008 255);
+  --border:    oklch(0.91 0.004 255);
+  --border-strong: oklch(0.82 0.006 255);
+  --border-invert: oklch(0.28 0.008 255);
+  --shadow-1: 0 1px 2px rgba(17,24,39,0.04), 0 1px 3px rgba(17,24,39,0.03);
+  --shadow-2: 0 4px 12px rgba(17,24,39,0.06), 0 1px 2px rgba(17,24,39,0.04);
+  --shadow-3: 0 24px 60px rgba(17,24,39,0.10), 0 4px 12px rgba(17,24,39,0.06);
+  --ok:   oklch(0.65 0.14 155);
+  --warn: oklch(0.72 0.15 72);
+  --err:  oklch(0.62 0.18 27);
+  --info: oklch(0.62 0.12 250);
+}
+
+/* ─── Dark theme ─── */
+html[data-theme="dark"] {
+  --bg:        oklch(0.15 0.008 255);
+  --bg-elev:   oklch(0.2 0.008 255);
+  --bg-inset:  oklch(0.18 0.008 255);
+  --bg-hover:  oklch(0.24 0.009 255);
+  --bg-invert: oklch(0.98 0.002 85);
+  --ink:       oklch(0.95 0.004 255);
+  --ink-soft:  oklch(0.78 0.007 255);
+  --ink-mute:  oklch(0.6 0.008 255);
+  --ink-invert: oklch(0.22 0.008 255);
+  --ink-invert-mute: oklch(0.45 0.008 255);
+  --border:    oklch(0.27 0.008 255);
+  --border-strong: oklch(0.36 0.009 255);
+  --border-invert: oklch(0.88 0.004 255);
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.25);
+  --shadow-2: 0 6px 20px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.25);
+  --shadow-3: 0 30px 80px rgba(0,0,0,0.5), 0 6px 20px rgba(0,0,0,0.3);
+  --ok:   oklch(0.72 0.14 155);
+  --warn: oklch(0.78 0.15 72);
+  --err:  oklch(0.7 0.17 27);
+  --info: oklch(0.72 0.12 250);
+}
+
+/* ─── Accent palettes ─── */
+html[data-palette="steel"] {
+  --accent:       oklch(0.72 0.16 62);
+  --accent-strong: oklch(0.62 0.18 55);
+  --accent-soft:  oklch(0.72 0.16 62 / 0.14);
+  --accent-ink:   #1a0f00;
+}
+
+html[data-palette="cobalt"] {
+  --accent:       oklch(0.58 0.18 258);
+  --accent-strong: oklch(0.5 0.2 258);
+  --accent-soft:  oklch(0.58 0.18 258 / 0.14);
+  --accent-ink:   #fff;
+}
+
+html[data-palette="lime"] {
+  --accent:       oklch(0.76 0.18 128);
+  --accent-strong: oklch(0.66 0.2 128);
+  --accent-soft:  oklch(0.76 0.18 128 / 0.14);
+  --accent-ink:   #0e1806;
+}
+
+/* ─── Map to Tailwind v4 theme ─── */
+@theme inline {
+  --color-background:          var(--bg);
+  --color-foreground:          var(--ink);
+  --color-card:                var(--bg-elev);
+  --color-card-foreground:     var(--ink);
+  --color-popover:             var(--bg-elev);
+  --color-popover-foreground:  var(--ink);
+  --color-primary:             var(--accent);
+  --color-primary-foreground:  var(--accent-ink);
+  --color-secondary:           var(--bg-inset);
+  --color-secondary-foreground: var(--ink-soft);
+  --color-muted:               var(--bg-inset);
+  --color-muted-foreground:    var(--ink-mute);
+  --color-accent:              var(--bg-hover);
+  --color-accent-foreground:   var(--ink);
+  --color-destructive:         var(--err);
+  --color-destructive-foreground: oklch(1 0 0);
+  --color-border:              var(--border);
+  --color-input:               var(--border);
+  --color-ring:                var(--accent);
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ─── Keyframes for shadcn/ui animations ─── */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+/* ─── Base styles ─── */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
