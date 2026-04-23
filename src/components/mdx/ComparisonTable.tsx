@@ -1,9 +1,10 @@
 interface ComparisonTableProps {
-  columns: string[];
-  rows: Array<{ feature: string; values: Array<string | boolean> }>;
+  columns?: string[];
+  rows?: Array<{ feature: string; values: Array<string | boolean> }>;
 }
 
-export function ComparisonTable({ columns, rows }: ComparisonTableProps) {
+export function ComparisonTable({ columns = [], rows = [] }: ComparisonTableProps) {
+  if (columns.length === 0 && rows.length === 0) return null;
   return (
     <div className="my-8 overflow-x-auto">
       <table className="w-full border-collapse text-sm">
