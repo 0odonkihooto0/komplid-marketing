@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getAllBlogPosts } from '@/content-loader/blog';
 import { getAllTemplates } from '@/content-loader/shablony';
 import { getAllComparisons } from '@/content-loader/sravneniya';
+import { CALCULATORS } from '@/lib/calculators-data';
 
 const BASE_URL = 'https://komplid.ru';
 
@@ -60,5 +61,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...postPages, ...templatePages, ...comparisonPages];
+  const calcPages: MetadataRoute.Sitemap = CALCULATORS.map(c => ({
+    url: `${BASE_URL}/kalkulyator/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...calcPages, ...postPages, ...templatePages, ...comparisonPages];
 }
