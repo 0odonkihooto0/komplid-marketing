@@ -89,20 +89,21 @@ readingTime: 8
 
 ## Как сравниваются основные платформы для электронной ИД?
 
-<ComparisonTable
-  columns={["Komplid ИД-Мастер", "ЦУС", "Excel + Word"]}
-  rows={[
-    { feature: "Шаблоны по приказу №344/пр", values: ["50+", "есть", "самостоятельно"] },
-    { feature: "Автогенерация АОСР из ОЖР", values: [true, "частично", false] },
-    { feature: "КЭП + МЧД", values: [true, true, false] },
-    { feature: "Маршруты согласования", values: [true, true, false] },
-    { feature: "Мобильный доступ офлайн", values: [true, false, false] },
-    { feature: "Пакетный экспорт PDF/ZIP", values: [true, true, false] },
-    { feature: "Экспорт XML для ИСУП", values: ["в разработке", true, false] },
-    { feature: "Хранение в РФ / ФЗ-152", values: [true, true, "у вас"] },
-    { feature: "Стоимость от", values: ["1 900 ₽/мес", "50 000+ ₽/мес", "0 ₽"] }
-  ]}
-/>
+export const _idCols = ["Komplid ИД-Мастер", "ЦУС", "Excel + Word"]
+
+export const _idRows = [
+  { feature: "Шаблоны по приказу №344/пр", values: ["50+", "есть", "самостоятельно"] },
+  { feature: "Автогенерация АОСР из ОЖР", values: [true, "частично", false] },
+  { feature: "КЭП + МЧД", values: [true, true, false] },
+  { feature: "Маршруты согласования", values: [true, true, false] },
+  { feature: "Мобильный доступ офлайн", values: [true, false, false] },
+  { feature: "Пакетный экспорт PDF/ZIP", values: [true, true, false] },
+  { feature: "Экспорт XML для ИСУП", values: ["в разработке", true, false] },
+  { feature: "Хранение в РФ / ФЗ-152", values: [true, true, "у вас"] },
+  { feature: "Стоимость от", values: ["1 900 ₽/мес", "50 000+ ₽/мес", "0 ₽"] }
+]
+
+<ComparisonTable columns={_idCols} rows={_idRows} />
 
 ## Какие ошибки чаще всего делают при переходе на электронную ИД?
 
