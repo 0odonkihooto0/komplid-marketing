@@ -11,6 +11,9 @@ export interface ComparisonFrontmatter {
   publishedAt: string;
   competitor: string;
   competitorFullName?: string;
+  keyTakeaway?: string;
+  readingTime?: number;
+  tags?: string[];
 }
 
 export interface Comparison extends ComparisonFrontmatter {
