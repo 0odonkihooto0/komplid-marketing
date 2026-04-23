@@ -1,0 +1,17 @@
+--- src/app/kalkulyator/page.tsx
++++ src/app/kalkulyator/page.tsx
+@@ -95,14 +95,6 @@
+         transition: 'border-color 0.15s, transform 0.15s',
+         textDecoration: 'none',
+       }}
+-      onMouseOver={(e: MouseEvent<HTMLAnchorElement>) => {
+-        e.currentTarget.style.borderColor = 'var(--accent)';
+-        e.currentTarget.style.transform = 'translateY(-2px)';
+-      }}
+-      onMouseOut={(e: MouseEvent<HTMLAnchorElement>) => {
+-        e.currentTarget.style.borderColor = 'var(--border)';
+-        e.currentTarget.style.transform = 'none';
+-      }}
+     >
+       <div
+         style={{

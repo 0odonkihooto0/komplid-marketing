@@ -110,11 +110,11 @@ function CalcCard({ calc }: { calc: CalculatorMeta }) {
         gap: 12,
         padding: 24,
         background: 'var(--bg-elev)',
+        border: '1px solid var(--border)',
         borderRadius: 12,
         transition: 'border-color 0.15s, transform 0.15s',
         textDecoration: 'none',
       }}
-      className="calc-card hover:border-[var(--accent)] hover:-translate-y-0.5 border border-[var(--border)]"
     >
       <div
         style={{

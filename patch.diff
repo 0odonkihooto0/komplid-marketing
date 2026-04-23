@@ -1,0 +1,15 @@
+--- src/app/shablony/page.tsx
++++ src/app/shablony/page.tsx
+@@ -95,12 +95,6 @@
+           background: 'var(--bg-elev)',
+           border: '1px solid var(--border)',
+         }}
+-        onMouseOver={(e: MouseEvent<HTMLElement>) => {
+-          e.currentTarget.style.borderColor = 'var(--accent)';
+-        }}
+-        onMouseOut={(e: MouseEvent<HTMLElement>) => {
+-          e.currentTarget.style.borderColor = 'var(--border)';
+-        }}
+       >
+         <div className="mb-4 flex items-start gap-3">
+           <div

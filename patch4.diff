@@ -1,0 +1,12 @@
+--- src/app/shablony/page.tsx
++++ src/app/shablony/page.tsx
+@@ -91,9 +91,8 @@
+     <Link href={`/shablony/${tpl.slug}`} className="group block">
+       <article
+-        className="flex h-full flex-col rounded-xl p-5 transition-colors"
++        className="flex h-full flex-col rounded-xl p-5 transition-colors border border-[var(--border)] hover:border-[var(--accent)]"
+         style={{
+           background: 'var(--bg-elev)',
+-          border: '1px solid var(--border)',
+         }}
+       >
