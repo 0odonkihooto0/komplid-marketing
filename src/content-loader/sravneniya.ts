@@ -20,26 +20,31 @@ export interface Comparison extends ComparisonFrontmatter {
   content: string;
 }
 
+// Кэш на уровне модуля: избегает повторных I/O при SSG.
+let comparisonsCache: ComparisonFrontmatter[] | null = null;
+
 export async function getAllComparisons(): Promise<ComparisonFrontmatter[]> {
+  if (comparisonsCache) return comparisonsCache;
+
   try {
     const files = await fs.readdir(CONTENT_DIR);
     const mdxFiles = files.filter((f) => f.endsWith('.mdx') && !f.startsWith('_'));
 
-    const comparisons = await Promise.all(
-      mdxFiles.map(async (file) => {
-        const filePath = path.join(CONTENT_DIR, file);
-        const source = await fs.readFile(filePath, 'utf-8');
-        const { data } = matter(source);
-        return {
-          ...data,
-          slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
-        } as ComparisonFrontmatter;
-      })
-    );
+    const comparisons: ComparisonFrontmatter[] = [];
+    for (const file of mdxFiles) {
+      const filePath = path.join(CONTENT_DIR, file);
+      const source = await fs.readFile(filePath, 'utf-8');
+      const { data } = matter(source);
+      comparisons.push({
+        ...data,
+        slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
+      } as ComparisonFrontmatter);
+    }
 
-    return comparisons.sort(
+    comparisonsCache = comparisons.sort(
       (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
+    return comparisonsCache;
   } catch {
     return [];
   }

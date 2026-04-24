@@ -23,26 +23,31 @@ export interface BlogPost extends BlogPostFrontmatter {
   content: string;
 }
 
+// Кэш на уровне модуля: избегает повторных I/O при SSG (sitemap, related posts, страницы блога).
+let postsCache: BlogPostFrontmatter[] | null = null;
+
 export async function getAllBlogPosts(): Promise<BlogPostFrontmatter[]> {
+  if (postsCache) return postsCache;
+
   try {
     const files = await fs.readdir(CONTENT_DIR);
     const mdxFiles = files.filter((f) => f.endsWith('.mdx') && !f.startsWith('_'));
 
-    const posts = await Promise.all(
-      mdxFiles.map(async (file) => {
-        const filePath = path.join(CONTENT_DIR, file);
-        const source = await fs.readFile(filePath, 'utf-8');
-        const { data } = matter(source);
-        return {
-          ...data,
-          slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
-        } as BlogPostFrontmatter;
-      })
-    );
+    const posts: BlogPostFrontmatter[] = [];
+    for (const file of mdxFiles) {
+      const filePath = path.join(CONTENT_DIR, file);
+      const source = await fs.readFile(filePath, 'utf-8');
+      const { data } = matter(source);
+      posts.push({
+        ...data,
+        slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
+      } as BlogPostFrontmatter);
+    }
 
-    return posts.sort(
+    postsCache = posts.sort(
       (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
+    return postsCache;
   } catch {
     return [];
   }
