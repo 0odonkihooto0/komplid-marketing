@@ -41,7 +41,9 @@ export async function POST(req: NextRequest) {
         newsletterConsent,
         metadata: { template: slug },
       }),
-    }).catch(() => {});
+    }).catch((err: unknown) => {
+      console.error('[api/template-download] lead dispatch failed:', err);
+    });
   }
 
   return Response.json({ downloadUrl: `/shablony-files/${filename}` });

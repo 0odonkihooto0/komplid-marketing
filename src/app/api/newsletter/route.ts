@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
   const apiToken = process.env.INTERNAL_API_TOKEN;
 
   if (!apiUrl || !apiToken) {
-    console.warn('[api/newsletter] INTERNAL_API_URL or INTERNAL_API_TOKEN not set');
-    return Response.json({ success: true });
+    console.error('[api/newsletter] INTERNAL_API_URL or INTERNAL_API_TOKEN not set — subscription lost');
+    return Response.json({ error: 'API not configured' }, { status: 500 });
   }
 
   let res: Response;
