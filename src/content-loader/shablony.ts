@@ -32,16 +32,17 @@ export async function getAllTemplates(): Promise<TemplateFrontmatter[]> {
     const files = await fs.readdir(CONTENT_DIR);
     const mdxFiles = files.filter((f) => f.endsWith('.mdx') && !f.startsWith('_'));
 
-    const templates: TemplateFrontmatter[] = [];
-    for (const file of mdxFiles) {
-      const filePath = path.join(CONTENT_DIR, file);
-      const source = await fs.readFile(filePath, 'utf-8');
-      const { data } = matter(source);
-      templates.push({
-        ...data,
-        slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
-      } as TemplateFrontmatter);
-    }
+    const templates = await Promise.all(
+      mdxFiles.map(async (file) => {
+        const filePath = path.join(CONTENT_DIR, file);
+        const source = await fs.readFile(filePath, 'utf-8');
+        const { data } = matter(source);
+        return {
+          ...data,
+          slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
+        } as TemplateFrontmatter;
+      })
+    );
 
     templatesCache = templates.sort(
       (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
