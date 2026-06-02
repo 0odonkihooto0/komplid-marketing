@@ -17,13 +17,16 @@ function slugify(text: string): string {
     .trim();
 }
 
+const H2_RE = /^##\s+(.+)$/;
+const H3_RE = /^###\s+(.+)$/;
+
 function extractHeadings(content: string): TocEntry[] {
   const headings: TocEntry[] = [];
   const lines = content.split('\n');
 
   for (const line of lines) {
-    const h2 = line.match(/^##\s+(.+)$/);
-    const h3 = line.match(/^###\s+(.+)$/);
+    const h2 = line.match(H2_RE);
+    const h3 = line.match(H3_RE);
 
     if (h2?.[1]) {
       headings.push({ level: 2, text: h2[1].trim(), id: slugify(h2[1].trim()) });

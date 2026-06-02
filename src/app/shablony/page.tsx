@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import type { MouseEvent } from 'react';
 import Link from 'next/link';
 import { getAllTemplates, type TemplateFrontmatter } from '@/content-loader/shablony';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
@@ -82,16 +81,9 @@ function TemplateCard({ tpl }: { tpl: TemplateFrontmatter; key?: string }) {
   return (
     <Link href={`/shablony/${tpl.slug}`} className="group block">
       <article
-        className="flex h-full flex-col rounded-xl p-5 transition-colors"
+        className="flex h-full flex-col rounded-xl border border-[var(--border)] p-5 transition-colors group-hover:border-[var(--accent)]"
         style={{
           background: 'var(--bg-elev)',
-          border: '1px solid var(--border)',
-        }}
-        onMouseOver={(e: MouseEvent<HTMLElement>) => {
-          e.currentTarget.style.borderColor = 'var(--accent)';
-        }}
-        onMouseOut={(e: MouseEvent<HTMLElement>) => {
-          e.currentTarget.style.borderColor = 'var(--border)';
         }}
       >
         <div className="mb-4 flex items-start gap-3">
