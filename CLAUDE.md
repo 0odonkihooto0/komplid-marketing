@@ -16,12 +16,18 @@
 
 ```bash
 npx tsc --noEmit          # TypeScript — нет ошибок типов
+npm test                  # Vitest — юнит-тесты проходят (lib, content-loader, API-роуты)
 npx next build            # Next.js build проходит (только для финальной проверки)
 ```
 
 **ЗАПРЕЩЕНО** сообщать «готово» пока tsc не прошёл без ошибок.
 Если тайп-чекер не настроен — сообщи об этом явно вместо молчаливого пропуска.
 Никогда не пиши «Done!» с висящими ошибками типов.
+
+Тесты на Vitest лежат рядом с кодом (`*.test.ts`, environment `node`). Покрыты
+чистые функции (`src/lib/extract-faq.ts`, `src/lib/referral.ts`) и API-роуты
+(`src/app/api/{lead,newsletter,template-download}/route.ts`). `npm run test:watch` —
+для разработки. При правке этих модулей обнови или добавь тесты.
 
 Для быстрой проверки без полного билда (в dev-режиме):
 ```bash

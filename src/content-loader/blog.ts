@@ -70,11 +70,13 @@ export async function getRelatedPosts(slug: string, limit = 3): Promise<BlogPost
   if (!current) return [];
 
   const all = await getAllBlogPosts();
+  // Set из тегов текущей статьи — O(1) проверка вместо линейного .includes в цикле.
+  const currentTags = new Set(current.tags);
   return all
     .filter((p) => p.slug !== slug)
     .map((post) => ({
       post,
-      score: post.tags.filter((t) => current.tags.includes(t)).length,
+      score: post.tags.filter((t) => currentTags.has(t)).length,
     }))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)

@@ -1,26 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import type { CSSProperties, ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { fmt, selectStyle } from './shared';
 
 type VatRate = 20 | 10 | 0;
-
-const selectStyle: CSSProperties = {
-  background: 'var(--bg-inset)',
-  border: '1px solid var(--border)',
-  color: 'var(--ink)',
-  borderRadius: 6,
-  padding: '8px 12px',
-  fontSize: 14,
-  width: '100%',
-  height: 40,
-};
-
-function fmt(n: number) {
-  return n.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
-}
 
 export function AvansCalculator() {
   const [contractAmount, setContractAmount] = useState<string>('');

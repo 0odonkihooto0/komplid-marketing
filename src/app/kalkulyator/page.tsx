@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { ComponentType, MouseEvent } from 'react';
+import type { ComponentType } from 'react';
 import Link from 'next/link';
 import { Receipt, FileText, CalendarDays } from 'lucide-react';
 import { CALCULATORS, type CalculatorMeta } from '@/lib/calculators-data';
@@ -104,24 +104,15 @@ function CalcCard({ calc }: { calc: CalculatorMeta }) {
   return (
     <Link
       href={`/kalkulyator/${calc.slug}`}
+      className="border border-[var(--border)] transition-[border-color,transform,translate] duration-150 hover:-translate-y-0.5 hover:border-[var(--accent)]"
       style={{
         display: 'flex',
         flexDirection: 'column',
         gap: 12,
         padding: 24,
         background: 'var(--bg-elev)',
-        border: '1px solid var(--border)',
         borderRadius: 12,
-        transition: 'border-color 0.15s, transform 0.15s',
         textDecoration: 'none',
-      }}
-      onMouseOver={(e: MouseEvent<HTMLAnchorElement>) => {
-        e.currentTarget.style.borderColor = 'var(--accent)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-      }}
-      onMouseOut={(e: MouseEvent<HTMLAnchorElement>) => {
-        e.currentTarget.style.borderColor = 'var(--border)';
-        e.currentTarget.style.transform = 'none';
       }}
     >
       <div

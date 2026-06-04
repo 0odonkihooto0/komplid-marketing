@@ -5,8 +5,9 @@ import type { CSSProperties } from 'react';
 import { eachDayOfInterval, isWeekend, parseISO, format, isAfter } from 'date-fns';
 import { Label } from '@/components/ui/label';
 
-// Производственный календарь РФ 2026 — федеральные нерабочие праздничные дни
-const HOLIDAYS_2026: string[] = [
+// Производственный календарь РФ 2026 — федеральные нерабочие праздничные дни.
+// Set для O(1) проверки членства в циклах по датам.
+const HOLIDAYS_2026 = new Set<string>([
   '2026-01-01', '2026-01-02', '2026-01-05', '2026-01-06', '2026-01-07',
   '2026-01-08', '2026-01-09',  // Новый год + Рождество (с переносами)
   '2026-02-23',                // День защитника Отечества
@@ -15,7 +16,7 @@ const HOLIDAYS_2026: string[] = [
   '2026-05-11',                // День Победы + перенос
   '2026-06-12',                // День России
   '2026-11-04',                // День народного единства
-];
+]);
 
 const inputStyle: CSSProperties = {
   background: 'var(--bg-inset)',
@@ -32,7 +33,7 @@ function countWorkingDays(start: Date, end: Date): number {
   const days = eachDayOfInterval({ start, end });
   return days.filter(d => {
     if (isWeekend(d)) return false;
-    if (HOLIDAYS_2026.includes(format(d, 'yyyy-MM-dd'))) return false;
+    if (HOLIDAYS_2026.has(format(d, 'yyyy-MM-dd'))) return false;
     return true;
   }).length;
 }
@@ -61,7 +62,7 @@ export function RabochnieDniCalculator() {
         for (let i = 0; i < days.length; i++) {
           const d = days[i];
           if (d === undefined) continue;
-          if (!isWeekend(d) && !HOLIDAYS_2026.includes(format(d, 'yyyy-MM-dd'))) {
+          if (!isWeekend(d) && !HOLIDAYS_2026.has(format(d, 'yyyy-MM-dd'))) {
             count++;
             if (count === 3) return format(d, 'dd.MM.yyyy');
           }
