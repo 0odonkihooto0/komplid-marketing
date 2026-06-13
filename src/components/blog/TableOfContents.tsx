@@ -25,6 +25,9 @@ function extractHeadings(content: string): TocEntry[] {
   const lines = content.split('\n');
 
   for (const line of lines) {
+    // Подавляющее большинство строк MDX — не заголовки; дешёвая проверка до regex.
+    if (line.charCodeAt(0) !== 35 /* '#' */) continue;
+
     const h2 = line.match(H2_RE);
     const h3 = line.match(H3_RE);
 

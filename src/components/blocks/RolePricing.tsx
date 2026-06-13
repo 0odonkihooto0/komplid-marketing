@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { CheckIcon, CrossIcon } from '@/components/ui/icons';
 
 // Общий блок B2C-тарифов для ролевых посадочных (/pto, /smetchik, /prorab).
 // Раньше вёрстка тумблера, карточек, иконок и formatPrice дублировалась в трёх
@@ -25,18 +26,6 @@ export interface RolePricingProps {
   description: string;
   tiers: PricingTierDef[];
 }
-
-const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-    <path d="M5 12l5 5L20 7" />
-  </svg>
-);
-
-const CrossIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-    <path d="M6 6l12 12M6 18L18 6" />
-  </svg>
-);
 
 function formatPrice(monthly: number | null, billing: 'monthly' | 'annual'): string {
   if (monthly === null || monthly === 0) return '0';

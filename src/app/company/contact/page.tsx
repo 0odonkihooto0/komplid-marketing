@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { company } from '@/lib/company';
 
 export const metadata: Metadata = {
   title: 'Контакты Komplid — связаться с нами',
@@ -7,11 +8,6 @@ export const metadata: Metadata = {
     'Связаться с Komplid: почта hello@komplid.ru, Telegram @komplid. Работаем онлайн по всей России, поддержка 10:00–19:00 МСК. Реквизиты ИП.',
   alternates: { canonical: 'https://komplid.ru/company/contact' },
 };
-
-const companyName = process.env.COMPANY_NAME ?? 'ИП Фамилия И.О.';
-const companyInn = process.env.COMPANY_INN ?? '000000000000';
-const companyOgrnip = process.env.COMPANY_OGRNIP ?? '000000000000000';
-const companyEmail = process.env.COMPANY_EMAIL ?? 'hello@komplid.ru';
 
 export default function ContactPage() {
   return (
@@ -49,10 +45,10 @@ export default function ContactPage() {
               Почта
             </h2>
             <a
-              href={`mailto:${companyEmail}`}
+              href={`mailto:${company.email}`}
               style={{ color: 'var(--accent-strong)', fontSize: 16 }}
             >
-              {companyEmail}
+              {company.email}
             </a>
             <p className="mt-2 text-sm" style={{ color: 'var(--ink-mute)' }}>
               Вопросы по продукту, тарифам и внедрению.
@@ -91,9 +87,9 @@ export default function ContactPage() {
             className="space-y-1 font-mono text-sm"
             style={{ color: 'var(--ink-soft)', listStyle: 'none', padding: 0, margin: 0 }}
           >
-            <li>{companyName}</li>
-            <li>ИНН {companyInn}</li>
-            <li>ОГРНИП {companyOgrnip}</li>
+            <li>{company.name}</li>
+            <li>ИНН {company.inn}</li>
+            <li>ОГРНИП {company.ogrnip}</li>
             <li>НДС не облагается (ИП на УСН)</li>
           </ul>
           <p className="mt-3 text-sm" style={{ color: 'var(--ink-mute)' }}>

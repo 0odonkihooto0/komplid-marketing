@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { isExternal } from '@/lib/utils';
 
 interface CtaProps {
   title: string;
@@ -9,8 +10,6 @@ interface CtaProps {
   eyebrow?: string;
   benefits?: string[];
 }
-
-function isExternal(href: string) { return href.startsWith('http'); }
 
 const DEFAULT_BENEFITS = [
   '14 дней полного доступа без карты',

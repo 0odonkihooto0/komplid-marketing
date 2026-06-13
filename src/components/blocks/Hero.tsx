@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, Play } from 'lucide-react';
+import { isExternal } from '@/lib/utils';
 
 interface CtaLink {
   label: string;
@@ -16,7 +17,6 @@ interface HeroProps {
 }
 
 export function Hero({ eyebrow, title, subtitle, primaryCta, secondaryCta, variant = 'default' }: HeroProps) {
-  const isExternal = (href: string) => href.startsWith('http');
   const paddingY = variant === 'compact' ? '48px 0' : '80px 0 72px';
 
   return (

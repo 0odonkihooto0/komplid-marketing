@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
+import { postToInternalApi } from '@/lib/internal-api';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,29 +32,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const apiUrl = process.env.INTERNAL_API_URL;
-  const apiToken = process.env.INTERNAL_API_TOKEN;
-
-  if (!apiUrl || !apiToken) {
-    console.error('[api/lead] INTERNAL_API_URL or INTERNAL_API_TOKEN not set — lead lost');
-    return Response.json({ error: 'API not configured' }, { status: 500 });
-  }
-
-  let res: Response;
-  try {
-    res = await fetch(`${apiUrl}/leads`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiToken}`,
-      },
-      body: JSON.stringify(parsed.data),
-    });
-  } catch {
-    return Response.json({ error: 'Internal error' }, { status: 500 });
-  }
-
-  if (!res.ok) {
+  const result = await postToInternalApi('/leads', parsed.data);
+  if (!result.ok) {
+    if (result.reason === 'not_configured') {
+      console.error('[api/lead] INTERNAL_API_URL or INTERNAL_API_TOKEN not set — lead lost');
+      return Response.json({ error: 'API not configured' }, { status: 500 });
+    }
     return Response.json({ error: 'Internal error' }, { status: 500 });
   }
 

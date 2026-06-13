@@ -21,9 +21,8 @@ export function extractFaqFromContent(content: string): ExtractedFaq[] {
 
   // Формат: **Вопрос?**\n\nОтвет до следующего **...?** или конца секции
   const pattern = /\*\*([^*]+\?)\*\*\s*\n+([\s\S]+?)(?=\n\*\*[^*]+\?\*\*|$)/g;
-  let match: RegExpExecArray | null;
 
-  while ((match = pattern.exec(section)) !== null) {
+  for (const match of section.matchAll(pattern)) {
     const question = match[1]?.trim();
     const answer = match[2]?.trim().replace(/\n+/g, ' ');
     if (question && answer) {
