@@ -1,7 +1,5 @@
 import Link from 'next/link';
-
-const companyName = process.env.COMPANY_NAME ?? 'ИП Фамилия И.О.';
-const companyOgrnip = process.env.COMPANY_OGRNIP ?? '000000000000000';
+import { company } from '@/lib/company';
 
 export function MarketingFooter() {
   return (
@@ -65,7 +63,7 @@ export function MarketingFooter() {
                 fontSize: 10.5,
               }}
             >
-              © 2026 Komplid · {companyName} · ОГРНИП {companyOgrnip}
+              © 2026 Komplid · {company.name} · ОГРНИП {company.ogrnip}
             </p>
           </div>
 

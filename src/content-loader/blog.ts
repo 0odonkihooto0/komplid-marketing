@@ -66,10 +66,12 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 }
 
 export async function getRelatedPosts(slug: string, limit = 3): Promise<BlogPostFrontmatter[]> {
-  const current = await getBlogPostBySlug(slug);
+  // Берём текущий пост из кэшированного списка, а не повторным чтением файла с диска:
+  // теги уже есть во frontmatter, контент здесь не нужен.
+  const all = await getAllBlogPosts();
+  const current = all.find((p) => p.slug === slug);
   if (!current) return [];
 
-  const all = await getAllBlogPosts();
   // Set из тегов текущей статьи — O(1) проверка вместо линейного .includes в цикле.
   const currentTags = new Set(current.tags);
   return all

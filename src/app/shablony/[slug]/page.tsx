@@ -47,10 +47,11 @@ export default async function ShablonPage({ params }: PageProps) {
   const components = useMDXComponents({});
   const url = `https://komplid.ru/shablony/${slug}`;
 
-  const relatedTemplates = tpl.relatedTemplates
-    ? await Promise.all(tpl.relatedTemplates.map((s) => getTemplateBySlug(s)))
-    : [];
-  const validRelated = relatedTemplates.filter(Boolean);
+  // Связанные шаблоны берём из кэшированного списка, а не читаем каждый файл с диска.
+  const allTemplates = tpl.relatedTemplates?.length ? await getAllTemplates() : [];
+  const validRelated = (tpl.relatedTemplates ?? [])
+    .map((s) => allTemplates.find((t) => t.slug === s))
+    .filter((t): t is (typeof allTemplates)[number] => Boolean(t));
 
   const ctaHref =
     tpl.category === 'Исполнительная документация' || tpl.category === 'Журналы работ'

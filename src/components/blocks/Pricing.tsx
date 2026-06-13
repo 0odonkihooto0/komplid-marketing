@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { isExternal } from '@/lib/utils';
+import { CheckIcon, CrossIcon } from '@/components/ui/icons';
 
 interface PricingFeature {
   text: string;
@@ -23,20 +25,6 @@ interface PricingProps {
   eyebrow?: string;
   tiers: PricingTier[];
 }
-
-const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-    <path d="M5 12l5 5L20 7" />
-  </svg>
-);
-
-const CrossIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-    <path d="M6 6l12 12M6 18L18 6" />
-  </svg>
-);
-
-function isExternal(href: string) { return href.startsWith('http'); }
 
 export function Pricing({ title, description, eyebrow, tiers }: PricingProps) {
   return (
