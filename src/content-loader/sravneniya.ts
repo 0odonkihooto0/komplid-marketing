@@ -43,9 +43,11 @@ export async function getAllComparisons(): Promise<ComparisonFrontmatter[]> {
       })
     );
 
-    comparisonsCache = comparisons.sort(
-      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
+    // Дату парсим один раз на элемент, а не на каждое сравнение в sort (O(N) вместо O(N log N)).
+    comparisonsCache = comparisons
+      .map((cmp) => ({ cmp, time: new Date(cmp.publishedAt).getTime() }))
+      .sort((a, b) => b.time - a.time)
+      .map((entry) => entry.cmp);
     return comparisonsCache;
   } catch {
     return [];
