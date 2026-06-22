@@ -45,9 +45,11 @@ export async function getAllBlogPosts(): Promise<BlogPostFrontmatter[]> {
       })
     );
 
-    postsCache = posts.sort(
-      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
+    // Дату парсим один раз на элемент, а не на каждое сравнение в sort (O(N) вместо O(N log N)).
+    postsCache = posts
+      .map((post) => ({ post, time: new Date(post.publishedAt).getTime() }))
+      .sort((a, b) => b.time - a.time)
+      .map((entry) => entry.post);
     return postsCache;
   } catch {
     return [];

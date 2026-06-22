@@ -44,9 +44,11 @@ export async function getAllTemplates(): Promise<TemplateFrontmatter[]> {
       })
     );
 
-    templatesCache = templates.sort(
-      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
+    // Дату парсим один раз на элемент, а не на каждое сравнение в sort (O(N) вместо O(N log N)).
+    templatesCache = templates
+      .map((tpl) => ({ tpl, time: new Date(tpl.publishedAt).getTime() }))
+      .sort((a, b) => b.time - a.time)
+      .map((entry) => entry.tpl);
     return templatesCache;
   } catch {
     return [];
