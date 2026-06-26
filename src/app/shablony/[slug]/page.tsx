@@ -48,9 +48,11 @@ export default async function ShablonPage({ params }: PageProps) {
   const url = `https://komplid.ru/shablony/${slug}`;
 
   // Связанные шаблоны берём из кэшированного списка, а не читаем каждый файл с диска.
+  // Индекс по slug — O(1) на каждый relatedTemplate вместо линейного .find (O(n·m)).
   const allTemplates = tpl.relatedTemplates?.length ? await getAllTemplates() : [];
+  const bySlug = new Map(allTemplates.map((t) => [t.slug, t] as const));
   const validRelated = (tpl.relatedTemplates ?? [])
-    .map((s) => allTemplates.find((t) => t.slug === s))
+    .map((s) => bySlug.get(s))
     .filter((t): t is (typeof allTemplates)[number] => Boolean(t));
 
   const ctaHref =
@@ -135,29 +137,23 @@ export default async function ShablonPage({ params }: PageProps) {
                 Связанные шаблоны
               </h2>
               <div className="flex flex-wrap gap-3">
-                {validRelated.map((rel) => {
-                  if (!rel) return null;
-                  return (
-                    <Link
-                      key={rel.slug}
-                      href={`/shablony/${rel.slug}`}
-                      className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
-                      style={{
-                        background: 'var(--bg-elev)',
-                        border: '1px solid var(--border)',
-                        color: 'var(--ink)',
-                      }}
-                    >
-                      <span
-                        className="font-mono text-[10px]"
-                        style={{ color: 'var(--ink-mute)' }}
-                      >
-                        {rel.format}
-                      </span>
-                      {rel.title}
-                    </Link>
-                  );
-                })}
+                {validRelated.map((rel) => (
+                  <Link
+                    key={rel.slug}
+                    href={`/shablony/${rel.slug}`}
+                    className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
+                    style={{
+                      background: 'var(--bg-elev)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--ink)',
+                    }}
+                  >
+                    <span className="font-mono text-[10px]" style={{ color: 'var(--ink-mute)' }}>
+                      {rel.format}
+                    </span>
+                    {rel.title}
+                  </Link>
+                ))}
               </div>
             </div>
           )}

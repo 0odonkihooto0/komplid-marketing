@@ -5,16 +5,14 @@ import type { ChangeEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { fmt, selectStyle } from './shared';
-
-type VatRate = 20 | 10 | 0;
+import { computeKs2, type VatRate } from './logic';
 
 export function Ks2Calculator() {
   const [amountExVat, setAmountExVat] = useState<string>('');
   const [vatRate, setVatRate] = useState<VatRate>(20);
 
   const amount = parseFloat(amountExVat) || 0;
-  const vatAmount = amount * vatRate / 100;
-  const totalInclVat = amount + vatAmount;
+  const { vatAmount, totalInclVat } = computeKs2(amount, vatRate);
   const hasResult = amount > 0;
 
   function handleVatChange(e: ChangeEvent<HTMLSelectElement>) {

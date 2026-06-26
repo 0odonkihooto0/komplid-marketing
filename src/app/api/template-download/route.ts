@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
+import { postToInternalApi } from '@/lib/internal-api';
 
 const schema = z.object({
   slug: z.string().min(1),
@@ -24,27 +25,20 @@ export async function POST(req: NextRequest) {
 
   const { slug, filename, email, role, newsletterConsent } = parsed.data;
 
-  // Отправляем лид в основное приложение — fire-and-forget, не блокируем скачивание
-  const apiUrl = process.env.INTERNAL_API_URL;
-  const apiToken = process.env.INTERNAL_API_TOKEN;
-  if (apiUrl && apiToken) {
-    fetch(`${apiUrl}/leads`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiToken}`,
-      },
-      body: JSON.stringify({
-        email,
-        role,
-        source: 'template_download',
-        newsletterConsent,
-        metadata: { template: slug },
-      }),
-    }).catch((err: unknown) => {
-      console.error('[api/template-download] lead dispatch failed:', err);
-    });
-  }
+  // Отправляем лид в основное приложение — fire-and-forget, не блокируем скачивание.
+  // Тот же клиент, что и в /lead и /newsletter (читает env, ставит Authorization).
+  void postToInternalApi('/leads', {
+    email,
+    role,
+    source: 'template_download',
+    newsletterConsent,
+    metadata: { template: slug },
+  }).then((result) => {
+    // not_configured — штатно для окружений без API, логируем только реальные сбои.
+    if (!result.ok && result.reason === 'error') {
+      console.error('[api/template-download] lead dispatch failed');
+    }
+  });
 
   return Response.json({ downloadUrl: `/shablony-files/${filename}` });
 }

@@ -5,8 +5,7 @@ import type { ChangeEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { fmt, selectStyle } from './shared';
-
-type VatRate = 20 | 10 | 0;
+import { computeAvans, type VatRate } from './logic';
 
 export function AvansCalculator() {
   const [contractAmount, setContractAmount] = useState<string>('');
@@ -14,13 +13,11 @@ export function AvansCalculator() {
   const [vatRate, setVatRate] = useState<VatRate>(20);
 
   const amount = parseFloat(contractAmount) || 0;
-  const pct = Math.min(100, Math.max(0, parseFloat(advancePct) || 0));
-
-  const advanceAmount = amount * pct / 100;
-  const remaining = amount - advanceAmount;
-  const vatAmount = amount * vatRate / 100;
-  const totalWithVat = amount + vatAmount;
-  const advanceWithVat = advanceAmount * (1 + vatRate / 100);
+  const { advanceAmount, remaining, vatAmount, totalWithVat, advanceWithVat } = computeAvans(
+    amount,
+    parseFloat(advancePct) || 0,
+    vatRate,
+  );
 
   const hasResult = amount > 0;
 

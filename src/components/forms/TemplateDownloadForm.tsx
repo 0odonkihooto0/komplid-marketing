@@ -4,6 +4,7 @@ import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { requestTemplateDownload, TemplateDownloadError } from '@/lib/template-download';
 
 interface Props {
   slug: string;
@@ -33,18 +34,14 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
     setError('');
 
     try {
-      const res = await fetch('/api/template-download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug, filename, email, role, newsletterConsent: newsletter }),
+      const data = await requestTemplateDownload({
+        slug,
+        filename,
+        email,
+        role,
+        newsletterConsent: newsletter,
       });
 
-      if (!res.ok) {
-        setError('Не удалось получить файл. Попробуйте ещё раз.');
-        return;
-      }
-
-      const data = (await res.json()) as { downloadUrl: string };
       const a = document.createElement('a');
       a.href = data.downloadUrl;
       a.download = filename;
@@ -52,8 +49,13 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
       a.click();
       document.body.removeChild(a);
       setDone(true);
-    } catch {
-      setError('Ошибка сети. Проверьте соединение и попробуйте ещё раз.');
+    } catch (err) {
+      // Не-OK ответ API и сетевой сбой различаем для понятного текста.
+      setError(
+        err instanceof TemplateDownloadError
+          ? 'Не удалось получить файл. Попробуйте ещё раз.'
+          : 'Ошибка сети. Проверьте соединение и попробуйте ещё раз.',
+      );
     } finally {
       setIsLoading(false);
     }

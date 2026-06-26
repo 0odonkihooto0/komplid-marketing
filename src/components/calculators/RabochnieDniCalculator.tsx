@@ -2,21 +2,9 @@
 
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
-import { eachDayOfInterval, isWeekend, parseISO, format, isAfter } from 'date-fns';
+import { parseISO, format, isAfter } from 'date-fns';
 import { Label } from '@/components/ui/label';
-
-// Производственный календарь РФ 2026 — федеральные нерабочие праздничные дни.
-// Set для O(1) проверки членства в циклах по датам.
-const HOLIDAYS_2026 = new Set<string>([
-  '2026-01-01', '2026-01-02', '2026-01-05', '2026-01-06', '2026-01-07',
-  '2026-01-08', '2026-01-09',  // Новый год + Рождество (с переносами)
-  '2026-02-23',                // День защитника Отечества
-  '2026-03-09',                // 8 марта (перенос с воскресенья)
-  '2026-05-01', '2026-05-04', // Праздник Весны и Труда + перенос
-  '2026-05-11',                // День Победы + перенос
-  '2026-06-12',                // День России
-  '2026-11-04',                // День народного единства
-]);
+import { countWorkingDays, nthWorkingDay } from './logic';
 
 const inputStyle: CSSProperties = {
   background: 'var(--bg-inset)',
@@ -28,15 +16,6 @@ const inputStyle: CSSProperties = {
   width: '100%',
   height: 40,
 };
-
-function countWorkingDays(start: Date, end: Date): number {
-  const days = eachDayOfInterval({ start, end });
-  return days.filter(d => {
-    if (isWeekend(d)) return false;
-    if (HOLIDAYS_2026.has(format(d, 'yyyy-MM-dd'))) return false;
-    return true;
-  }).length;
-}
 
 export function RabochnieDniCalculator() {
   const [startDate, setStartDate] = useState<string>('');
@@ -55,21 +34,12 @@ export function RabochnieDniCalculator() {
     }
   }
 
-  const notif3 = workingDays !== null && workingDays >= 3
-    ? (() => {
-        const days = eachDayOfInterval({ start: parseISO(startDate), end: parseISO(endDate) });
-        let count = 0;
-        for (let i = 0; i < days.length; i++) {
-          const d = days[i];
-          if (d === undefined) continue;
-          if (!isWeekend(d) && !HOLIDAYS_2026.has(format(d, 'yyyy-MM-dd'))) {
-            count++;
-            if (count === 3) return format(d, 'dd.MM.yyyy');
-          }
-        }
-        return null;
-      })()
-    : null;
+  // Дата 3-го рабочего дня — для уведомлений «за 3 рабочих дня».
+  const thirdWorkingDay =
+    workingDays !== null && workingDays >= 3
+      ? nthWorkingDay(parseISO(startDate), parseISO(endDate), 3)
+      : null;
+  const notif3 = thirdWorkingDay ? format(thirdWorkingDay, 'dd.MM.yyyy') : null;
 
   return (
     <div

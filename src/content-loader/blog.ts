@@ -1,6 +1,5 @@
-import fs from 'fs/promises';
 import path from 'path';
-import matter from 'gray-matter';
+import { readCollection, readEntryBySlug } from './load-collection';
 
 const CONTENT_DIR = path.join(process.cwd(), 'content', 'blog');
 
@@ -30,26 +29,7 @@ export async function getAllBlogPosts(): Promise<BlogPostFrontmatter[]> {
   if (postsCache) return postsCache;
 
   try {
-    const files = await fs.readdir(CONTENT_DIR);
-    const mdxFiles = files.filter((f) => f.endsWith('.mdx') && !f.startsWith('_'));
-
-    const posts = await Promise.all(
-      mdxFiles.map(async (file) => {
-        const filePath = path.join(CONTENT_DIR, file);
-        const source = await fs.readFile(filePath, 'utf-8');
-        const { data } = matter(source);
-        return {
-          ...data,
-          slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
-        } as BlogPostFrontmatter;
-      })
-    );
-
-    // Дату парсим один раз на элемент, а не на каждое сравнение в sort (O(N) вместо O(N log N)).
-    postsCache = posts
-      .map((post) => ({ post, time: new Date(post.publishedAt).getTime() }))
-      .sort((a, b) => b.time - a.time)
-      .map((entry) => entry.post);
+    postsCache = await readCollection<BlogPostFrontmatter>(CONTENT_DIR);
     return postsCache;
   } catch {
     return [];
@@ -57,14 +37,7 @@ export async function getAllBlogPosts(): Promise<BlogPostFrontmatter[]> {
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  try {
-    const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
-    const source = await fs.readFile(filePath, 'utf-8');
-    const { data, content } = matter(source);
-    return { ...data, slug, content } as BlogPost;
-  } catch {
-    return null;
-  }
+  return readEntryBySlug<BlogPost>(CONTENT_DIR, slug);
 }
 
 export async function getRelatedPosts(slug: string, limit = 3): Promise<BlogPostFrontmatter[]> {
