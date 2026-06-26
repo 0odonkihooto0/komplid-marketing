@@ -2,22 +2,21 @@
 
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { nextTheme, persistTheme, type Theme } from '@/lib/theme';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
-    const current = document.documentElement.getAttribute('data-theme') as 'light' | 'dark';
+    const current = document.documentElement.getAttribute('data-theme') as Theme | null;
     setTheme(current ?? 'light');
   }, []);
 
   function toggle() {
-    const next = theme === 'light' ? 'dark' : 'light';
+    const next = nextTheme(theme);
     document.documentElement.setAttribute('data-theme', next);
     setTheme(next);
-    try {
-      localStorage.setItem('komplid_theme', next);
-    } catch {}
+    persistTheme(next);
   }
 
   return (

@@ -1,6 +1,5 @@
-import fs from 'fs/promises';
 import path from 'path';
-import matter from 'gray-matter';
+import { readCollection, readEntryBySlug } from './load-collection';
 
 const CONTENT_DIR = path.join(process.cwd(), 'content', 'sravneniya');
 
@@ -27,27 +26,7 @@ export async function getAllComparisons(): Promise<ComparisonFrontmatter[]> {
   if (comparisonsCache) return comparisonsCache;
 
   try {
-    const files = await fs.readdir(CONTENT_DIR);
-    const mdxFiles = files.filter((f) => f.endsWith('.mdx') && !f.startsWith('_'));
-
-    // Параллельное чтение файлов — как в blog.ts / shablony.ts.
-    const comparisons = await Promise.all(
-      mdxFiles.map(async (file) => {
-        const filePath = path.join(CONTENT_DIR, file);
-        const source = await fs.readFile(filePath, 'utf-8');
-        const { data } = matter(source);
-        return {
-          ...data,
-          slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
-        } as ComparisonFrontmatter;
-      })
-    );
-
-    // Дату парсим один раз на элемент, а не на каждое сравнение в sort (O(N) вместо O(N log N)).
-    comparisonsCache = comparisons
-      .map((cmp) => ({ cmp, time: new Date(cmp.publishedAt).getTime() }))
-      .sort((a, b) => b.time - a.time)
-      .map((entry) => entry.cmp);
+    comparisonsCache = await readCollection<ComparisonFrontmatter>(CONTENT_DIR);
     return comparisonsCache;
   } catch {
     return [];
@@ -55,12 +34,5 @@ export async function getAllComparisons(): Promise<ComparisonFrontmatter[]> {
 }
 
 export async function getComparisonBySlug(slug: string): Promise<Comparison | null> {
-  try {
-    const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
-    const source = await fs.readFile(filePath, 'utf-8');
-    const { data, content } = matter(source);
-    return { ...data, slug, content } as Comparison;
-  } catch {
-    return null;
-  }
+  return readEntryBySlug<Comparison>(CONTENT_DIR, slug);
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Link2, Send, Check } from 'lucide-react';
+import { copyToClipboard } from '@/lib/clipboard';
 
 interface ShareButtonsProps {
   url: string;
@@ -12,12 +13,12 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(url);
+    // copyToClipboard сам откатывается на execCommand и не бросает —
+    // подсветку «Скопировано» показываем только при подтверждённом успехе.
+    const ok = await copyToClipboard(url);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // fallback: select text
     }
   }
 

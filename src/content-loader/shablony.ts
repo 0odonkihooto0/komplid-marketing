@@ -1,6 +1,5 @@
-import fs from 'fs/promises';
 import path from 'path';
-import matter from 'gray-matter';
+import { readCollection, readEntryBySlug } from './load-collection';
 
 const CONTENT_DIR = path.join(process.cwd(), 'content', 'shablony');
 
@@ -29,26 +28,7 @@ export async function getAllTemplates(): Promise<TemplateFrontmatter[]> {
   if (templatesCache) return templatesCache;
 
   try {
-    const files = await fs.readdir(CONTENT_DIR);
-    const mdxFiles = files.filter((f) => f.endsWith('.mdx') && !f.startsWith('_'));
-
-    const templates = await Promise.all(
-      mdxFiles.map(async (file) => {
-        const filePath = path.join(CONTENT_DIR, file);
-        const source = await fs.readFile(filePath, 'utf-8');
-        const { data } = matter(source);
-        return {
-          ...data,
-          slug: (data['slug'] as string | undefined) ?? file.replace(/\.mdx$/, ''),
-        } as TemplateFrontmatter;
-      })
-    );
-
-    // Дату парсим один раз на элемент, а не на каждое сравнение в sort (O(N) вместо O(N log N)).
-    templatesCache = templates
-      .map((tpl) => ({ tpl, time: new Date(tpl.publishedAt).getTime() }))
-      .sort((a, b) => b.time - a.time)
-      .map((entry) => entry.tpl);
+    templatesCache = await readCollection<TemplateFrontmatter>(CONTENT_DIR);
     return templatesCache;
   } catch {
     return [];
@@ -56,12 +36,5 @@ export async function getAllTemplates(): Promise<TemplateFrontmatter[]> {
 }
 
 export async function getTemplateBySlug(slug: string): Promise<Template | null> {
-  try {
-    const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
-    const source = await fs.readFile(filePath, 'utf-8');
-    const { data, content } = matter(source);
-    return { ...data, slug, content } as Template;
-  } catch {
-    return null;
-  }
+  return readEntryBySlug<Template>(CONTENT_DIR, slug);
 }
