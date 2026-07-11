@@ -22,6 +22,8 @@ import {
   Home,
   CloudSnow,
   Wind,
+  Accessibility,
+  ArrowUpDown,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -86,6 +88,8 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'krovlya': Home,
   'snegovaya-nagruzka': CloudSnow,
   'vetrovaya-nagruzka': Wind,
+  'pandus': Accessibility,
+  'lestnitsa': ArrowUpDown,
 };
 
 // Порядок категорий на хабе (план 02 §5).
