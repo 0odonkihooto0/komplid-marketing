@@ -4,6 +4,7 @@ import { RABOCHIE_DNI } from './rabochie-dni';
 import { NEUSTOYKA_PODRYAD } from './neustoyka-podryad';
 import { PROSROCHKA_SDACHI } from './prosrochka-sdachi';
 import { GARANTIYNOE_UDERZHANIE } from './garantiynoe-uderzhanie';
+import { TRUDOZATRATY } from './trudozatraty';
 
 // Слаги всех опубликованных калькуляторов. Union расширяется по мере добавления
 // новых калькуляторов (Волна 1 плана 02-CALCULATORS-PLAN.md).
@@ -13,7 +14,8 @@ export type CalcSlug =
   | 'rabochie-dni'
   | 'neustoyka-podryad'
   | 'prosrochka-sdachi'
-  | 'garantiynoe-uderzhanie';
+  | 'garantiynoe-uderzhanie'
+  | 'trudozatraty';
 
 // Категории каталога /kalkulyator (план 02 §5): «Деньги и договоры» /
 // «Материалы и объёмы» / «Инженерные расчёты по СП».
@@ -82,6 +84,7 @@ export const CALCULATORS: CalculatorMeta[] = [
   NEUSTOYKA_PODRYAD,
   PROSROCHKA_SDACHI,
   GARANTIYNOE_UDERZHANIE,
+  TRUDOZATRATY,
 ];
 
 export function getCalcBySlug(slug: string): CalculatorMeta | undefined {
