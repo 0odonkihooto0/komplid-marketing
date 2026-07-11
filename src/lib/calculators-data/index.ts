@@ -10,6 +10,8 @@ import { OBEM_BETONA } from './obem-betona';
 import { ARMATURA } from './armatura';
 import { KIRPICH_NA_STENU } from './kirpich-na-stenu';
 import { RASHOD_SHTUKATURKI } from './rashod-shtukaturki';
+import { PLITKA } from './plitka';
+import { LAMINAT } from './laminat';
 
 // Слаги всех опубликованных калькуляторов. Union расширяется по мере добавления
 // новых калькуляторов (Волны 1–3 плана 02-CALCULATORS-PLAN.md).
@@ -25,7 +27,9 @@ export type CalcSlug =
   | 'obem-betona'
   | 'armatura'
   | 'kirpich-na-stenu'
-  | 'rashod-shtukaturki';
+  | 'rashod-shtukaturki'
+  | 'plitka'
+  | 'laminat';
 
 // Категории каталога /kalkulyator (план 02 §5): «Деньги и договоры» /
 // «Материалы и объёмы» / «Инженерные расчёты по СП».
@@ -100,6 +104,8 @@ export const CALCULATORS: CalculatorMeta[] = [
   ARMATURA,
   KIRPICH_NA_STENU,
   RASHOD_SHTUKATURKI,
+  PLITKA,
+  LAMINAT,
 ];
 
 export function getCalcBySlug(slug: string): CalculatorMeta | undefined {

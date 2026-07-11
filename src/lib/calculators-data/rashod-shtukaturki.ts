@@ -57,7 +57,7 @@ export const RASHOD_SHTUKATURKI: CalculatorMeta = {
       url: 'https://protect.gost.ru/',
     },
   ],
-  related: ['kirpich-na-stenu'],
+  related: ['kirpich-na-stenu', 'plitka'],
   faq: [
     {
       question: 'Какой расход штукатурки на 1 м²?',

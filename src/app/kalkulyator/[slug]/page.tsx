@@ -21,6 +21,8 @@ import { BetonCalculator } from '@/components/calculators/BetonCalculator';
 import { ArmaturaCalculator } from '@/components/calculators/ArmaturaCalculator';
 import { KirpichCalculator } from '@/components/calculators/KirpichCalculator';
 import { ShtukaturkaCalculator } from '@/components/calculators/ShtukaturkaCalculator';
+import { PlitkaCalculator } from '@/components/calculators/PlitkaCalculator';
+import { LaminatCalculator } from '@/components/calculators/LaminatCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -39,6 +41,8 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'armatura': ArmaturaCalculator,
   'kirpich-na-stenu': KirpichCalculator,
   'rashod-shtukaturki': ShtukaturkaCalculator,
+  'plitka': PlitkaCalculator,
+  'laminat': LaminatCalculator,
 };
 
 export async function generateStaticParams() {

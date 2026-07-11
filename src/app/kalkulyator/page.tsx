@@ -14,6 +14,8 @@ import {
   Ruler,
   BrickWall,
   Layers,
+  LayoutGrid,
+  Rows3,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -70,6 +72,8 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'armatura': Ruler,
   'kirpich-na-stenu': BrickWall,
   'rashod-shtukaturki': Layers,
+  'plitka': LayoutGrid,
+  'laminat': Rows3,
 };
 
 // Порядок категорий на хабе (план 02 §5).
