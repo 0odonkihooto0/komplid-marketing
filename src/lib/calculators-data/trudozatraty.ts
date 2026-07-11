@@ -73,7 +73,7 @@ export const TRUDOZATRATY: CalculatorMeta = {
       url: 'https://www.minstroyrf.gov.ru/',
     },
   ],
-  related: ['smeta-avans', 'ks2-ndsfree'],
+  related: ['zimnee-udorozhanie', 'smeta-avans', 'ks2-ndsfree'],
   faq: [
     {
       question: 'Что входит в полную стоимость человеко-часа?',

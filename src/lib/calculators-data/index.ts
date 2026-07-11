@@ -5,6 +5,7 @@ import { NEUSTOYKA_PODRYAD } from './neustoyka-podryad';
 import { PROSROCHKA_SDACHI } from './prosrochka-sdachi';
 import { GARANTIYNOE_UDERZHANIE } from './garantiynoe-uderzhanie';
 import { TRUDOZATRATY } from './trudozatraty';
+import { ZIMNEE_UDOROZHANIE } from './zimnee-udorozhanie';
 
 // Слаги всех опубликованных калькуляторов. Union расширяется по мере добавления
 // новых калькуляторов (Волна 1 плана 02-CALCULATORS-PLAN.md).
@@ -15,7 +16,8 @@ export type CalcSlug =
   | 'neustoyka-podryad'
   | 'prosrochka-sdachi'
   | 'garantiynoe-uderzhanie'
-  | 'trudozatraty';
+  | 'trudozatraty'
+  | 'zimnee-udorozhanie';
 
 // Категории каталога /kalkulyator (план 02 §5): «Деньги и договоры» /
 // «Материалы и объёмы» / «Инженерные расчёты по СП».
@@ -85,6 +87,7 @@ export const CALCULATORS: CalculatorMeta[] = [
   PROSROCHKA_SDACHI,
   GARANTIYNOE_UDERZHANIE,
   TRUDOZATRATY,
+  ZIMNEE_UDOROZHANIE,
 ];
 
 export function getCalcBySlug(slug: string): CalculatorMeta | undefined {

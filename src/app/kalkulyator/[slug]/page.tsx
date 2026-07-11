@@ -16,6 +16,7 @@ import { NeustoykaCalculator } from '@/components/calculators/NeustoykaCalculato
 import { ProsrochkaCalculator } from '@/components/calculators/ProsrochkaCalculator';
 import { UderzhanieCalculator } from '@/components/calculators/UderzhanieCalculator';
 import { TrudozatratyCalculator } from '@/components/calculators/TrudozatratyCalculator';
+import { ZimneeCalculator } from '@/components/calculators/ZimneeCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,6 +30,7 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'prosrochka-sdachi': ProsrochkaCalculator,
   'garantiynoe-uderzhanie': UderzhanieCalculator,
   'trudozatraty': TrudozatratyCalculator,
+  'zimnee-udorozhanie': ZimneeCalculator,
 };
 
 export async function generateStaticParams() {
