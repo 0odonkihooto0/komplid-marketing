@@ -20,6 +20,8 @@ import {
   PaintRoller,
   Shovel,
   Home,
+  CloudSnow,
+  Wind,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -82,6 +84,8 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'kraska': PaintRoller,
   'kotlovan': Shovel,
   'krovlya': Home,
+  'snegovaya-nagruzka': CloudSnow,
+  'vetrovaya-nagruzka': Wind,
 };
 
 // Порядок категорий на хабе (план 02 §5).

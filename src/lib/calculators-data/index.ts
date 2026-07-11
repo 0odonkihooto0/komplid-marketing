@@ -16,6 +16,8 @@ import { OBOI } from './oboi';
 import { KRASKA } from './kraska';
 import { KOTLOVAN } from './kotlovan';
 import { KROVLYA } from './krovlya';
+import { SNEGOVAYA_NAGRUZKA } from './snegovaya-nagruzka';
+import { VETROVAYA_NAGRUZKA } from './vetrovaya-nagruzka';
 
 // Слаги всех опубликованных калькуляторов. Union расширяется по мере добавления
 // новых калькуляторов (Волны 1–3 плана 02-CALCULATORS-PLAN.md).
@@ -37,7 +39,9 @@ export type CalcSlug =
   | 'oboi'
   | 'kraska'
   | 'kotlovan'
-  | 'krovlya';
+  | 'krovlya'
+  | 'snegovaya-nagruzka'
+  | 'vetrovaya-nagruzka';
 
 // Категории каталога /kalkulyator (план 02 §5): «Деньги и договоры» /
 // «Материалы и объёмы» / «Инженерные расчёты по СП».
@@ -118,6 +122,8 @@ export const CALCULATORS: CalculatorMeta[] = [
   KRASKA,
   KOTLOVAN,
   KROVLYA,
+  SNEGOVAYA_NAGRUZKA,
+  VETROVAYA_NAGRUZKA,
 ];
 
 export function getCalcBySlug(slug: string): CalculatorMeta | undefined {

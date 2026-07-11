@@ -58,7 +58,7 @@ export const KROVLYA: CalculatorMeta = {
       url: 'https://minstroyrf.gov.ru/',
     },
   ],
-  related: ['kotlovan', 'obem-betona'],
+  related: ['snegovaya-nagruzka', 'vetrovaya-nagruzka', 'kotlovan'],
   faq: [
     {
       question: 'Как посчитать площадь двускатной крыши?',
