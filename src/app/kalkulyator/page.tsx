@@ -18,6 +18,8 @@ import {
   Rows3,
   Wallpaper,
   PaintRoller,
+  Shovel,
+  Home,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -78,6 +80,8 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'laminat': Rows3,
   'oboi': Wallpaper,
   'kraska': PaintRoller,
+  'kotlovan': Shovel,
+  'krovlya': Home,
 };
 
 // Порядок категорий на хабе (план 02 §5).

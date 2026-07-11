@@ -58,7 +58,7 @@ export const OBEM_BETONA: CalculatorMeta = {
       url: 'https://minstroyrf.gov.ru/',
     },
   ],
-  related: ['armatura', 'trudozatraty'],
+  related: ['armatura', 'kotlovan', 'trudozatraty'],
   faq: [
     {
       question: 'Как посчитать объём бетона на ленточный фундамент?',
