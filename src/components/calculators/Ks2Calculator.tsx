@@ -6,10 +6,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { fmt, selectStyle } from './shared';
 import { computeKs2, type VatRate } from './logic';
+import { ResultRow } from './ResultRow';
+import { CopyLinkButton } from './CopyLinkButton';
+import { useCalcUrlState, readParam } from './useCalcUrlState';
 
 export function Ks2Calculator() {
   const [amountExVat, setAmountExVat] = useState<string>('');
   const [vatRate, setVatRate] = useState<VatRate>(20);
+
+  // Постоянная ссылка на расчёт: ?sum=…&vat=… (дефолтную ставку 20 не пишем)
+  useCalcUrlState({
+    onLoad: sp => {
+      setAmountExVat(readParam(sp, 'sum'));
+      const vat = readParam(sp, 'vat');
+      if (vat === '20' || vat === '10' || vat === '0') setVatRate(Number(vat) as VatRate);
+    },
+    params: {
+      sum: amountExVat,
+      vat: vatRate === 20 ? '' : String(vatRate),
+    },
+  });
 
   const amount = parseFloat(amountExVat) || 0;
   const { vatAmount, totalInclVat } = computeKs2(amount, vatRate);
@@ -82,13 +98,13 @@ export function Ks2Calculator() {
 
           {hasResult && (
             <>
-              <Row label="Всего по акту (без НДС)" value={`${fmt(amount)} ₽`} />
-              <Row
+              <ResultRow label="Всего по акту (без НДС)" value={`${fmt(amount)} ₽`} />
+              <ResultRow
                 label={vatRate === 0 ? 'НДС не облагается' : `НДС ${vatRate}%`}
                 value={vatRate === 0 ? '—' : `${fmt(vatAmount)} ₽`}
               />
               <div style={{ borderTop: '2px solid var(--border)', paddingTop: 12, marginTop: 4 }} />
-              <Row label="Итого к оплате (с НДС)" value={`${fmt(totalInclVat)} ₽`} large />
+              <ResultRow label="Итого к оплате (с НДС)" value={`${fmt(totalInclVat)} ₽`} large />
               {vatRate === 0 && (
                 <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-mute)' }}>
                   Подрядчик применяет УСН. НДС не начисляется, в акте указывается «НДС не облагается».
@@ -98,32 +114,17 @@ export function Ks2Calculator() {
           )}
         </div>
       </div>
-    </div>
-  );
-}
 
-function Row({
-  label,
-  value,
-  large,
-}: {
-  label: string;
-  value: string;
-  large?: boolean;
-}) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-      <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{label}</span>
-      <strong
+      <div
         style={{
-          fontSize: large ? 22 : 14,
-          color: large ? 'var(--accent-strong)' : 'var(--ink)',
-          whiteSpace: 'nowrap',
-          fontVariantNumeric: 'tabular-nums',
+          padding: '12px 24px',
+          borderTop: '1px solid var(--border)',
+          display: 'flex',
+          justifyContent: 'flex-end',
         }}
       >
-        {value}
-      </strong>
+        <CopyLinkButton />
+      </div>
     </div>
   );
 }

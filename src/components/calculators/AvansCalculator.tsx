@@ -6,11 +6,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { fmt, selectStyle } from './shared';
 import { computeAvans, type VatRate } from './logic';
+import { ResultRow } from './ResultRow';
+import { CopyLinkButton } from './CopyLinkButton';
+import { useCalcUrlState, readParam } from './useCalcUrlState';
 
 export function AvansCalculator() {
   const [contractAmount, setContractAmount] = useState<string>('');
   const [advancePct, setAdvancePct] = useState<string>('20');
   const [vatRate, setVatRate] = useState<VatRate>(20);
+
+  // Постоянная ссылка на расчёт: ?sum=…&pct=…&vat=… (дефолты в URL не пишем)
+  useCalcUrlState({
+    onLoad: sp => {
+      setContractAmount(readParam(sp, 'sum'));
+      const pct = readParam(sp, 'pct');
+      if (pct) setAdvancePct(pct);
+      const vat = readParam(sp, 'vat');
+      if (vat === '20' || vat === '10' || vat === '0') setVatRate(Number(vat) as VatRate);
+    },
+    params: {
+      sum: contractAmount,
+      pct: advancePct === '20' ? '' : advancePct,
+      vat: vatRate === 20 ? '' : String(vatRate),
+    },
+  });
 
   const amount = parseFloat(contractAmount) || 0;
   const { advanceAmount, remaining, vatAmount, totalWithVat, advanceWithVat } = computeAvans(
@@ -115,34 +134,17 @@ export function AvansCalculator() {
           )}
         </div>
       </div>
-    </div>
-  );
-}
 
-function ResultRow({
-  label,
-  value,
-  accent,
-  large,
-}: {
-  label: string;
-  value: string;
-  accent?: boolean;
-  large?: boolean;
-}) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-      <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{label}</span>
-      <strong
+      <div
         style={{
-          fontSize: large ? 20 : accent ? 16 : 14,
-          color: accent || large ? 'var(--accent-strong)' : 'var(--ink)',
-          whiteSpace: 'nowrap',
-          fontVariantNumeric: 'tabular-nums',
+          padding: '12px 24px',
+          borderTop: '1px solid var(--border)',
+          display: 'flex',
+          justifyContent: 'flex-end',
         }}
       >
-        {value}
-      </strong>
+        <CopyLinkButton />
+      </div>
     </div>
   );
 }

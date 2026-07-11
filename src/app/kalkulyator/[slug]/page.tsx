@@ -1,16 +1,37 @@
 import type { Metadata } from 'next';
+import type { ComponentType } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { CALCULATORS, getCalcBySlug } from '@/lib/calculators-data';
+import { CALCULATORS, getCalcBySlug, type CalcSlug } from '@/lib/calculators-data';
 import { SoftwareAppSchema } from '@/components/seo/SoftwareAppSchema';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { HowToSchema } from '@/components/seo/HowToSchema';
 import { Faq } from '@/components/blocks/Faq';
 import { Cta } from '@/components/blocks/Cta';
+import { CalcContentSections } from '@/components/calculators/CalcContentSections';
 import { AvansCalculator } from '@/components/calculators/AvansCalculator';
 import { Ks2Calculator } from '@/components/calculators/Ks2Calculator';
 import { RabochnieDniCalculator } from '@/components/calculators/RabochnieDniCalculator';
+import { NeustoykaCalculator } from '@/components/calculators/NeustoykaCalculator';
+import { ProsrochkaCalculator } from '@/components/calculators/ProsrochkaCalculator';
+import { UderzhanieCalculator } from '@/components/calculators/UderzhanieCalculator';
+import { TrudozatratyCalculator } from '@/components/calculators/TrudozatratyCalculator';
+import { ZimneeCalculator } from '@/components/calculators/ZimneeCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
+
+// Реестр виджетов: tsc требует запись для каждого слага из CalcSlug —
+// новый калькулятор нельзя зарегистрировать в данных, забыв виджет.
+const WIDGETS: Record<CalcSlug, ComponentType> = {
+  'smeta-avans': AvansCalculator,
+  'ks2-ndsfree': Ks2Calculator,
+  'rabochie-dni': RabochnieDniCalculator,
+  'neustoyka-podryad': NeustoykaCalculator,
+  'prosrochka-sdachi': ProsrochkaCalculator,
+  'garantiynoe-uderzhanie': UderzhanieCalculator,
+  'trudozatraty': TrudozatratyCalculator,
+  'zimnee-udorozhanie': ZimneeCalculator,
+};
 
 export async function generateStaticParams() {
   return CALCULATORS.map(c => ({ slug: c.slug }));
@@ -22,7 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!calc) return {};
   const url = `https://komplid.ru/kalkulyator/${slug}`;
   return {
-    title: `${calc.title} | Komplid`,
+    // Суффикс «| Komplid» добавляет title.template корневого layout — не дублируем
+    title: calc.title,
     description: calc.description,
     keywords: calc.keywords,
     alternates: { canonical: url },
@@ -38,6 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CalcPage({ params }: Props) {
   const { slug } = await params;
   const calc = getCalcBySlug(slug) ?? notFound();
+  const Widget = WIDGETS[calc.slug];
 
   const url = `https://komplid.ru/kalkulyator/${slug}`;
 
@@ -47,6 +70,11 @@ export default async function CalcPage({ params }: Props) {
         name={calc.schemaName}
         description={calc.schemaDescription}
         url={url}
+      />
+      <HowToSchema
+        name={`Как рассчитать: ${calc.titleShort}`}
+        description={calc.schemaDescription}
+        steps={calc.howToUse}
       />
       <BreadcrumbSchema
         items={[
@@ -75,34 +103,13 @@ export default async function CalcPage({ params }: Props) {
             {calc.description}
           </p>
 
-          {/* Виджет калькулятора */}
-          {slug === 'smeta-avans' && <AvansCalculator />}
-          {slug === 'ks2-ndsfree' && <Ks2Calculator />}
-          {slug === 'rabochie-dni' && <RabochnieDniCalculator />}
+          {/* Виджет калькулятора — выше сгиба */}
+          <Widget />
 
-          {/* Как использовать */}
-          <section style={{ marginTop: 48 }}>
-            <h2
-              style={{
-                fontSize: 22,
-                fontWeight: 600,
-                letterSpacing: '-0.015em',
-                marginBottom: 16,
-                color: 'var(--ink)',
-              }}
-            >
-              Как использовать калькулятор
-            </h2>
-            <ol style={{ paddingLeft: 20, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {calc.howToUse.map((step, i) => (
-                <li key={i} style={{ fontSize: 14, color: 'var(--ink-soft)', lineHeight: 1.55 }}>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </section>
+          {/* Контент-стандарт §4: формула, пример, инструкция, нормативка, related */}
+          <CalcContentSections calc={calc} />
 
-          {/* Внутренние перелинковки */}
+          {/* Внутренние перелинковки на посадочные */}
           <div
             style={{
               marginTop: 40,

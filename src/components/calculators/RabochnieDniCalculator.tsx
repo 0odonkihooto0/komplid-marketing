@@ -5,6 +5,8 @@ import type { CSSProperties } from 'react';
 import { parseISO, format, isAfter } from 'date-fns';
 import { Label } from '@/components/ui/label';
 import { countWorkingDays, nthWorkingDay } from './logic';
+import { CopyLinkButton } from './CopyLinkButton';
+import { useCalcUrlState, readParam } from './useCalcUrlState';
 
 const inputStyle: CSSProperties = {
   background: 'var(--bg-inset)',
@@ -17,9 +19,24 @@ const inputStyle: CSSProperties = {
   height: 40,
 };
 
+// Дата из URL проверяется по формату — произвольная строка в query
+// не должна ронять eachDayOfInterval внутри countWorkingDays.
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
 export function RabochnieDniCalculator() {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+
+  // Постоянная ссылка на расчёт: ?from=…&to=…
+  useCalcUrlState({
+    onLoad: sp => {
+      const from = readParam(sp, 'from');
+      const to = readParam(sp, 'to');
+      if (ISO_DATE.test(from)) setStartDate(from);
+      if (ISO_DATE.test(to)) setEndDate(to);
+    },
+    params: { from: startDate, to: endDate },
+  });
 
   let workingDays: number | null = null;
   let errorMsg: string | null = null;
@@ -153,6 +170,17 @@ export function RabochnieDniCalculator() {
             </>
           )}
         </div>
+      </div>
+
+      <div
+        style={{
+          padding: '12px 24px',
+          borderTop: '1px solid var(--border)',
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <CopyLinkButton />
       </div>
     </div>
   );
