@@ -10,6 +10,8 @@ import {
   Banknote,
   Users,
   Snowflake,
+  Box,
+  Ruler,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -62,6 +64,8 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'garantiynoe-uderzhanie': Banknote,
   'trudozatraty': Users,
   'zimnee-udorozhanie': Snowflake,
+  'obem-betona': Box,
+  'armatura': Ruler,
 };
 
 // Порядок категорий на хабе (план 02 §5).

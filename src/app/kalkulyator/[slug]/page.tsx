@@ -17,6 +17,8 @@ import { ProsrochkaCalculator } from '@/components/calculators/ProsrochkaCalcula
 import { UderzhanieCalculator } from '@/components/calculators/UderzhanieCalculator';
 import { TrudozatratyCalculator } from '@/components/calculators/TrudozatratyCalculator';
 import { ZimneeCalculator } from '@/components/calculators/ZimneeCalculator';
+import { BetonCalculator } from '@/components/calculators/BetonCalculator';
+import { ArmaturaCalculator } from '@/components/calculators/ArmaturaCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,6 +33,8 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'garantiynoe-uderzhanie': UderzhanieCalculator,
   'trudozatraty': TrudozatratyCalculator,
   'zimnee-udorozhanie': ZimneeCalculator,
+  'obem-betona': BetonCalculator,
+  'armatura': ArmaturaCalculator,
 };
 
 export async function generateStaticParams() {
