@@ -6,9 +6,23 @@ import { PROSROCHKA_SDACHI } from './prosrochka-sdachi';
 import { GARANTIYNOE_UDERZHANIE } from './garantiynoe-uderzhanie';
 import { TRUDOZATRATY } from './trudozatraty';
 import { ZIMNEE_UDOROZHANIE } from './zimnee-udorozhanie';
+import { OBEM_BETONA } from './obem-betona';
+import { ARMATURA } from './armatura';
+import { KIRPICH_NA_STENU } from './kirpich-na-stenu';
+import { RASHOD_SHTUKATURKI } from './rashod-shtukaturki';
+import { PLITKA } from './plitka';
+import { LAMINAT } from './laminat';
+import { OBOI } from './oboi';
+import { KRASKA } from './kraska';
+import { KOTLOVAN } from './kotlovan';
+import { KROVLYA } from './krovlya';
+import { SNEGOVAYA_NAGRUZKA } from './snegovaya-nagruzka';
+import { VETROVAYA_NAGRUZKA } from './vetrovaya-nagruzka';
+import { PANDUS } from './pandus';
+import { LESTNITSA } from './lestnitsa';
 
 // Слаги всех опубликованных калькуляторов. Union расширяется по мере добавления
-// новых калькуляторов (Волна 1 плана 02-CALCULATORS-PLAN.md).
+// новых калькуляторов (Волны 1–3 плана 02-CALCULATORS-PLAN.md).
 export type CalcSlug =
   | 'smeta-avans'
   | 'ks2-ndsfree'
@@ -17,7 +31,21 @@ export type CalcSlug =
   | 'prosrochka-sdachi'
   | 'garantiynoe-uderzhanie'
   | 'trudozatraty'
-  | 'zimnee-udorozhanie';
+  | 'zimnee-udorozhanie'
+  | 'obem-betona'
+  | 'armatura'
+  | 'kirpich-na-stenu'
+  | 'rashod-shtukaturki'
+  | 'plitka'
+  | 'laminat'
+  | 'oboi'
+  | 'kraska'
+  | 'kotlovan'
+  | 'krovlya'
+  | 'snegovaya-nagruzka'
+  | 'vetrovaya-nagruzka'
+  | 'pandus'
+  | 'lestnitsa';
 
 // Категории каталога /kalkulyator (план 02 §5): «Деньги и договоры» /
 // «Материалы и объёмы» / «Инженерные расчёты по СП».
@@ -88,6 +116,20 @@ export const CALCULATORS: CalculatorMeta[] = [
   GARANTIYNOE_UDERZHANIE,
   TRUDOZATRATY,
   ZIMNEE_UDOROZHANIE,
+  OBEM_BETONA,
+  ARMATURA,
+  KIRPICH_NA_STENU,
+  RASHOD_SHTUKATURKI,
+  PLITKA,
+  LAMINAT,
+  OBOI,
+  KRASKA,
+  KOTLOVAN,
+  KROVLYA,
+  SNEGOVAYA_NAGRUZKA,
+  VETROVAYA_NAGRUZKA,
+  PANDUS,
+  LESTNITSA,
 ];
 
 export function getCalcBySlug(slug: string): CalculatorMeta | undefined {

@@ -10,6 +10,20 @@ import {
   Banknote,
   Users,
   Snowflake,
+  Box,
+  Ruler,
+  BrickWall,
+  Layers,
+  LayoutGrid,
+  Rows3,
+  Wallpaper,
+  PaintRoller,
+  Shovel,
+  Home,
+  CloudSnow,
+  Wind,
+  Accessibility,
+  ArrowUpDown,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -36,12 +50,12 @@ export const metadata: Metadata = {
   // Суффикс «| Komplid» добавляет title.template корневого layout — не дублируем
   title: `${COUNT} бесплатных ${pluralCalc(COUNT)} для строительства 2026`,
   description:
-    'Онлайн-калькуляторы для подрядчиков, сметчиков и ПТО: аванс по контракту, КС-2 с НДС, неустойка, рабочие дни и другие расчёты. Бесплатно, без регистрации.',
+    'Онлайн-калькуляторы для стройки: деньги и договоры (аванс, КС-2, неустойка), материалы (бетон, кирпич, плитка), инженерные расчёты по СП. Бесплатно, без регистрации.',
   keywords: [
     'калькулятор для строительства',
     'расчёт аванса подрядчику',
-    'КС-2 НДС онлайн',
-    'рабочие дни 2026',
+    'калькулятор бетона и кирпича',
+    'снеговая нагрузка по СП 20',
     'калькулятор строительство онлайн',
   ],
   alternates: { canonical: 'https://komplid.ru/kalkulyator' },
@@ -49,7 +63,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: `${COUNT} бесплатных ${pluralCalc(COUNT)} для строительства 2026`,
     description:
-      'Аванс подрядчику, КС-2 с НДС, неустойка, рабочие дни — онлайн, бесплатно, без регистрации.',
+      'Деньги и договоры, материалы и объёмы, инженерные расчёты по СП — онлайн, бесплатно, без регистрации.',
   },
 };
 
@@ -62,6 +76,20 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'garantiynoe-uderzhanie': Banknote,
   'trudozatraty': Users,
   'zimnee-udorozhanie': Snowflake,
+  'obem-betona': Box,
+  'armatura': Ruler,
+  'kirpich-na-stenu': BrickWall,
+  'rashod-shtukaturki': Layers,
+  'plitka': LayoutGrid,
+  'laminat': Rows3,
+  'oboi': Wallpaper,
+  'kraska': PaintRoller,
+  'kotlovan': Shovel,
+  'krovlya': Home,
+  'snegovaya-nagruzka': CloudSnow,
+  'vetrovaya-nagruzka': Wind,
+  'pandus': Accessibility,
+  'lestnitsa': ArrowUpDown,
 };
 
 // Порядок категорий на хабе (план 02 §5).
@@ -104,8 +132,9 @@ export default function KalkulyatorPage() {
           >
             {COUNT} бесплатных {pluralCalc(COUNT)} для строительства
           </h1>
-          <p style={{ maxWidth: 560, fontSize: 16, color: 'var(--ink-soft)', margin: 0 }}>
-            Расчёты по договору подряда и документам: аванс, КС-2 с НДС, неустойка, рабочие дни —
+          <p style={{ maxWidth: 620, fontSize: 16, color: 'var(--ink-soft)', margin: 0 }}>
+            Три раздела: деньги и договоры (аванс, КС-2, неустойка), материалы и объёмы (бетон,
+            кирпич, плитка), инженерные расчёты по СП (снеговая и ветровая нагрузка, пандус) —
             онлайн, без регистрации, с формулами и нормативным обоснованием.
           </p>
         </div>

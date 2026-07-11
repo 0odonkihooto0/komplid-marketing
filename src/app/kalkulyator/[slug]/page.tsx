@@ -17,6 +17,20 @@ import { ProsrochkaCalculator } from '@/components/calculators/ProsrochkaCalcula
 import { UderzhanieCalculator } from '@/components/calculators/UderzhanieCalculator';
 import { TrudozatratyCalculator } from '@/components/calculators/TrudozatratyCalculator';
 import { ZimneeCalculator } from '@/components/calculators/ZimneeCalculator';
+import { BetonCalculator } from '@/components/calculators/BetonCalculator';
+import { ArmaturaCalculator } from '@/components/calculators/ArmaturaCalculator';
+import { KirpichCalculator } from '@/components/calculators/KirpichCalculator';
+import { ShtukaturkaCalculator } from '@/components/calculators/ShtukaturkaCalculator';
+import { PlitkaCalculator } from '@/components/calculators/PlitkaCalculator';
+import { LaminatCalculator } from '@/components/calculators/LaminatCalculator';
+import { OboiCalculator } from '@/components/calculators/OboiCalculator';
+import { KraskaCalculator } from '@/components/calculators/KraskaCalculator';
+import { KotlovanCalculator } from '@/components/calculators/KotlovanCalculator';
+import { KrovlyaCalculator } from '@/components/calculators/KrovlyaCalculator';
+import { SnegCalculator } from '@/components/calculators/SnegCalculator';
+import { VeterCalculator } from '@/components/calculators/VeterCalculator';
+import { PandusCalculator } from '@/components/calculators/PandusCalculator';
+import { LestnitsaCalculator } from '@/components/calculators/LestnitsaCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,6 +45,20 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'garantiynoe-uderzhanie': UderzhanieCalculator,
   'trudozatraty': TrudozatratyCalculator,
   'zimnee-udorozhanie': ZimneeCalculator,
+  'obem-betona': BetonCalculator,
+  'armatura': ArmaturaCalculator,
+  'kirpich-na-stenu': KirpichCalculator,
+  'rashod-shtukaturki': ShtukaturkaCalculator,
+  'plitka': PlitkaCalculator,
+  'laminat': LaminatCalculator,
+  'oboi': OboiCalculator,
+  'kraska': KraskaCalculator,
+  'kotlovan': KotlovanCalculator,
+  'krovlya': KrovlyaCalculator,
+  'snegovaya-nagruzka': SnegCalculator,
+  'vetrovaya-nagruzka': VeterCalculator,
+  'pandus': PandusCalculator,
+  'lestnitsa': LestnitsaCalculator,
 };
 
 export async function generateStaticParams() {
