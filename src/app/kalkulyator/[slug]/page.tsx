@@ -23,6 +23,8 @@ import { KirpichCalculator } from '@/components/calculators/KirpichCalculator';
 import { ShtukaturkaCalculator } from '@/components/calculators/ShtukaturkaCalculator';
 import { PlitkaCalculator } from '@/components/calculators/PlitkaCalculator';
 import { LaminatCalculator } from '@/components/calculators/LaminatCalculator';
+import { OboiCalculator } from '@/components/calculators/OboiCalculator';
+import { KraskaCalculator } from '@/components/calculators/KraskaCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -43,6 +45,8 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'rashod-shtukaturki': ShtukaturkaCalculator,
   'plitka': PlitkaCalculator,
   'laminat': LaminatCalculator,
+  'oboi': OboiCalculator,
+  'kraska': KraskaCalculator,
 };
 
 export async function generateStaticParams() {
