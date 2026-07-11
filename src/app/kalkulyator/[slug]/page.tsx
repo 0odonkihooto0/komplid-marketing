@@ -19,6 +19,8 @@ import { TrudozatratyCalculator } from '@/components/calculators/TrudozatratyCal
 import { ZimneeCalculator } from '@/components/calculators/ZimneeCalculator';
 import { BetonCalculator } from '@/components/calculators/BetonCalculator';
 import { ArmaturaCalculator } from '@/components/calculators/ArmaturaCalculator';
+import { KirpichCalculator } from '@/components/calculators/KirpichCalculator';
+import { ShtukaturkaCalculator } from '@/components/calculators/ShtukaturkaCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,6 +37,8 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'zimnee-udorozhanie': ZimneeCalculator,
   'obem-betona': BetonCalculator,
   'armatura': ArmaturaCalculator,
+  'kirpich-na-stenu': KirpichCalculator,
+  'rashod-shtukaturki': ShtukaturkaCalculator,
 };
 
 export async function generateStaticParams() {

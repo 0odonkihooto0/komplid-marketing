@@ -8,6 +8,8 @@ import { TRUDOZATRATY } from './trudozatraty';
 import { ZIMNEE_UDOROZHANIE } from './zimnee-udorozhanie';
 import { OBEM_BETONA } from './obem-betona';
 import { ARMATURA } from './armatura';
+import { KIRPICH_NA_STENU } from './kirpich-na-stenu';
+import { RASHOD_SHTUKATURKI } from './rashod-shtukaturki';
 
 // Слаги всех опубликованных калькуляторов. Union расширяется по мере добавления
 // новых калькуляторов (Волны 1–3 плана 02-CALCULATORS-PLAN.md).
@@ -21,7 +23,9 @@ export type CalcSlug =
   | 'trudozatraty'
   | 'zimnee-udorozhanie'
   | 'obem-betona'
-  | 'armatura';
+  | 'armatura'
+  | 'kirpich-na-stenu'
+  | 'rashod-shtukaturki';
 
 // Категории каталога /kalkulyator (план 02 §5): «Деньги и договоры» /
 // «Материалы и объёмы» / «Инженерные расчёты по СП».
@@ -94,6 +98,8 @@ export const CALCULATORS: CalculatorMeta[] = [
   ZIMNEE_UDOROZHANIE,
   OBEM_BETONA,
   ARMATURA,
+  KIRPICH_NA_STENU,
+  RASHOD_SHTUKATURKI,
 ];
 
 export function getCalcBySlug(slug: string): CalculatorMeta | undefined {

@@ -12,6 +12,8 @@ import {
   Snowflake,
   Box,
   Ruler,
+  BrickWall,
+  Layers,
 } from 'lucide-react';
 import {
   CALCULATORS,
@@ -66,6 +68,8 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'zimnee-udorozhanie': Snowflake,
   'obem-betona': Box,
   'armatura': Ruler,
+  'kirpich-na-stenu': BrickWall,
+  'rashod-shtukaturki': Layers,
 };
 
 // Порядок категорий на хабе (план 02 §5).
