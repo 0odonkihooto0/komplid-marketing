@@ -33,7 +33,8 @@ function pluralCalc(n: number): string {
 const COUNT = CALCULATORS.length;
 
 export const metadata: Metadata = {
-  title: `${COUNT} бесплатных ${pluralCalc(COUNT)} для строительства 2026 | Komplid`,
+  // Суффикс «| Komplid» добавляет title.template корневого layout — не дублируем
+  title: `${COUNT} бесплатных ${pluralCalc(COUNT)} для строительства 2026`,
   description:
     'Онлайн-калькуляторы для подрядчиков, сметчиков и ПТО: аванс по контракту, КС-2 с НДС, неустойка, рабочие дни и другие расчёты. Бесплатно, без регистрации.',
   keywords: [

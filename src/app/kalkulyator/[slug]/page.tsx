@@ -43,7 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!calc) return {};
   const url = `https://komplid.ru/kalkulyator/${slug}`;
   return {
-    title: `${calc.title} | Komplid`,
+    // Суффикс «| Komplid» добавляет title.template корневого layout — не дублируем
+    title: calc.title,
     description: calc.description,
     keywords: calc.keywords,
     alternates: { canonical: url },
