@@ -81,7 +81,7 @@ export const NEUSTOYKA_PODRYAD: CalculatorMeta = {
       url: 'https://www.cbr.ru/hd_base/keyrate/',
     },
   ],
-  related: ['rabochie-dni', 'smeta-avans'],
+  related: ['prosrochka-sdachi', 'rabochie-dni', 'smeta-avans'],
   faq: [
     {
       question: 'Как рассчитать неустойку по договору подряда?',

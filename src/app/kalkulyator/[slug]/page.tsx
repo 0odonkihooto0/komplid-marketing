@@ -13,6 +13,7 @@ import { AvansCalculator } from '@/components/calculators/AvansCalculator';
 import { Ks2Calculator } from '@/components/calculators/Ks2Calculator';
 import { RabochnieDniCalculator } from '@/components/calculators/RabochnieDniCalculator';
 import { NeustoykaCalculator } from '@/components/calculators/NeustoykaCalculator';
+import { ProsrochkaCalculator } from '@/components/calculators/ProsrochkaCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -23,6 +24,7 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'ks2-ndsfree': Ks2Calculator,
   'rabochie-dni': RabochnieDniCalculator,
   'neustoyka-podryad': NeustoykaCalculator,
+  'prosrochka-sdachi': ProsrochkaCalculator,
 };
 
 export async function generateStaticParams() {
