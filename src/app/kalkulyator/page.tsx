@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { ComponentType } from 'react';
 import Link from 'next/link';
-import { Receipt, FileText, CalendarDays } from 'lucide-react';
+import { Receipt, FileText, CalendarDays, Scale } from 'lucide-react';
 import {
   CALCULATORS,
   CATEGORY_LABELS,
@@ -47,6 +47,7 @@ const ICONS: Record<CalcSlug, ComponentType<{ size?: number; color?: string }>> 
   'smeta-avans': Receipt,
   'ks2-ndsfree': FileText,
   'rabochie-dni': CalendarDays,
+  'neustoyka-podryad': Scale,
 };
 
 // Порядок категорий на хабе (план 02 §5).

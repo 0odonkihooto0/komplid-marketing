@@ -12,6 +12,7 @@ import { CalcContentSections } from '@/components/calculators/CalcContentSection
 import { AvansCalculator } from '@/components/calculators/AvansCalculator';
 import { Ks2Calculator } from '@/components/calculators/Ks2Calculator';
 import { RabochnieDniCalculator } from '@/components/calculators/RabochnieDniCalculator';
+import { NeustoykaCalculator } from '@/components/calculators/NeustoykaCalculator';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,6 +22,7 @@ const WIDGETS: Record<CalcSlug, ComponentType> = {
   'smeta-avans': AvansCalculator,
   'ks2-ndsfree': Ks2Calculator,
   'rabochie-dni': RabochnieDniCalculator,
+  'neustoyka-podryad': NeustoykaCalculator,
 };
 
 export async function generateStaticParams() {
