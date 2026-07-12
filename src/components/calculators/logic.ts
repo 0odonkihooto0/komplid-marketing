@@ -1,4 +1,4 @@
-import { eachDayOfInterval, isWeekend, format } from 'date-fns';
+import { addDays, startOfDay, isWeekend, format } from 'date-fns';
 
 // Чистая расчётная логика калькуляторов — без React и DOM, чтобы покрыть
 // тестами математику отдельно от рендера (CLAUDE.md §10: разделение UI и логики).
@@ -66,18 +66,30 @@ export function isWorkingDay(d: Date): boolean {
   return !isWeekend(d) && !HOLIDAYS_2026.has(format(d, 'yyyy-MM-dd'));
 }
 
-/** Число рабочих дней в интервале [start, end] включительно. */
+/**
+ * Число рабочих дней в интервале [start, end] включительно.
+ * Итерируем по дням без материализации всего интервала в массив
+ * (eachDayOfInterval аллоцирует Date на каждый день диапазона).
+ * При start > end возвращает 0 — вызывающий код валидирует порядок дат.
+ */
 export function countWorkingDays(start: Date, end: Date): number {
-  return eachDayOfInterval({ start, end }).filter(isWorkingDay).length;
+  const last = startOfDay(end);
+  let count = 0;
+  for (let d = startOfDay(start); d <= last; d = addDays(d, 1)) {
+    if (isWorkingDay(d)) count++;
+  }
+  return count;
 }
 
 /**
  * Дата N-го рабочего дня в интервале [start, end] включительно
- * или null, если рабочих дней меньше N.
+ * или null, если рабочих дней меньше N. Обходит дни по одному
+ * с ранним выходом — интервал целиком не аллоцируется.
  */
 export function nthWorkingDay(start: Date, end: Date, n: number): Date | null {
+  const last = startOfDay(end);
   let count = 0;
-  for (const d of eachDayOfInterval({ start, end })) {
+  for (let d = startOfDay(start); d <= last; d = addDays(d, 1)) {
     if (isWorkingDay(d)) {
       count++;
       if (count === n) return d;

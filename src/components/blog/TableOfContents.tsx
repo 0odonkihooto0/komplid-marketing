@@ -1,45 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-interface TocEntry {
-  level: 2 | 3;
-  text: string;
-  id: string;
-}
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
-}
-
-const H2_RE = /^##\s+(.+)$/;
-const H3_RE = /^###\s+(.+)$/;
-
-function extractHeadings(content: string): TocEntry[] {
-  const headings: TocEntry[] = [];
-  const lines = content.split('\n');
-
-  for (const line of lines) {
-    // Подавляющее большинство строк MDX — не заголовки; дешёвая проверка до regex.
-    if (line.charCodeAt(0) !== 35 /* '#' */) continue;
-
-    const h2 = line.match(H2_RE);
-    const h3 = line.match(H3_RE);
-
-    if (h2?.[1]) {
-      headings.push({ level: 2, text: h2[1].trim(), id: slugify(h2[1].trim()) });
-    } else if (h3?.[1]) {
-      headings.push({ level: 3, text: h3[1].trim(), id: slugify(h3[1].trim()) });
-    }
-  }
-
-  return headings;
-}
+import { extractHeadings } from './toc';
 
 interface TableOfContentsProps {
   content: string;
