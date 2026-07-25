@@ -9,6 +9,30 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   trailingSlash: false,
+  // Корпус СП — статические HTML в public/normativ/<slug>.html.
+  // Чистый URL /normativ/<slug> — публичный контракт (canonical в каждом файле);
+  // .html-вариант навсегда редиректится на чистый, чтобы не плодить дубли в SEO.
+  async redirects() {
+    return [
+      {
+        source: '/normativ/:slug(sp-[a-z0-9-]+)\\.html',
+        destination: '/normativ/:slug',
+        permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    return {
+      afterFiles: [
+        // afterFiles: хаб /normativ (роут) и /normativ/img/* (файлы) в маску
+        // не попадают и обслуживаются до этого правила
+        {
+          source: '/normativ/:slug(sp-[a-z0-9-]+)',
+          destination: '/normativ/:slug.html',
+        },
+      ],
+    };
+  },
   async headers() {
     return [
       {

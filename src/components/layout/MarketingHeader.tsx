@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: '/#modules', label: 'Модули' },
   { href: '/#pricing', label: 'Тарифы' },
   { href: '/sravnenie', label: 'Сравнение' },
+  { href: '/normativ', label: 'Нормативы' },
   { href: '/blog', label: 'Блог' },
   { href: '/#faq', label: 'FAQ' },
 ];

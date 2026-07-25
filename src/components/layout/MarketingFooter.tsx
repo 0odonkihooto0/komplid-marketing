@@ -75,6 +75,7 @@ export function MarketingFooter() {
             <Link href="/#pricing">Тарифы</Link>
             <Link href="/blog">Блог</Link>
             <Link href="/shablony">Шаблоны документов</Link>
+            <Link href="/normativ">База СП (нормативы)</Link>
           </div>
 
           {/* Для специалистов */}

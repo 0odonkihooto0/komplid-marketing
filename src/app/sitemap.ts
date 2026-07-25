@@ -3,6 +3,7 @@ import { getAllBlogPosts } from '@/content-loader/blog';
 import { getAllTemplates } from '@/content-loader/shablony';
 import { getAllComparisons } from '@/content-loader/sravneniya';
 import { CALCULATORS } from '@/lib/calculators-data';
+import { getAllNormativDocs } from '@/lib/normativ-data';
 
 const BASE_URL = 'https://komplid.ru';
 
@@ -13,8 +14,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/pto', priority: 0.9, changeFrequency: 'monthly' as const },
     { path: '/prorab', priority: 0.9, changeFrequency: 'monthly' as const },
     { path: '/pricing', priority: 0.8, changeFrequency: 'monthly' as const },
-    { path: '/features', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/blog', priority: 0.8, changeFrequency: 'daily' as const },
+    { path: '/normativ', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/shablony', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/kalkulyator', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/sravnenie', priority: 0.8, changeFrequency: 'monthly' as const },
@@ -34,10 +35,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
-  const [posts, templates, comparisons] = await Promise.all([
+  const [posts, templates, comparisons, normativDocs] = await Promise.all([
     getAllBlogPosts(),
     getAllTemplates(),
     getAllComparisons(),
+    getAllNormativDocs(),
   ]);
 
   const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
@@ -68,5 +70,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...calcPages, ...postPages, ...templatePages, ...comparisonPages];
+  // тексты СП меняются только при пересборке корпуса → yearly
+  const normativPages: MetadataRoute.Sitemap = normativDocs.map((doc) => ({
+    url: `${BASE_URL}/normativ/${doc.slug}`,
+    lastModified: doc.publishedAt ? new Date(doc.publishedAt) : new Date(),
+    changeFrequency: 'yearly',
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticPages,
+    ...calcPages,
+    ...postPages,
+    ...templatePages,
+    ...comparisonPages,
+    ...normativPages,
+  ];
 }
