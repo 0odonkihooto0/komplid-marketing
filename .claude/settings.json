@@ -12,5 +12,28 @@
       "Bash(git log:*)",
       "Bash(git show:*)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/memory-load.sh", "timeout": 10 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/memory-remind.sh", "timeout": 10 }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/memory-commit.sh", "timeout": 40 }
+        ]
+      }
+    ]
   }
 }
