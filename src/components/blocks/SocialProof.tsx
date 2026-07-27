@@ -1,3 +1,5 @@
+import { PLATFORM_FACTS } from '@/lib/proof-data';
+
 interface Logo {
   name: string;
 }
@@ -7,17 +9,17 @@ interface SocialProofProps {
   logos?: Logo[];
 }
 
-const DEFAULT_LOGOS: Logo[] = [
-  { name: 'СевЗапСтрой' },
-  { name: 'Строй-Инвест' },
-  { name: 'МонолитСпец' },
-  { name: 'ФасадПлюс' },
-  { name: 'Архитектон-М' },
-  { name: 'ТеплоИнж' },
-];
+/**
+ * По умолчанию показываем проверяемые факты о платформе, а не логотипы клиентов:
+ * до запуска клиентов нет. Раньше здесь были вымышленные компании — они
+ * подставлялись молча всем, кто отрендерит компонент без пропсов.
+ */
+const DEFAULT_LOGOS: Logo[] = PLATFORM_FACTS.map((fact) => ({
+  name: `${fact.value} ${fact.label}`,
+}));
 
 export function SocialProof({
-  label = 'Доверяют подрядчики и заказчики',
+  label = 'Что уже готово',
   logos = DEFAULT_LOGOS,
 }: SocialProofProps) {
   return (

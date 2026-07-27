@@ -121,7 +121,7 @@ export function Hero({ eyebrow, title, subtitle, primaryCta, secondaryCta, varia
               <span style={{ color: 'var(--accent-strong)' }}>★★★★★</span>
               <span>
                 <strong style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>4.8/5</strong>
-                {' · '}14 дней без карты{' · '}данные в РФ
+                {' · '}пробный период без карты{' · '}данные в РФ
               </span>
             </div>
           </div>
