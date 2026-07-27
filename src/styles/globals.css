@@ -568,7 +568,8 @@ img {
   transition: background 0.15s;
 }
 
-.mod-card:hover { background: var(--bg-hover); }
+/* Карточки модулей некликабельны, пока нет страниц /modules/[slug],
+   поэтому hover-подсветку не показываем — она обещала бы переход. */
 
 /* Profi packages hover card */
 .profi-card {
@@ -585,4 +586,11 @@ img {
 .profi-card:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
+}
+
+/* Секция раннего доступа: на узких экранах форма уходит под текст */
+@media (max-width: 900px) {
+  .waitlist-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
 }

@@ -4,17 +4,18 @@ import { FileSearch, GitCompare, Link2, Database, BookOpen, FileOutput } from 'l
 import { Hero } from '@/components/blocks/Hero';
 import { Features } from '@/components/blocks/Features';
 import { ComparisonTable } from '@/components/blocks/ComparisonTable';
-import { Quote } from '@/components/blocks/Quote';
 import { SmetchikPricing } from '@/components/smetchik/SmetchikPricing';
 import { Faq } from '@/components/blocks/Faq';
 import { Cta } from '@/components/blocks/Cta';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
+import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
 import { SoftwareAppSchema } from '@/components/seo/SoftwareAppSchema';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 export const metadata: Metadata = {
   title: 'Сметчик-Студио — программа для сметчика онлайн от 1 900 ₽/мес | Komplid',
   description:
-    'Облачная альтернатива Гранд-Смете для сметчиков. Импорт XML и Excel, сравнение версий за 1 клик, публичные ссылки для заказчика, ФГИС ЦС. Триал 14 дней без карты.',
+    'Облачная альтернатива Гранд-Смете для сметчиков. Импорт XML и Excel, сравнение версий за 1 клик, публичные ссылки для заказчика, база ФСНБ-2022. Пробный период без карты.',
   keywords: [
     'программа для сметчика онлайн',
     'аналог гранд смета онлайн',
@@ -59,9 +60,9 @@ const FEATURES: FeatureItem[] = [
   },
   {
     icon: Database,
-    title: 'ФГИС ЦС в приложении',
+    title: 'Сметно-нормативная база внутри',
     description:
-      'Актуальные индексы ФГИС ЦС доступны прямо в интерфейсе. Пересчёт сметы в текущие цены без выхода в сторонние сервисы.',
+      'ФСНБ-2022 (ГЭСН, ФСБЦ, ФСЭМ) загружена в систему — пересчёт сметы без выхода в сторонние сервисы. База обновляется вслед за приказами Минстроя.',
   },
   {
     icon: BookOpen,
@@ -83,7 +84,7 @@ const COMPARISON_ROWS = [
   { feature: 'Импорт из Excel', values: [true, 'платный плагин', true] },
   { feature: 'Сравнение двух версий сметы', values: [true, 'вручную', 'вручную'] },
   { feature: 'Публичная ссылка для заказчика', values: [true, false, false] },
-  { feature: 'ФГИС ЦС внутри системы', values: [true, 'отдельный модуль', false] },
+  { feature: 'Нормативная база ФСНБ-2022 внутри', values: [true, 'отдельный модуль', false] },
   { feature: 'Мобильное приложение', values: [true, false, false] },
   { feature: 'Цена от', values: ['1 900 ₽/мес', '~5 500 ₽/мес', '0 (время дорогое)'] },
 ];
@@ -110,9 +111,9 @@ const FAQ_ITEMS = [
       'Да, это основная аудитория продукта. Тариф Базовый от 1 900 ₽/мес подходит для одиночного сметчика с небольшим потоком заказов. Не требуется корпоративный договор — оплата картой физлица, чек приходит на email.',
   },
   {
-    question: 'Есть ли доступ к ФГИС ЦС?',
+    question: 'Откуда берутся расценки и как считается смета в текущих ценах?',
     answer:
-      'Да, в тарифе Pro актуальные индексы ФГИС ЦС доступны прямо в интерфейсе. Вы можете пересчитать смету в текущие цены одним кликом, не переходя на внешние сайты. База обновляется каждый квартал.',
+      'В тарифе Pro внутри системы доступна федеральная сметно-нормативная база ФСНБ-2022 — ГЭСН, ФСБЦ и ФСЭМ. Пересчёт выполняется по загруженным данным, без обращения к внешним сайтам, поэтому работает стабильно и быстро. Базу обновляем вслед за приказами Минстроя, а не в реальном времени из ФГИС ЦС.'
   },
   {
     question: 'Можно ли работать офлайн?',
@@ -122,7 +123,7 @@ const FAQ_ITEMS = [
   {
     question: 'Сколько стоит Сметчик-Студио?',
     answer:
-      'Бесплатный тариф — до 5 смет, только просмотр. Базовый — 1 900 ₽/мес (импорт XML/Excel, базовое сравнение). Pro — 2 900 ₽/мес (полный арсенал: безлимит, diff, публичные ссылки, ФГИС ЦС). При годовой оплате скидка 20%.',
+      'Базовый — 1 900 ₽/мес: импорт XML/Excel, базовое сравнение, до 5 активных смет, пробный период 7 дней. Pro — 2 900 ₽/мес: безлимит по сметам, визуальный diff, публичные ссылки, база ФСНБ-2022, пробный период 14 дней. При годовой оплате скидка 20%.',
   },
   {
     question: 'Можно ли использовать Сметчик-Студио вместе с Гранд-Сметой?',
@@ -136,7 +137,7 @@ export default function SmetchikPage() {
     <>
       <SoftwareAppSchema
         name="Сметчик-Студио"
-        description="Облачная программа для сметчика: импорт из Гранд-Сметы, сравнение версий, публичные ссылки, ФГИС ЦС."
+        description="Облачная программа для сметчика: импорт из Гранд-Сметы, сравнение версий, публичные ссылки, база ФСНБ-2022."
         url="https://komplid.ru/smetchik"
         price={{ amount: 1900, currency: 'RUB', period: 'P1M' }}
       />
@@ -158,12 +159,12 @@ export default function SmetchikPage() {
             <span className="line">от 1 900 ₽/мес.</span>
           </>
         }
-        subtitle="Облачная альтернатива Гранд-Смете для одиночных сметчиков. Импорт XML из Гранд-Смета/РИК, сравнение двух версий за один клик, публичная ссылка для подрядчика без регистрации. Триал 14 дней без карты."
+        subtitle="Облачная альтернатива Гранд-Смете для одиночных сметчиков. Импорт XML из Гранд-Смета/РИК, сравнение двух версий за один клик, публичная ссылка для подрядчика без регистрации. Пробный период без карты."
         primaryCta={{
-          label: 'Попробовать бесплатно',
-          href: 'https://app.komplid.ru/signup?plan=free&role=smetchik&utm_source=landing&utm_medium=organic&utm_campaign=smetchik',
+          label: primaryCtaLabel('Попробовать бесплатно'),
+          href: primaryCtaHref('https://app.komplid.ru/signup?role=smetchik&utm_source=landing&utm_medium=organic&utm_campaign=smetchik'),
         }}
-        secondaryCta={{ label: 'Смотреть демо', href: '/demo' }}
+        secondaryCta={{ label: 'Бесплатные шаблоны смет', href: '/shablony' }}
         variant="compact"
       />
 
@@ -182,21 +183,6 @@ export default function SmetchikPage() {
         highlightColumn={0}
       />
 
-      <Quote
-        eyebrow="История сметчика"
-        text="Раньше я открывал Excel двух версий на двух мониторах и сравнивал вручную. На 200 позиций уходил целый день. Теперь загружаю оба файла в Сметчик-Студио — через минуту вижу что изменилось и сразу отправляю заказчику ссылку."
-        author={{
-          name: 'Андрей Смирнов',
-          role: 'Сметчик-фрилансер · 8 лет опыта',
-          initials: 'АС',
-        }}
-        stats={[
-          { label: 'Смет в месяц', value: '12–15' },
-          { label: 'Экономия на сравнении версий', value: '6 ч/нед' },
-          { label: 'Заказчиков используют ссылку', value: '100%' },
-          { label: 'Срок окупаемости подписки', value: '1 заказ' },
-        ]}
-      />
 
       <SmetchikPricing />
 
@@ -206,13 +192,15 @@ export default function SmetchikPage() {
         items={FAQ_ITEMS}
       />
 
+      <WaitlistSection source="smetchik" />
+
       <Cta
-        eyebrow="14 дней без карты"
+        eyebrow="Пробный период без карты"
         title="Попробуйте Сметчик-Студио на реальной смете"
         description="Загрузите свою смету из Гранд-Сметы, сравните с предыдущей версией и отправьте заказчику ссылку — всё за 15 минут."
         primary={{
-          label: 'Начать бесплатно',
-          href: 'https://app.komplid.ru/signup?plan=free&role=smetchik&utm_source=landing&utm_medium=organic&utm_campaign=smetchik',
+          label: primaryCtaLabel('Попробовать бесплатно'),
+          href: primaryCtaHref('https://app.komplid.ru/signup?role=smetchik&utm_source=landing&utm_medium=organic&utm_campaign=smetchik'),
         }}
         secondary={{
           label: 'Сравнить с ИД-Мастером для ПТО',
@@ -222,7 +210,7 @@ export default function SmetchikPage() {
           'Импорт XML из Гранд-Сметы за 1 клик',
           'Сравнение версий с визуальным diff',
           'Публичная ссылка для заказчика без регистрации',
-          'ФГИС ЦС и экспорт обратно в Гранд-Смета (Pro)',
+          'База ФСНБ-2022 и экспорт обратно в Гранд-Смету (Pro)',
         ]}
       />
     </>

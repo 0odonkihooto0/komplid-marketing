@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { postToInternalApi } from '@/lib/internal-api';
+import { appendLead, notifyTelegram } from '@/lib/leads-store';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,17 @@ const schema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
+/**
+ * Приём лида.
+ *
+ * Порядок важен: сначала пишем лид на диск сайта, и только потом пытаемся
+ * переслать его в приложение. До запуска app.komplid.ru приложение недоступно —
+ * раньше в этом случае хендлер отдавал 500 и лид терялся безвозвратно, хотя сбор
+ * базы и есть главная задача пре-лонча.
+ *
+ * 500 отдаём только если лид не удалось сохранить вообще нигде — тогда
+ * пользователю честно предлагаем повторить.
+ */
 export async function POST(req: NextRequest) {
   let body: unknown;
   try {
@@ -32,13 +44,28 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const result = await postToInternalApi('/leads', parsed.data);
-  if (!result.ok) {
-    if (result.reason === 'not_configured') {
-      console.error('[api/lead] INTERNAL_API_URL or INTERNAL_API_TOKEN not set — lead lost');
-      return Response.json({ error: 'API not configured' }, { status: 500 });
-    }
-    return Response.json({ error: 'Internal error' }, { status: 500 });
+  const lead = parsed.data;
+
+  const stored = await appendLead(lead);
+
+  // Пересылка в приложение и уведомление — best-effort: их сбой не должен
+  // отражаться на пользователе, лид уже у нас.
+  const forwarded = await postToInternalApi('/leads', lead);
+  if (!forwarded.ok) {
+    console.warn(
+      `[api/lead] лид ${lead.email} не ушёл в приложение (${forwarded.reason}), ` +
+        `сохранён локально: ${stored}`,
+    );
+  }
+
+  await notifyTelegram(
+    `Новый лид · ${lead.source}\n${lead.email}` +
+      (lead.role ? `\nроль: ${lead.role}` : '') +
+      (lead.company ? `\nкомпания: ${lead.company}` : ''),
+  );
+
+  if (!stored && !forwarded.ok) {
+    return Response.json({ error: 'Не удалось сохранить заявку' }, { status: 500 });
   }
 
   return Response.json({ success: true });

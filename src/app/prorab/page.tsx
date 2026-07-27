@@ -4,17 +4,18 @@ import { WifiOff, Mic, MapPin, Flag, Smartphone, Send } from 'lucide-react';
 import { Hero } from '@/components/blocks/Hero';
 import { Features } from '@/components/blocks/Features';
 import { ComparisonTable } from '@/components/blocks/ComparisonTable';
-import { Quote } from '@/components/blocks/Quote';
 import { ProrabPricing } from '@/components/prorab/ProrabPricing';
 import { Faq } from '@/components/blocks/Faq';
 import { Cta } from '@/components/blocks/Cta';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
+import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
 import { SoftwareAppSchema } from '@/components/seo/SoftwareAppSchema';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 export const metadata: Metadata = {
   title: 'Прораб-Журнал — мобильное приложение прораба от 1 900 ₽/мес | Komplid',
   description:
-    'Ведите ОЖР с телефона офлайн, голосовой ввод через Yandex SpeechKit, фото с GPS-координатами. PWA без App Store и Google Play. Для прорабов и мастеров СМР. Триал 14 дней без карты.',
+    'Ведите ОЖР с телефона офлайн, голосовой ввод через Yandex SpeechKit, фото с GPS-координатами. PWA без App Store и Google Play. Для прорабов и мастеров СМР. Пробный период без карты.',
   keywords: [
     'ОЖР с телефона',
     'электронный журнал работ',
@@ -123,7 +124,7 @@ const FAQ_ITEMS = [
   {
     question: 'Сколько стоит Прораб-Журнал?',
     answer:
-      'Бесплатный тариф — 1 объект, до 30 записей ОЖР в месяц, просмотр. Базовый — 1 900 ₽/мес (3 объекта, голосовой ввод, фото с GPS, дефекты). Pro — 2 900 ₽/мес (10 объектов, автогенерация АОСР из записей, push-уведомления, синхронизация с ПТО). При годовой оплате скидка 20%. Пробный период 14 дней без карты.',
+      'Базовый — 1 900 ₽/мес: 1 объект, 5 ГБ, до 500 фото в месяц, голосовой ввод, фото с GPS, дефекты, пробный период 7 дней. Pro — 2 900 ₽/мес: 5 объектов, 25 ГБ, фото без лимита, автогенерация АОСР из записей, push-уведомления, пробный период 14 дней. При годовой оплате скидка 20%. Постоянного бесплатного тарифа нет.',
   },
 ];
 
@@ -154,12 +155,12 @@ export default function ProrabPage() {
             <span className="line">приложение прораба.</span>
           </>
         }
-        subtitle="Ведите ОЖР, делайте фото с GPS, фиксируйте дефекты прямо со стройки. Работает офлайн — записи синхронизируются при появлении связи. PWA-приложение без App Store и Google Play. Триал 14 дней без карты."
+        subtitle="Ведите ОЖР, делайте фото с GPS, фиксируйте дефекты прямо со стройки. Работает офлайн — записи синхронизируются при появлении связи. PWA-приложение без App Store и Google Play. Пробный период без карты."
         primaryCta={{
-          label: 'Попробовать бесплатно',
-          href: 'https://app.komplid.ru/signup?plan=free&role=prorab&utm_source=landing&utm_medium=organic&utm_campaign=prorab',
+          label: primaryCtaLabel('Попробовать бесплатно'),
+          href: primaryCtaHref('https://app.komplid.ru/signup?role=prorab&utm_source=landing&utm_medium=organic&utm_campaign=prorab'),
         }}
-        secondaryCta={{ label: 'Смотреть демо', href: '/demo' }}
+        secondaryCta={{ label: 'Бесплатные шаблоны ОЖР', href: '/shablony' }}
         variant="compact"
       />
 
@@ -178,21 +179,6 @@ export default function ProrabPage() {
         highlightColumn={0}
       />
 
-      <Quote
-        eyebrow="История прораба"
-        text="Раньше на стройке я делал заметки в телефоне, потом вечером переписывал в бумажный журнал. Забывал половину. Сейчас диктую голосом прямо на объекте, фото с GPS прикрепляется автоматически, вечером просто проверяю — журнал готов и уже у ПТО."
-        author={{
-          name: 'Дмитрий Орлов',
-          role: 'Прораб · ООО «МонолитСпецстрой»',
-          initials: 'ДО',
-        }}
-        stats={[
-          { label: 'Записей в день', value: '~8' },
-          { label: 'Экономия', value: '2 ч/день' },
-          { label: 'Объектов в работе', value: '3' },
-          { label: 'Без единой потери данных', value: '✓' },
-        ]}
-      />
 
       <ProrabPricing />
 
@@ -202,13 +188,15 @@ export default function ProrabPage() {
         items={FAQ_ITEMS}
       />
 
+      <WaitlistSection source="prorab" />
+
       <Cta
-        eyebrow="14 дней без карты"
+        eyebrow="Пробный период без карты"
         title="Попробуйте Прораб-Журнал на реальном объекте"
         description="Установите PWA за 30 секунд, сделайте первую запись ОЖР голосом и прикрепите фото с GPS — всё за 5 минут."
         primary={{
-          label: 'Начать бесплатно',
-          href: 'https://app.komplid.ru/signup?plan=free&role=prorab&utm_source=landing&utm_medium=organic&utm_campaign=prorab',
+          label: primaryCtaLabel('Попробовать бесплатно'),
+          href: primaryCtaHref('https://app.komplid.ru/signup?role=prorab&utm_source=landing&utm_medium=organic&utm_campaign=prorab'),
         }}
         secondary={{
           label: 'Сравнить с ИД-Мастером для ПТО',

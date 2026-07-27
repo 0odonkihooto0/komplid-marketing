@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { postToInternalApi } from '@/lib/internal-api';
+import { appendLead, notifyTelegram } from '@/lib/leads-store';
 
 const schema = z.object({
   slug: z.string().min(1),
@@ -8,6 +9,7 @@ const schema = z.object({
   email: z.string().email(),
   role: z.enum(['prorab', 'pto', 'smetchik', 'other']).optional(),
   newsletterConsent: z.boolean().optional(),
+  earlyAccess: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -23,22 +25,33 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Validation error', issues: parsed.error.issues }, { status: 400 });
   }
 
-  const { slug, filename, email, role, newsletterConsent } = parsed.data;
+  const { slug, filename, email, role, newsletterConsent, earlyAccess } = parsed.data;
 
-  // Отправляем лид в основное приложение — fire-and-forget, не блокируем скачивание.
-  // Тот же клиент, что и в /lead и /newsletter (читает env, ставит Authorization).
-  void postToInternalApi('/leads', {
+  const lead = {
     email,
     role,
-    source: 'template_download',
+    source: earlyAccess ? 'template_download+waitlist' : 'template_download',
     newsletterConsent,
+    earlyAccess,
     metadata: { template: slug },
-  }).then((result) => {
+  };
+
+  // Сначала пишем лид к себе. Скачивания шаблонов — основной лид-магнит пре-лонча
+  // (PROMOTION_STRATEGY §4.2), а приложение до запуска недоступно: раньше такой лид
+  // просто исчезал в fire-and-forget-запросе.
+  await appendLead(lead);
+
+  // Пересылка в приложение — по-прежнему fire-and-forget: скачивание не ждёт сети.
+  void postToInternalApi('/leads', lead).then((result) => {
     // not_configured — штатно для окружений без API, логируем только реальные сбои.
     if (!result.ok && result.reason === 'error') {
       console.error('[api/template-download] lead dispatch failed');
     }
   });
+
+  if (earlyAccess) {
+    void notifyTelegram(`Ранний доступ (из шаблона ${slug})\n${email}`);
+  }
 
   return Response.json({ downloadUrl: `/shablony-files/${filename}` });
 }

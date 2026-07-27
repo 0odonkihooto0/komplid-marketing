@@ -42,3 +42,10 @@ next-env.d.ts
 
 # личные настройки Claude Code (общие для команды — в .claude/settings.json)
 .claude/settings.local.json
+
+# служебные маркеры хуков (память проекта — в docs/memory/, она коммитится)
+.claude/.cache/
+
+# лиды с сайта: персональные данные (email), в репозиторий попадать не должны (152-ФЗ).
+# На проде каталог примонтирован томом — см. docker-compose.prod.yml
+/.data/

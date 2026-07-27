@@ -6,6 +6,7 @@ services:
       args:
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+        NEXT_PUBLIC_WAITLIST_MODE: ${NEXT_PUBLIC_WAITLIST_MODE}
         NEXT_PUBLIC_YANDEX_METRIKA_ID: ${NEXT_PUBLIC_YANDEX_METRIKA_ID}
         NEXT_PUBLIC_YANDEX_VERIFICATION: ${NEXT_PUBLIC_YANDEX_VERIFICATION}
         NEXT_PUBLIC_GOOGLE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_VERIFICATION}
@@ -14,3 +15,14 @@ services:
       - "3100:3000"
     env_file:
       - .env.production
+    environment:
+      # Куда складывать лиды внутри контейнера (см. том ниже).
+      LEADS_DATA_DIR: /data
+    volumes:
+      # КРИТИЧНО: deploy.sh пересобирает образ на каждом деплое. Без именованного
+      # тома собранная база пре-лонча (docs/memory/prelaunch-status.md) исчезнет
+      # при первом же выкате. Бэкапить: docker run --rm -v komplid_leads:/data ...
+      - leads:/data
+
+volumes:
+  leads:

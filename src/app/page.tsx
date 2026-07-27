@@ -1,23 +1,29 @@
 import type { Metadata } from 'next';
 import type { LucideIcon } from 'lucide-react';
-import { FileText, BarChart2, BookOpen, Shield, Cpu, PenSquare } from 'lucide-react';
+import {
+  FileText, BarChart2, BookOpen, Shield, Cpu, PenSquare,
+  KeyRound, FileSignature, RefreshCw,
+} from 'lucide-react';
 import { Hero } from '@/components/blocks/Hero';
 import { Modules } from '@/components/blocks/Modules';
 import { Features } from '@/components/blocks/Features';
 import { Metrics } from '@/components/blocks/Metrics';
-import { Quote } from '@/components/blocks/Quote';
+import { SocialProof } from '@/components/blocks/SocialProof';
 import { Pricing } from '@/components/blocks/Pricing';
 import type { PricingTier } from '@/components/blocks/Pricing';
 import { Faq } from '@/components/blocks/Faq';
 import { Cta } from '@/components/blocks/Cta';
 import { ProfiPackagesTeaser } from '@/components/blocks/ProfiPackagesTeaser';
 import { LatestPosts } from '@/components/blocks/LatestPosts';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 import { SoftwareAppSchema } from '@/components/seo/SoftwareAppSchema';
+import { BETA_METRICS, hasBetaMetrics } from '@/lib/proof-data';
+import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
 
 export const metadata: Metadata = {
   title: 'Komplid — ERP для строительных проектов · ИД, Сметы, Журналы онлайн',
   description:
-    'Цифровое управление строительством: 18 модулей в одной системе. ИД, КС-2/КС-3, ОЖР, смета, стройконтроль, ТИМ. От 12 000 ₽/мес для команды, от 1 900 ₽ для специалиста. Пробный период 14 дней.',
+    'Цифровое управление строительством: 18 модулей в одной системе. ИД, КС-2/КС-3, ОЖР, смета, стройконтроль, ТИМ. От 12 000 ₽/мес для команды, от 1 900 ₽ для специалиста. Пробный период без карты.',
   alternates: { canonical: 'https://komplid.ru/' },
 };
 
@@ -59,9 +65,31 @@ const FEATURES: FeatureItem[] = [
   },
   {
     icon: PenSquare,
-    title: 'ЭЦП и МЧД',
+    title: 'Подпись с привязкой к месту',
     description:
-      'КриптоПро, Рутокен, машиночитаемая доверенность. Параллельные маршруты согласования.',
+      'Простая электронная подпись с GPS-координатами и геозоной объекта — видно, кто и откуда подписал.',
+  },
+];
+
+/**
+ * Заявлять можно только поставленное (CLAUDE.md §21).
+ * Эти функции в приложении ещё не работают — показываем отдельно и без сроков.
+ */
+const IN_PROGRESS: FeatureItem[] = [
+  {
+    icon: KeyRound,
+    title: 'УКЭП КриптоПро',
+    description: 'Квалифицированная подпись через КриптоПро CSP и Рутокен.',
+  },
+  {
+    icon: FileSignature,
+    title: 'Машиночитаемая доверенность',
+    description: 'МЧД по 63-ФЗ — подписание в рамках делегированных полномочий.',
+  },
+  {
+    icon: RefreshCw,
+    title: 'Обмен с 1С',
+    description: 'Двусторонняя синхронизация смет и актов с 1С:Предприятие.',
   },
 ];
 
@@ -76,7 +104,7 @@ const PRICING_TIERS: PricingTier[] = [
       { text: 'Все 18 модулей', included: true },
       { text: 'Мобильное приложение', included: true },
       { text: 'Базовые шаблоны КС, АОСР, ОЖР', included: true },
-      { text: 'ЭЦП маршруты', included: false },
+      { text: 'Маршруты согласования', included: false },
       { text: 'Приоритетная поддержка', included: false },
     ],
     cta: { label: 'Начать пробный период', href: 'https://app.komplid.ru/signup?plan=start' },
@@ -91,9 +119,9 @@ const PRICING_TIERS: PricingTier[] = [
     featured: true,
     features: [
       { text: 'Всё из «Старт»', included: true },
-      { text: 'ЭЦП + маршруты согласований', included: true },
+      { text: 'Маршруты согласований с подписью', included: true },
       { text: 'ТИМ · IFC, BCF, коллизии', included: true },
-      { text: 'Интеграция с 1С, Гранд-сметой', included: true },
+      { text: 'Импорт смет из Гранд-Сметы и РИК', included: true },
       { text: 'SLA 8×5, чат и менеджер', included: true },
     ],
     cta: { label: 'Выбрать «Команду»', href: 'https://app.komplid.ru/signup?plan=team' },
@@ -138,7 +166,7 @@ const FAQ_ITEMS = [
   {
     question: 'Есть ли бесплатный период?',
     answer:
-      'Да, 14 дней полного доступа ко всем функциям тарифа Pro без привязки карты. После окончания вы можете выбрать тариф или остаться на бесплатном уровне Freemium с базовыми возможностями.',
+      'Да. Тарифы Pro и командные — 14 дней полного доступа без привязки карты, тарифы Базовый — 7 дней. Постоянного бесплатного уровня для команд нет: это осознанное решение, чтобы не тянуть неактивные аккаунты за счёт платящих.',
   },
   {
     question: 'Работает ли Komplid офлайн на стройке?',
@@ -173,37 +201,25 @@ export default function HomePage() {
           </>
         }
         subtitle="Komplid ведёт объект от ПИР и сметы до КС-2 и ввода в эксплуатацию. 18 модулей в одной системе: ИД, ГПР, СК, ТИМ, журналы, отчёты — с реальным числом полей, подписей и ссылок между документами по СП и СНиП."
-        primaryCta={{ label: 'Попробовать 14 дней', href: 'https://app.komplid.ru/signup' }}
-        secondaryCta={{ label: 'Посмотреть демо', href: '/demo' }}
+        primaryCta={{
+          label: primaryCtaLabel('Попробовать 14 дней'),
+          href: primaryCtaHref('https://app.komplid.ru/signup'),
+        }}
+        secondaryCta={{ label: 'Бесплатные шаблоны документов', href: '/shablony' }}
       />
 
-      <Metrics
-        eyebrow="Komplid в цифрах"
-        title="Данные, которые команды собрали за первый год"
-        variant="dark"
-        items={[
-          {
-            number: '−42%',
-            label: 'Время на выпуск КС-2',
-            description: 'За счёт автозаполнения из АОСР, журналов и ГПР.',
-          },
-          {
-            number: '3.4×',
-            label: 'Скорость согласования',
-            description: 'Параллельные маршруты вместо писем «по цепочке».',
-          },
-          {
-            number: '152',
-            label: 'Действующих строек',
-            description: 'От ИЖС до ЖК на 1200+ квартир.',
-          },
-          {
-            number: '99.98%',
-            label: 'Доступность SaaS',
-            description: 'Серверы в РФ, ФЗ-152.',
-          },
-        ]}
-      />
+      {/* Клиентские метрики появятся здесь, когда бета их измерит — src/lib/proof-data.ts.
+          До тех пор показываем только проверяемые факты о самой платформе. */}
+      <SocialProof />
+
+      {hasBetaMetrics && (
+        <Metrics
+          eyebrow="Komplid в цифрах"
+          title="Что показывает бета"
+          variant="dark"
+          items={BETA_METRICS}
+        />
+      )}
 
       <Modules />
 
@@ -214,23 +230,14 @@ export default function HomePage() {
         items={FEATURES}
       />
 
-      <ProfiPackagesTeaser />
-
-      <Quote
-        eyebrow="История команды"
-        text="Раньше чтобы закрыть месяц, мы собирали журналы, АОСР и КС три дня. В Komplid — нажал «Сформировать пакет» и получил архив. Инспектор перестал возвращать документы."
-        author={{
-          name: 'Михаил Иванов',
-          role: 'Руководитель проектов, АО «СевЗапСтрой»',
-          initials: 'МИ',
-        }}
-        stats={[
-          { label: 'Объектов в Komplid', value: '8' },
-          { label: 'Экономия времени', value: '12 ч/нед' },
-          { label: 'Снижение возвратов ИД', value: '−68%' },
-          { label: 'Окупилось за', value: '2.5 мес' },
-        ]}
+      <Features
+        eyebrow="Честно о статусе"
+        title="Что пока в разработке"
+        description="Komplid ещё не запущен. Эти возможности спроектированы, но пока не работают — мы не обещаем их сроков и не считаем частью текущего продукта."
+        items={IN_PROGRESS}
       />
+
+      <ProfiPackagesTeaser />
 
       <Pricing
         eyebrow="Для команд и компаний"
@@ -248,12 +255,17 @@ export default function HomePage() {
 
       <LatestPosts limit={3} />
 
+      <WaitlistSection source="homepage" />
+
       <Cta
-        eyebrow="14 дней бесплатно · без карты"
+        eyebrow="Пробный период без карты"
         title="Попробуйте Komplid на реальном объекте."
         description="Заведите объект, загрузите договор и пару документов — через 15 минут ваш прораб будет работать в системе."
-        primary={{ label: 'Начать бесплатно', href: 'https://app.komplid.ru/signup' }}
-        secondary={{ label: 'Заказать демо', href: '/demo' }}
+        primary={{
+          label: primaryCtaLabel('Начать бесплатно'),
+          href: primaryCtaHref('https://app.komplid.ru/signup'),
+        }}
+        secondary={{ label: 'Смотреть шаблоны и калькуляторы', href: '/shablony' }}
       />
     </>
   );
