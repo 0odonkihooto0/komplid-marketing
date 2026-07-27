@@ -79,7 +79,7 @@ python tools/publish.py --dest C:\komplid_marketing\komplid-marketing
 npx tsc --noEmit && npm test          # код сайта
 npx next build                        # если менялся состав корпуса
 # на поднятом сервере:
-curl -sI http://localhost:3000/normativ/sp-48-13330-2019      # 200
-curl -sI http://localhost:3000/normativ/sp-48-13330-2019.html # 301 на чистый URL
-curl -s  http://localhost:3000/sitemap.xml | grep -c normativ/ # 323
+curl -sI http://localhost:3200/normativ/sp-48-13330-2019      # 200
+curl -sI http://localhost:3200/normativ/sp-48-13330-2019.html # 301 на чистый URL
+curl -s  http://localhost:3200/sitemap.xml | grep -c normativ/ # 323
 ```
