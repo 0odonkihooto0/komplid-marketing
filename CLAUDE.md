@@ -31,7 +31,7 @@ npx next build            # Next.js build проходит (только для 
 
 Для быстрой проверки без полного билда (в dev-режиме):
 ```bash
-docker compose up       # локальный dev с hot reload на localhost:3000
+docker compose up       # локальный dev с hot reload на localhost:3200
 ```
 
 ---
@@ -353,7 +353,7 @@ const res = await fetch(`${process.env.INTERNAL_API_URL}/leads`, {
 
 **Локальная работа:**
 ```bash
-docker compose up           # dev-режим с hot reload на localhost:3000
+docker compose up           # dev-режим с hot reload на localhost:3200
 docker compose down         # остановить
 ```
 
