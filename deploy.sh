@@ -2,10 +2,19 @@
 set -euo pipefail
 
 # ─── Конфигурация ───────────────────────────────────────────────────────────
-# Замени на реальный хост после настройки сервера Timeweb (Шаг 1.5.2)
-SERVER_HOST="komplid@YOUR_SERVER_IP"
-PROJECT_DIR="/home/komplid/komplid-marketing"
+# Хост сервера Timeweb берётся из окружения, чтобы IP не лежал в репозитории:
+#   export KOMPLID_DEPLOY_HOST="komplid@1.2.3.4"
+SERVER_HOST="${KOMPLID_DEPLOY_HOST:-}"
+PROJECT_DIR="${KOMPLID_DEPLOY_DIR:-/home/komplid/komplid-marketing}"
 BRANCH="${1:-main}"
+SITE_URL="${KOMPLID_SITE_URL:-https://komplid.ru/}"
+
+if [ -z "${SERVER_HOST}" ]; then
+  echo "ERROR: не задана переменная KOMPLID_DEPLOY_HOST."
+  echo "       Пример: export KOMPLID_DEPLOY_HOST=\"komplid@1.2.3.4\""
+  echo "       Без неё скрипт раньше молча уходил на несуществующий хост-заглушку."
+  exit 1
+fi
 
 # ─── Локальные проверки ─────────────────────────────────────────────────────
 echo ">>> Проверяем незакоммиченные изменения..."
@@ -39,12 +48,12 @@ ssh "${SERVER_HOST}" "
 echo ">>> Ждём запуска контейнера (5 сек)..."
 sleep 5
 
-HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" https://komplid.ru/ || echo "000")
+HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "${SITE_URL}" || echo "000")
 
 if [ "${HTTP_STATUS}" = "200" ]; then
-  echo "OK: https://komplid.ru/ отвечает 200"
+  echo "OK: ${SITE_URL} отвечает 200"
 else
-  echo "WARN: https://komplid.ru/ вернул HTTP ${HTTP_STATUS}"
+  echo "WARN: ${SITE_URL} вернул HTTP ${HTTP_STATUS}"
   echo "      Проверь: ssh ${SERVER_HOST} 'docker logs komplid-marketing-web-1 --tail 50'"
 fi
 
