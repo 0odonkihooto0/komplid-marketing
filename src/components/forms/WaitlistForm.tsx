@@ -4,28 +4,39 @@ import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { requestTemplateDownload, TemplateDownloadError } from '@/lib/template-download';
-import { WAITLIST_MODE, WAITLIST_OFFER } from '@/lib/waitlist';
+import { WAITLIST_ANCHOR, WAITLIST_OFFER } from '@/lib/waitlist';
 
-interface Props {
-  slug: string;
-  filename: string;
-}
-
-type Role = 'prorab' | 'pto' | 'smetchik' | 'other';
+type Role = 'smetchik' | 'pto' | 'prorab' | 'director' | 'sk' | 'other';
 
 const ROLES: { value: Role; label: string }[] = [
+  { value: 'smetchik', label: 'Сметчик' },
   { value: 'pto', label: 'ПТО-инженер' },
   { value: 'prorab', label: 'Прораб' },
-  { value: 'smetchik', label: 'Сметчик' },
+  { value: 'sk', label: 'Стройконтроль' },
+  { value: 'director', label: 'Руководитель' },
   { value: 'other', label: 'Другое' },
 ];
 
-export function TemplateDownloadForm({ slug, filename }: Props) {
+interface Props {
+  /** Откуда пришёл лид — попадает в поле source и в UTM-кампанию. */
+  source?: string;
+  title?: string;
+  description?: string;
+}
+
+/**
+ * Форма раннего доступа — основной инструмент сбора базы до запуска.
+ * Лид уходит в существующий /api/lead, который сначала пишет его на диск сайта
+ * и только потом пытается переслать в приложение.
+ */
+export function WaitlistForm({
+  source = 'waitlist',
+  title = 'Ранний доступ к Komplid',
+  description = WAITLIST_OFFER,
+}: Props) {
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState<Role>('pto');
-  const [newsletter, setNewsletter] = useState(true);
-  const [earlyAccess, setEarlyAccess] = useState(false);
+  const [role, setRole] = useState<Role>('smetchik');
+  const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
@@ -36,29 +47,28 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
     setError('');
 
     try {
-      const data = await requestTemplateDownload({
-        slug,
-        filename,
-        email,
-        role,
-        newsletterConsent: newsletter,
-        earlyAccess,
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          role,
+          source,
+          // UTM берём из адресной строки: платные каналы должны быть отличимы
+          // от органики при подсчёте CPL (PROMOTION_STRATEGY §7).
+          utm: Object.fromEntries(
+            [...new URLSearchParams(window.location.search)].filter(([k]) =>
+              k.startsWith('utm_'),
+            ),
+          ),
+          metadata: { page: window.location.pathname },
+        }),
       });
 
-      const a = document.createElement('a');
-      a.href = data.downloadUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      if (!res.ok) throw new Error(String(res.status));
       setDone(true);
-    } catch (err) {
-      // Не-OK ответ API и сетевой сбой различаем для понятного текста.
-      setError(
-        err instanceof TemplateDownloadError
-          ? 'Не удалось получить файл. Попробуйте ещё раз.'
-          : 'Ошибка сети. Проверьте соединение и попробуйте ещё раз.',
-      );
+    } catch {
+      setError('Не удалось отправить заявку. Попробуйте ещё раз или напишите на hello@komplid.ru.');
     } finally {
       setIsLoading(false);
     }
@@ -67,6 +77,7 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
   if (done) {
     return (
       <div
+        id={WAITLIST_ANCHOR.slice(1)}
         className="rounded-xl p-6"
         style={{ background: 'var(--bg-elev)', border: '1px solid var(--border)' }}
       >
@@ -79,18 +90,11 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
           </div>
           <div>
             <p className="font-semibold" style={{ color: 'var(--ink)' }}>
-              Файл скачивается
+              Вы в списке раннего доступа
             </p>
             <p className="mt-1 text-sm" style={{ color: 'var(--ink-soft)' }}>
-              Если скачивание не началось — обратитесь к браузеру или{' '}
-              <a
-                href={`/shablony-files/${filename}`}
-                download={filename}
-                style={{ color: 'var(--accent-strong)', textDecoration: 'underline' }}
-              >
-                скачайте напрямую
-              </a>
-              .
+              Напишем на {email}, когда откроем регистрацию. Пока продукт готовится, будем
+              присылать разборы нормативки и новые шаблоны — не чаще раза в неделю.
             </p>
           </div>
         </div>
@@ -100,28 +104,29 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
 
   return (
     <form
+      id={WAITLIST_ANCHOR.slice(1)}
       onSubmit={handleSubmit}
       className="rounded-xl p-6"
       style={{ background: 'var(--bg-elev)', border: '1px solid var(--border)' }}
     >
       <h2 className="mb-1 font-semibold" style={{ color: 'var(--ink)', fontSize: '15px' }}>
-        Скачать шаблон бесплатно
+        {title}
       </h2>
       <p className="mb-5 text-sm" style={{ color: 'var(--ink-mute)' }}>
-        Оставьте email — пришлём ссылку на обновления формы.
+        {description}
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
+        <div>
           <Label
-            htmlFor="tdf-email"
+            htmlFor="wl-email"
             className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest"
             style={{ color: 'var(--ink-mute)' }}
           >
             Email
           </Label>
           <Input
-            id="tdf-email"
+            id="wl-email"
             type="email"
             required
             placeholder="ivan@company.ru"
@@ -137,14 +142,14 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
 
         <div>
           <Label
-            htmlFor="tdf-role"
+            htmlFor="wl-role"
             className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest"
             style={{ color: 'var(--ink-mute)' }}
           >
-            Роль
+            Кем работаете
           </Label>
           <select
-            id="tdf-role"
+            id="wl-role"
             value={role}
             onChange={(e: ChangeEvent<HTMLSelectElement>) => setRole(e.target.value as Role)}
             className="w-full rounded-md px-3 py-2 text-sm"
@@ -161,38 +166,28 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
             ))}
           </select>
         </div>
-
-        <div className="flex items-end">
-          <label className="flex cursor-pointer items-start gap-2 text-sm" style={{ color: 'var(--ink-soft)' }}>
-            <input
-              type="checkbox"
-              checked={newsletter}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewsletter(e.target.checked)}
-              className="mt-0.5 h-4 w-4 flex-shrink-0"
-              style={{ accentColor: 'var(--accent)' }}
-            />
-            <span>Получать обновления форм и нормативов</span>
-          </label>
-        </div>
       </div>
 
-      {WAITLIST_MODE && (
-        <label
-          className="mt-4 flex cursor-pointer items-start gap-2 rounded-lg p-3 text-sm"
-          style={{ background: 'var(--accent-soft)', color: 'var(--ink-soft)' }}
-        >
-          <input
-            type="checkbox"
-            checked={earlyAccess}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setEarlyAccess(e.target.checked)}
-            className="mt-0.5 h-4 w-4 flex-shrink-0"
-            style={{ accentColor: 'var(--accent)' }}
-          />
-          <span>
-            Хочу ранний доступ к Komplid. <strong>{WAITLIST_OFFER}</strong>
-          </span>
-        </label>
-      )}
+      <label
+        className="mt-4 flex cursor-pointer items-start gap-2 text-xs"
+        style={{ color: 'var(--ink-mute)' }}
+      >
+        <input
+          type="checkbox"
+          required
+          checked={consent}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setConsent(e.target.checked)}
+          className="mt-0.5 h-4 w-4 flex-shrink-0"
+          style={{ accentColor: 'var(--accent)' }}
+        />
+        <span>
+          Согласен на обработку персональных данных в соответствии с{' '}
+          <a href="/legal/privacy" style={{ color: 'var(--ink-soft)', textDecoration: 'underline' }}>
+            политикой конфиденциальности
+          </a>
+          .
+        </span>
+      </label>
 
       {error && (
         <p className="mt-3 text-sm" style={{ color: 'var(--err)' }}>
@@ -206,7 +201,7 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
         className="mt-5 w-full"
         style={{ background: 'var(--accent)', color: 'var(--accent-ink)', border: 'none' }}
       >
-        {isLoading ? 'Подготавливаем файл…' : 'Получить шаблон'}
+        {isLoading ? 'Отправляем…' : 'Получить ранний доступ'}
       </Button>
     </form>
   );

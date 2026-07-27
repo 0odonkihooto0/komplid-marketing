@@ -7,6 +7,8 @@ export interface TemplateDownloadPayload {
   email: string;
   role: string;
   newsletterConsent: boolean;
+  /** Отметка «хочу ранний доступ» — тот же лид, но с интересом к продукту. */
+  earlyAccess?: boolean;
 }
 
 /** Ошибка не-OK ответа API (в отличие от сетевого сбоя fetch). */
