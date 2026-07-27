@@ -1,0 +1,46 @@
+name: CI
+
+# Только проверки. Деплой на прод — вручную через ./deploy.sh (CLAUDE.md §9):
+# у этого workflow нет ни секретов, ни SSH-доступа к серверу.
+on:
+  pull_request:
+    paths-ignore:
+      # 358 МБ статики свода правил не должны гонять сборку — они не влияют на код.
+      - 'public/normativ/**'
+      - '**/*.md'
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'public/normativ/**'
+      - '**/*.md'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Типы
+        run: npx tsc --noEmit
+
+      - name: Тесты
+        run: npm test
+
+      - name: Сборка
+        run: npx next build
