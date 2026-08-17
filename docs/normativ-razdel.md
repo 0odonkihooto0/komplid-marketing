@@ -58,9 +58,16 @@ python tools/publish.py --dest C:\komplid_marketing\komplid-marketing
 2. **Слаги и якоря — публичный контракт**: `sp-48-13330-2019`, `#p-8-2-3`, `#pril-b`,
    `#tbl-2`. На них ссылаются извне, их цитируют AI-ассистенты. Менять — только
    с redirect-слоем.
-3. **Не создавать роут `src/app/normativ/[slug]/`** — он перехватит адреса раньше
-   rewrite, и статика перестанет отдаваться. Маска rewrite (`sp-[a-z0-9-]+`)
-   намеренно не задевает хаб `/normativ` и `/normativ/img/...`.
+3. **Не создавать роут `src/app/normativ/[slug]/`** — односегментный динамический
+   роут перехватит адреса раньше rewrite, и статика перестанет отдаваться. Маска
+   rewrite (`sp-[a-z0-9-]+`) намеренно не задевает хаб `/normativ` и `/normativ/img/...`.
+
+   **Двухсегментный роут — можно.** `src/app/normativ/[doc]/[clause]/` обслуживает
+   страницы отдельных пунктов (`/normativ/sp-48-13330-2019/p-6-13`) и статике
+   не мешает: односегментному адресу он не соответствует, и тот по-прежнему
+   уходит в rewrite. Проверено curl-ом, проверка описана ниже. Слаг документа
+   в адресе пункта — **полный**, как в корпусе: короткий `sp-48` был бы вторым
+   параллельным именованием того же документа.
 4. **Ассеты коммитить отдельно от кода.** Раздел весит ~358 МБ; смешанный коммит
    невозможно ревьюить, а `git log` по коду становится бесполезен.
 5. **Деплой дольше обычного** из-за объёма статики: первый push и первая сборка
@@ -79,7 +86,8 @@ python tools/publish.py --dest C:\komplid_marketing\komplid-marketing
 npx tsc --noEmit && npm test          # код сайта
 npx next build                        # если менялся состав корпуса
 # на поднятом сервере:
-curl -sI http://localhost:3200/normativ/sp-48-13330-2019      # 200
-curl -sI http://localhost:3200/normativ/sp-48-13330-2019.html # 301 на чистый URL
-curl -s  http://localhost:3200/sitemap.xml | grep -c normativ/ # 323
+curl -sI http://localhost:3200/normativ/sp-48-13330-2019         # 200, статика корпуса
+curl -sI http://localhost:3200/normativ/sp-48-13330-2019.html    # 308 на чистый URL
+curl -sI http://localhost:3200/normativ/sp-48-13330-2019/p-6-13  # 200, страница пункта
+curl -s  http://localhost:3200/sitemap.xml | grep -c normativ/   # 323 + страницы пунктов
 ```

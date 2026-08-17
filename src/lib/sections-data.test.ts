@@ -3,6 +3,15 @@ import { DOC_FORMS, getDocForm, FORM_SECTIONS } from './formy-data';
 import { GLOSSARY_TERMS, getGlossaryTerm, TERM_CATEGORIES } from './glossariy-data';
 import { XSD_SCHEMAS, getXsdSchema, SCHEMA_GROUPS } from './isup-data';
 import { ROLE_SOLUTIONS, getRoleSolution } from './solutions-data';
+import {
+  SP_CLAUSES,
+  CLAUSE_DOCS,
+  getClause,
+  getClauseByPath,
+  clauseDocSlug,
+  clauseUrlPart,
+  clauseUrl,
+} from './normativ-clauses';
 
 /**
  * Данные разделов перенесены из прототипов скриптом, а перелинковка в них
@@ -138,5 +147,53 @@ describe('ролевые решения', () => {
     for (const role of ROLE_SOLUTIONS) {
       expect(role.secondaryHref.startsWith('/'), role.id).toBe(true);
     }
+  });
+});
+
+describe('пункты сводов правил', () => {
+  it('идентификаторы уникальны', () => {
+    const ids = SP_CLAUSES.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('адрес пункта двухсегментный и с полным слагом документа', () => {
+    // Односегментный /normativ/<slug> обязан остаться за статикой корпуса
+    // (CLAUDE.md §19 п.3): роут на два сегмента её не перехватывает.
+    for (const clause of SP_CLAUSES) {
+      expect(clauseUrl(clause), clause.id).toMatch(/^\/normativ\/sp-\d+-\d+-\d+\/p-[\d-]+$/);
+    }
+  });
+
+  it('номер пункта переводится в адрес однозначно', () => {
+    const clause = SP_CLAUSES.find((c) => c.clause === '6.13');
+    expect(clause && clauseUrlPart(clause)).toBe('p-6-13');
+  });
+
+  it('пункт находится по адресу, из которого собран', () => {
+    for (const clause of SP_CLAUSES) {
+      const found = getClauseByPath(clauseDocSlug(clause), clauseUrlPart(clause));
+      expect(found?.id, clause.id).toBe(clause.id);
+    }
+  });
+
+  it('смежные пункты существуют', () => {
+    for (const clause of SP_CLAUSES) {
+      for (const id of clause.related) {
+        expect(getClause(id), `${clause.id} → ${id}`).toBeDefined();
+      }
+    }
+  });
+
+  it('у каждого пункта известен свод правил', () => {
+    for (const clause of SP_CLAUSES) {
+      expect(CLAUSE_DOCS[clause.docKey], clause.id).toBeDefined();
+    }
+  });
+
+  it('СП 70 помечен как отсутствующий в корпусе', () => {
+    // Документа в корпусе нет, поэтому ссылки на его страницу быть не должно —
+    // иначе хлебная крошка ведёт в 404.
+    expect(CLAUSE_DOCS['sp-70']?.slug).toBeNull();
+    expect(CLAUSE_DOCS['sp-48']?.slug).toBe('sp-48-13330-2019');
   });
 });
