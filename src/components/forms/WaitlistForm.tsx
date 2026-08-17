@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { WAITLIST_ANCHOR, WAITLIST_OFFER } from '@/lib/waitlist';
+import { PdConsentCheckbox } from './PdConsentCheckbox';
+import { PRIVACY_POLICY_VERSION } from '@/lib/legal/privacy-consent';
 
 type Role = 'smetchik' | 'pto' | 'prorab' | 'director' | 'sk' | 'other';
 
@@ -54,6 +56,11 @@ export function WaitlistForm({
           email,
           role,
           source,
+          // Факт согласия и редакция политики — доказательство по 152-ФЗ.
+          // Значение берём из состояния галочки, а не константой: без этого
+          // «согласие» проставлялось бы само, независимо от действий человека.
+          pdConsent: consent,
+          pdConsentVersion: PRIVACY_POLICY_VERSION,
           // UTM берём из адресной строки: платные каналы должны быть отличимы
           // от органики при подсчёте CPL (PROMOTION_STRATEGY §7).
           utm: Object.fromEntries(
@@ -168,26 +175,7 @@ export function WaitlistForm({
         </div>
       </div>
 
-      <label
-        className="mt-4 flex cursor-pointer items-start gap-2 text-xs"
-        style={{ color: 'var(--ink-mute)' }}
-      >
-        <input
-          type="checkbox"
-          required
-          checked={consent}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setConsent(e.target.checked)}
-          className="mt-0.5 h-4 w-4 flex-shrink-0"
-          style={{ accentColor: 'var(--accent)' }}
-        />
-        <span>
-          Согласен на обработку персональных данных в соответствии с{' '}
-          <a href="/legal/privacy" style={{ color: 'var(--ink-soft)', textDecoration: 'underline' }}>
-            политикой конфиденциальности
-          </a>
-          .
-        </span>
-      </label>
+      <PdConsentCheckbox id="wl-consent" checked={consent} onChange={setConsent} />
 
       {error && (
         <p className="mt-3 text-sm" style={{ color: 'var(--err)' }}>

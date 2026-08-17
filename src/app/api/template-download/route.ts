@@ -10,6 +10,10 @@ const schema = z.object({
   role: z.enum(['prorab', 'pto', 'smetchik', 'other']).optional(),
   newsletterConsent: z.boolean().optional(),
   earlyAccess: z.boolean().optional(),
+  // Согласие на обработку ПДн — отдельно от newsletterConsent (подписка).
+  // Необязательные: клиент с закэшированной страницей не должен терять лид.
+  pdConsent: z.boolean().optional(),
+  pdConsentVersion: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -25,7 +29,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Validation error', issues: parsed.error.issues }, { status: 400 });
   }
 
-  const { slug, filename, email, role, newsletterConsent, earlyAccess } = parsed.data;
+  const { slug, filename, email, role, newsletterConsent, earlyAccess, pdConsent, pdConsentVersion } =
+    parsed.data;
 
   const lead = {
     email,
@@ -33,6 +38,8 @@ export async function POST(req: NextRequest) {
     source: earlyAccess ? 'template_download+waitlist' : 'template_download',
     newsletterConsent,
     earlyAccess,
+    pdConsent,
+    pdConsentVersion,
     metadata: { template: slug },
   };
 

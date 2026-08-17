@@ -9,6 +9,9 @@ export interface TemplateDownloadPayload {
   newsletterConsent: boolean;
   /** Отметка «хочу ранний доступ» — тот же лид, но с интересом к продукту. */
   earlyAccess?: boolean;
+  /** Согласие на обработку ПДн и редакция политики — доказательство по 152-ФЗ. */
+  pdConsent?: boolean;
+  pdConsentVersion?: string;
 }
 
 /** Ошибка не-OK ответа API (в отличие от сетевого сбоя fetch). */

@@ -19,6 +19,14 @@ const nextConfig = {
         destination: '/normativ/:slug',
         permanent: true,
       },
+      // В тексте политики (п. 12.3 исходного документа) фигурировал адрес
+      // komplid.ru/privacy. Канонический адрес на сайте — /legal/privacy
+      // (он же в футере, sitemap и чекбоксах форм), короткий ведёт на него.
+      {
+        source: '/privacy',
+        destination: '/legal/privacy',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

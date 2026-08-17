@@ -13,6 +13,11 @@ const schema = z.object({
   role: z.enum(['director', 'pto', 'prorab', 'smetchik', 'sk', 'other']).optional(),
   interest: z.string().optional(),
   source: z.string().min(1),
+  // Факт согласия на обработку ПДн и редакция политики, на которую человек
+  // соглашался. Не обязательные в схеме: старые клиенты с закэшированной
+  // страницей продолжают присылать лиды без этих полей, терять их нельзя.
+  pdConsent: z.boolean().optional(),
+  pdConsentVersion: z.string().optional(),
   utm: z.record(z.string(), z.string()).optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
 });

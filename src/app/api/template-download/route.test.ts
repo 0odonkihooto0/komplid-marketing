@@ -1,21 +1,32 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { POST } from './route';
 
-const ENV_KEYS = ['INTERNAL_API_URL', 'INTERNAL_API_TOKEN'] as const;
+const ENV_KEYS = ['INTERNAL_API_URL', 'INTERNAL_API_TOKEN', 'LEADS_DATA_DIR'] as const;
 const saved: Record<string, string | undefined> = {};
 
-beforeEach(() => {
+let dataDir: string;
+
+beforeEach(async () => {
   for (const k of ENV_KEYS) saved[k] = process.env[k];
   process.env.INTERNAL_API_URL = 'https://api.example.test';
   process.env.INTERNAL_API_TOKEN = 'test-token';
+  // Роут пишет лид на диск. Без своего каталога тесты дописывали заявки
+  // в ./.data репозитория, а оттуда их считает счётчик мест в бете —
+  // прогон тестов «занимал» места в закрытой бете на машине разработчика.
+  dataDir = await mkdtemp(path.join(tmpdir(), 'komplid-tpl-'));
+  process.env.LEADS_DATA_DIR = dataDir;
 });
 
-afterEach(() => {
+afterEach(async () => {
   for (const k of ENV_KEYS) {
     if (saved[k] === undefined) delete process.env[k];
     else process.env[k] = saved[k];
   }
   vi.unstubAllGlobals();
+  await rm(dataDir, { recursive: true, force: true });
 });
 
 type PostReq = Parameters<typeof POST>[0];
@@ -68,6 +79,23 @@ describe('POST /api/template-download', () => {
       'https://api.example.test/leads',
       expect.objectContaining({ method: 'POST' }),
     );
+  });
+
+  // Скачивание шаблона — тоже сбор email, значит согласие должно фиксироваться.
+  it('передаёт факт согласия на обработку ПДн и редакцию политики', async () => {
+    const mock = vi.fn(() => Promise.resolve({ ok: true } as Response));
+    vi.stubGlobal('fetch', mock);
+
+    const res = await POST(
+      makeReq(JSON.stringify({ ...validBody, pdConsent: true, pdConsentVersion: '2026-08-17' })),
+    );
+
+    expect(res.status).toBe(200);
+    const [, init] = mock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(String(init.body))).toMatchObject({
+      pdConsent: true,
+      pdConsentVersion: '2026-08-17',
+    });
   });
 
   it('возвращает downloadUrl даже без настроенного API (лид не отправляется)', async () => {

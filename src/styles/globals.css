@@ -1158,3 +1158,50 @@ img {
   .mod-grid--4,
   .mod-grid--5 { grid-template-columns: 1fr; }
 }
+
+/* ─── Политика конфиденциальности: таблица целей обработки (раздел 6) ─── */
+.policy-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.policy-table tr { border-bottom: 1px solid var(--border); }
+
+.policy-table th,
+.policy-table td {
+  padding: 12px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.policy-table th {
+  width: 34%;
+  padding-right: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.policy-table td { color: var(--ink-soft); }
+
+.policy-table ul {
+  display: grid;
+  gap: 6px;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+@media (max-width: 640px) {
+  /* Строка распадается на «подпись сверху — значение снизу»: горизонтальный
+     скролл внутри юридического текста читать невозможно. */
+  .policy-table,
+  .policy-table tbody,
+  .policy-table tr,
+  .policy-table th,
+  .policy-table td {
+    display: block;
+    width: auto;
+  }
+
+  .policy-table th { padding-bottom: 4px; }
+  .policy-table td { padding-top: 0; }
+}

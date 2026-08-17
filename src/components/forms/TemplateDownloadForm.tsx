@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { requestTemplateDownload, TemplateDownloadError } from '@/lib/template-download';
 import { WAITLIST_MODE, WAITLIST_OFFER } from '@/lib/waitlist';
+import { PdConsentCheckbox } from './PdConsentCheckbox';
+import { PRIVACY_POLICY_VERSION } from '@/lib/legal/privacy-consent';
 
 interface Props {
   slug: string;
@@ -26,6 +28,9 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
   const [role, setRole] = useState<Role>('pto');
   const [newsletter, setNewsletter] = useState(true);
   const [earlyAccess, setEarlyAccess] = useState(false);
+  // Согласие на обработку ПДн — отдельно от подписки на рассылку: это разные
+  // согласия, и смешивать их в одну галочку нельзя.
+  const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
@@ -43,6 +48,8 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
         role,
         newsletterConsent: newsletter,
         earlyAccess,
+        pdConsent: consent,
+        pdConsentVersion: PRIVACY_POLICY_VERSION,
       });
 
       const a = document.createElement('a');
@@ -193,6 +200,8 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
           </span>
         </label>
       )}
+
+      <PdConsentCheckbox id="tdf-consent" checked={consent} onChange={setConsent} />
 
       {error && (
         <p className="mt-3 text-sm" style={{ color: 'var(--err)' }}>
