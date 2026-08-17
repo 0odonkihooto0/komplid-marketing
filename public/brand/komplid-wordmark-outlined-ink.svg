@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 736 112" width="736" height="112" role="img" aria-label="КОМПЛИД">
+  <title>КОМПЛИД — начертание в кривых</title>
+  <g fill="#14171C">
+      <g transform="translate(0 0)"><path d="M0 0h20v100H0z"></path><path d="M12 54L58 0h18L30 64z"></path><path d="M12 46L58 100h18L30 36z"></path></g>
+      <g transform="translate(92 0)"><path d="M46 0c25.4 0 46 22.4 46 50s-20.6 50-46 50S0 77.6 0 50 20.6 0 46 0zM46 20c-14.5 0-26 13.4-26 30s11.5 30 26 30 26-13.4 26-30-11.5-30-26-30z"></path></g>
+      <g transform="translate(200 0)"><path d="M0 0h20v100H0z"></path><path d="M88 0h20v100H88z"></path><path d="M0 0h20l44 80H44z"></path><path d="M88 0h20L64 80H44z"></path></g>
+      <g transform="translate(324 0)"><path d="M0 0h88v100H68V20H20v80H0z"></path></g>
+      <g transform="translate(428 0)"><path d="M22 0h66v100H68V20H40L26 100H0z"></path></g>
+      <g transform="translate(532 0)"><path d="M0 0h20v100H0z"></path><path d="M68 0h20v100H68z"></path><path d="M20 100h26L68 0H42z"></path></g>
+      <g transform="translate(636 0)"><path d="M22 0h58v20H22z"></path><path d="M60 0h20v90H60z"></path><path d="M22 0h18L26 80H8z"></path><path d="M0 80h100v20H0z"></path><path d="M2 100h16v12H2z"></path><path d="M82 100h16v12H82z"></path></g>
+  </g>
+</svg>

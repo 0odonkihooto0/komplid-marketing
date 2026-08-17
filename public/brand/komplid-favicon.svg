@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Комплид">
+  <title>Комплид</title>
+  <rect width="32" height="32" rx="7" fill="#1B1F26"></rect>
+  <g transform="translate(3.4 5.2) scale(0.222)">
+    <path d="M2.1 51.9A14 14 0 0 1 21.9 32.1L51.66 61.86Q77 37 105.76 7.76A6 6 0 0 1 114.24 16.24Q80 52 56.6 86.6Q40.34 90.14 36.1 85.9Z" fill="#F5A524"></path>
+  </g>
+</svg>
