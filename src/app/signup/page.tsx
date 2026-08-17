@@ -4,8 +4,8 @@ import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 import { WAITLIST_MODE } from '@/lib/waitlist';
 
 export const metadata: Metadata = {
-  title: 'Регистрация в Komplid',
-  description: 'Ранний доступ к Komplid — ERP для строительных проектов.',
+  title: 'Регистрация в Комплид',
+  description: 'Ранний доступ к Комплид — ERP для строительных проектов.',
   // Страница-переходник: в поиске ей делать нечего.
   robots: { index: false, follow: true },
 };
@@ -26,7 +26,7 @@ export default function SignupPage() {
     <WaitlistSection
       source="signup_page"
       eyebrow="Регистрация ещё закрыта"
-      title="Komplid откроется скоро — оставьте почту"
+      title="Комплид откроется скоро — оставьте почту"
       description="Мы запускаем доступ волнами и начинаем со списка раннего доступа. Напишем в день открытия и закрепим скидку."
     />
   );

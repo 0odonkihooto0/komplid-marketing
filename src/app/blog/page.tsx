@@ -27,7 +27,7 @@ export default async function BlogPage() {
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div className="wrap">
-          <span className="eyebrow">Komplid · Блог</span>
+          <span className="eyebrow">Комплид · Блог</span>
           <h1
             className="mb-4 mt-3 text-4xl font-medium tracking-tight"
             style={{ letterSpacing: '-0.025em', color: 'var(--ink)' }}

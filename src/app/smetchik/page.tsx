@@ -13,7 +13,7 @@ import { SoftwareAppSchema } from '@/components/seo/SoftwareAppSchema';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 export const metadata: Metadata = {
-  title: 'Сметчик-Студио — программа для сметчика онлайн от 1 900 ₽/мес | Komplid',
+  title: 'Сметчик-Студио — программа для сметчика онлайн от 1 900 ₽/мес | Комплид',
   description:
     'Облачная альтернатива Гранд-Смете для сметчиков. Импорт XML и Excel, сравнение версий за 1 клик, публичные ссылки для заказчика, база ФСНБ-2022. Пробный период без карты.',
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     'смета в облаке',
     'сметчик фрилансер ПО',
     'Сметчик-Студио',
-    'Komplid сметы',
+    'Комплид сметы',
   ],
   alternates: { canonical: 'https://komplid.ru/smetchik' },
   openGraph: {
@@ -149,7 +149,7 @@ export default function SmetchikPage() {
       />
 
       <Hero
-        eyebrow="Профи-пакет Komplid · Для сметчиков"
+        eyebrow="Профи-пакет Комплид · Для сметчиков"
         title={
           <>
             <span className="line">Сметчик-Студио</span>

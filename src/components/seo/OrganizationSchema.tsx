@@ -5,9 +5,10 @@ export function OrganizationSchema() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': 'https://komplid.ru/#organization',
-    name: 'Komplid',
+    name: 'Комплид',
     // «Komplid Systems» убран: такого юрлица и бренда нет (BRAND_STRATEGY §4.3).
-    alternateName: ['Комплид'],
+    // Латиница остаётся вторым именем: по ней ищут и на неё ведёт домен.
+    alternateName: ['Komplid'],
     url: 'https://komplid.ru',
     logo: {
       '@type': 'ImageObject',
@@ -16,7 +17,7 @@ export function OrganizationSchema() {
       height: 512,
     },
     description:
-      'ERP-платформа для цифрового управления строительными проектами в России. 18 модулей: ИД, сметы, журналы, стройконтроль, ТИМ.',
+      'Платформа управления строительными проектами в России. 21 модуль: ИД, сметы, журналы, стройконтроль, ТИМ.',
     foundingDate: '2026',
     address: {
       '@type': 'PostalAddress',

@@ -1,27 +1,16 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
 import { MobileNav } from './MobileNav';
-
-const NAV_LINKS = [
-  { href: '/#modules', label: 'Модули' },
-  { href: '/#pricing', label: 'Тарифы' },
-  { href: '/sravnenie', label: 'Сравнение' },
-  { href: '/normativ', label: 'Нормативы' },
-  { href: '/blog', label: 'Блог' },
-  { href: '/#faq', label: 'FAQ' },
-];
+import { BrandLogo } from './BrandLogo';
+import { NAV_LINKS } from './nav-links';
+import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
 
 export function MarketingHeader() {
   return (
     <header className="nav-bar">
       <div className="nav-inner">
-        {/* Логотип */}
         <Link href="/" className="brand-link">
-          <span className="brand-mark">
-            K
-            <span className="brand-dot" />
-          </span>
-          Komplid
+          <BrandLogo />
         </Link>
 
         {/* Десктопная навигация */}
@@ -43,8 +32,11 @@ export function MarketingHeader() {
             Войти
           </a>
 
-          <a href="https://app.komplid.ru/signup" className="nav-desktop-only btn-primary">
-            Попробовать
+          <a
+            href={primaryCtaHref('https://app.komplid.ru/signup')}
+            className="nav-desktop-only btn-accent btn-accent--sm"
+          >
+            {primaryCtaLabel('Попробовать')}
           </a>
 
           <div className="nav-mobile-only">

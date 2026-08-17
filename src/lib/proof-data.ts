@@ -17,13 +17,14 @@ export interface PlatformFact {
  * 323 — число файлов в content/normativ/registry.json,
  * 22 — длина CALCULATORS в src/lib/calculators-data/index.ts,
  * 12 — комплект XSD-схем Минстроя в приложении,
- * 18 — модули в stroydocs/src/lib/ui/object-modules.ts (7 базовых + 11 опциональных).
+ * 21 — модули приложения в двух контурах: 14 в контуре объекта и 7 в контуре
+ *      организации (см. src/lib/home-data.ts и docs/memory/app-module-list.md).
  */
 export const PLATFORM_FACTS: PlatformFact[] = [
   { value: '323', label: 'свода правил' },
   { value: '22', label: 'калькулятора' },
   { value: '12', label: 'схем Минстроя' },
-  { value: '18', label: 'модулей' },
+  { value: '21', label: 'модуль' },
 ];
 
 export interface BetaMetric {
@@ -33,7 +34,7 @@ export interface BetaMetric {
 }
 
 /**
- * Метрики беты для тёмного блока «Komplid в цифрах».
+ * Метрики беты для тёмного блока «Комплид в цифрах».
  *
  * Пусто до запуска — блок не рендерится (см. hasBetaMetrics ниже).
  * Заполнять ТОЛЬКО измеренными данными из /admin/billing основного приложения,

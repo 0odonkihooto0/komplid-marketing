@@ -15,10 +15,12 @@ interface FaqProps {
   title: string;
   items: FaqItem[];
   eyebrow?: string;
+  /** Подводка под заголовком — например, кому адресованы эти вопросы */
+  description?: string;
   centered?: boolean;
 }
 
-export function Faq({ title, items, eyebrow, centered = false }: FaqProps) {
+export function Faq({ title, items, eyebrow, description, centered = false }: FaqProps) {
   const align = centered ? { textAlign: 'center' as const, margin: '0 auto 48px' } : { margin: '0 0 48px' };
 
   return (
@@ -31,6 +33,11 @@ export function Faq({ title, items, eyebrow, centered = false }: FaqProps) {
             </span>
           )}
           <h2 style={centered ? { marginLeft: 'auto', marginRight: 'auto' } : undefined}>{title}</h2>
+          {description && (
+            <p style={centered ? { marginLeft: 'auto', marginRight: 'auto' } : undefined}>
+              {description}
+            </p>
+          )}
         </div>
 
         <div style={{ maxWidth: 820, margin: centered ? '0 auto' : undefined }}>

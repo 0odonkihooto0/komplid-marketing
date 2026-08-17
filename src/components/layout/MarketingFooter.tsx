@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { company } from '@/lib/company';
+import { BrandLogo } from './BrandLogo';
 
 export function MarketingFooter() {
   return (
@@ -8,51 +9,12 @@ export function MarketingFooter() {
         <div className="foot-grid">
           {/* Бренд */}
           <div className="foot-col">
-            <Link
-              href="/"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                fontWeight: 600,
-                fontSize: 15,
-                color: 'var(--ink)',
-                marginBottom: 12,
-              }}
-            >
-              <span
-                style={{
-                  position: 'relative',
-                  width: 24,
-                  height: 24,
-                  borderRadius: 5,
-                  background: 'var(--bg-invert)',
-                  color: 'var(--ink-invert)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 14,
-                  fontWeight: 600,
-                }}
-              >
-                K
-                <span
-                  style={{
-                    position: 'absolute',
-                    right: -2,
-                    top: -2,
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    background: 'var(--accent)',
-                  }}
-                />
-              </span>
-              Komplid
+            <Link href="/" className="brand-link" style={{ marginBottom: 14 }}>
+              <BrandLogo withTagline />
             </Link>
             <p>
-              ERP для строительных проектов. Исполнительная документация, сметы, журналы,
-              стройконтроль и ТИМ — в одной системе.
+              Система управления строительными проектами: смета, журналы, исполнительная
+              документация и КС-2 в одном контуре.
             </p>
             <p
               style={{
@@ -63,16 +25,16 @@ export function MarketingFooter() {
                 fontSize: 10.5,
               }}
             >
-              © 2026 Komplid · {company.name} · ОГРНИП {company.ogrnip}
+              © 2026 Комплид · {company.name} · ОГРНИП {company.ogrnip}
             </p>
           </div>
 
           {/* Продукт */}
           <div className="foot-col">
             <h5>Продукт</h5>
+            <Link href="/#stages">Контур объекта</Link>
             <Link href="/#modules">Модули</Link>
-            <Link href="/#features">Возможности</Link>
-            <Link href="/#pricing">Тарифы</Link>
+            <Link href="/#price">Тарифы</Link>
             <Link href="/blog">Блог</Link>
             <Link href="/shablony">Шаблоны документов</Link>
             <Link href="/normativ">База СП (нормативы)</Link>
@@ -85,6 +47,9 @@ export function MarketingFooter() {
             <Link href="/pto">ИД-Мастер</Link>
             <Link href="/prorab">Прораб-Журнал</Link>
             <Link href="/kalkulyator">Калькуляторы</Link>
+            <Link href="/formy">Формы ИД</Link>
+            <Link href="/glossariy">Глоссарий ИД</Link>
+            <Link href="/isup">Схемы для ИСУП</Link>
           </div>
 
           {/* Для компаний */}

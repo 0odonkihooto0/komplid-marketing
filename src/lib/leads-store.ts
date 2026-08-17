@@ -1,4 +1,4 @@
-import { appendFile, mkdir } from 'node:fs/promises';
+import { appendFile, mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
@@ -49,6 +49,37 @@ export async function appendLead(lead: LeadInput): Promise<boolean> {
   } catch (err) {
     console.error('[leads-store] не удалось записать лид на диск:', err);
     return false;
+  }
+}
+
+/**
+ * Сколько заявок в очереди раннего доступа уже лежит.
+ *
+ * Нужно для счётчика мест на главной. Показывать выдуманное число нельзя —
+ * это недостоверные сведения по ст. 5 ФЗ «О рекламе» (CLAUDE.md §21), поэтому
+ * считаем реальные строки файла. Уникальность по почте: один человек, дважды
+ * заполнивший форму, не должен съедать два места.
+ *
+ * Файла может не быть (свежий том, никто ещё не записался) — это ноль, а не ошибка.
+ */
+export async function countWaitlistLeads(): Promise<number> {
+  try {
+    const raw = await readFile(path.join(dataDir(), 'leads.jsonl'), 'utf8');
+    const emails = new Set<string>();
+
+    for (const line of raw.split('\n')) {
+      if (!line.trim()) continue;
+      try {
+        const lead = JSON.parse(line) as Partial<StoredLead>;
+        if (typeof lead.email === 'string') emails.add(lead.email.trim().toLowerCase());
+      } catch {
+        // Битую строку пропускаем: она не должна ронять счётчик целиком.
+      }
+    }
+
+    return emails.size;
+  } catch {
+    return 0;
   }
 }
 

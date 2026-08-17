@@ -11,14 +11,9 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 
-const NAV_LINKS = [
-  { href: '/#modules', label: 'Модули' },
-  { href: '/#pricing', label: 'Тарифы' },
-  { href: '/sravnenie', label: 'Сравнение' },
-  { href: '/normativ', label: 'Нормативы' },
-  { href: '/blog', label: 'Блог' },
-  { href: '/#faq', label: 'FAQ' },
-];
+import { NAV_LINKS } from './nav-links';
+import { ThemeToggle } from './ThemeToggle';
+import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
 
 export function MobileNav() {
   return (
@@ -43,7 +38,7 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="right">
         <SheetHeader>
-          <SheetTitle style={{ color: 'var(--ink)' }}>Komplid</SheetTitle>
+          <SheetTitle style={{ color: 'var(--ink)' }}>Комплид</SheetTitle>
         </SheetHeader>
         <nav
           style={{
@@ -88,6 +83,11 @@ export function MobileNav() {
             gap: 8,
           }}
         >
+          {/* В шапке переключатель темы виден только на десктопе */}
+          <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8 }}>
+            <ThemeToggle />
+          </div>
+
           <a
             href="https://app.komplid.ru/login"
             style={{
@@ -104,8 +104,9 @@ export function MobileNav() {
           >
             Войти
           </a>
+          {/* До запуска ведёт на форму раннего доступа, как и остальные первичные CTA */}
           <a
-            href="https://app.komplid.ru/signup"
+            href={primaryCtaHref('https://app.komplid.ru/signup')}
             style={{
               display: 'block',
               padding: '10px 14px',
@@ -113,12 +114,12 @@ export function MobileNav() {
               fontSize: 14,
               fontWeight: 500,
               textAlign: 'center',
-              color: 'var(--ink-invert)',
-              background: 'var(--bg-invert)',
-              border: '1px solid var(--bg-invert)',
+              color: 'var(--accent-ink)',
+              background: 'var(--accent)',
+              border: '1px solid var(--accent)',
             }}
           >
-            Попробовать
+            {primaryCtaLabel('Попробовать')}
           </a>
         </div>
       </SheetContent>

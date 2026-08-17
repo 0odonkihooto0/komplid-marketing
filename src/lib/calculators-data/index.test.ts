@@ -78,7 +78,7 @@ describe('инварианты CALCULATORS', () => {
         expect(calc.title.trim().length).toBeGreaterThan(0);
         expect(calc.titleShort.trim().length).toBeGreaterThan(0);
         expect(calc.description.trim().length).toBeGreaterThan(80);
-        expect(calc.schemaName).toContain('Komplid');
+        expect(calc.schemaName).toContain('Комплид');
       });
     });
   }

@@ -31,7 +31,7 @@ interface Props {
  */
 export function WaitlistForm({
   source = 'waitlist',
-  title = 'Ранний доступ к Komplid',
+  title = 'Ранний доступ к «Комплид»',
   description = WAITLIST_OFFER,
 }: Props) {
   const [email, setEmail] = useState('');

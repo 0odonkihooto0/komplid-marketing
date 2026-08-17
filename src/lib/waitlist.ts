@@ -14,7 +14,19 @@ export const WAITLIST_MODE = process.env.NEXT_PUBLIC_WAITLIST_MODE !== '0';
 export const WAITLIST_ANCHOR = '#ranniy-dostup';
 
 /** Оффер раннего доступа. Глубже −30% не давать (PROMOTION_STRATEGY §9). */
-export const WAITLIST_OFFER = 'Скидка 30% на первые 3 месяца — первым 100 подписавшимся';
+export const WAITLIST_OFFER = 'Скидка 20% на первый год — первым 100 подписавшимся';
+
+/** Сколько мест в закрытой бете всего. Занятые считаются по реальным заявкам. */
+export const BETA_SEATS_TOTAL = 100;
+
+/** Склонение слова «место» — счётчик мест пишется числом и словом. */
+export function seatsPhrase(n: number): string {
+  const d = n % 10;
+  const dd = n % 100;
+  if (d === 1 && dd !== 11) return `${n} место`;
+  if (d >= 2 && d <= 4 && (dd < 12 || dd > 14)) return `${n} места`;
+  return `${n} мест`;
+}
 
 /**
  * Куда должен вести первичный CTA. До запуска — на форму, после — на регистрацию
