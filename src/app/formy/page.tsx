@@ -88,7 +88,7 @@ export default function FormyPage() {
                 <span style={{ flex: 1, height: 1, background: 'var(--line)' }} />
               </div>
 
-              <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+              <div className="mod-grid mod-grid--3">
                 {forms.map((form) => (
                   <Link key={form.slug} href={`/formy/${form.slug}`} className="mod-featured">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

@@ -29,6 +29,7 @@ export async function LatestPosts({ limit = 3 }: { limit?: number }) {
         </div>
 
         <div
+          className="latest-posts-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',

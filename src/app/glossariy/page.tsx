@@ -42,7 +42,7 @@ export default function GlossariyPage() {
             </p>
           </div>
 
-          <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <div className="mod-grid mod-grid--3">
             {GLOSSARY_TERMS.map((term) => (
               <Link key={term.slug} href={`/glossariy/${term.slug}`} className="mod-featured">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

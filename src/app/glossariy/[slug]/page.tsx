@@ -124,7 +124,7 @@ export default async function TermPage({ params }: Params) {
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="wrap">
             <h2 style={{ fontSize: 22, fontWeight: 600, margin: '0 0 18px' }}>Смежные термины</h2>
-            <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <div className="mod-grid mod-grid--3">
               {related.map((r) => (
                 <Link key={r.slug} href={`/glossariy/${r.slug}`} className="mod-featured">
                   <h3 style={{ margin: 0, fontSize: 15.5, fontWeight: 500, letterSpacing: 0 }}>

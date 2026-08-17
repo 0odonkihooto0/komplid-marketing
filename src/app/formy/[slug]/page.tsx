@@ -114,7 +114,7 @@ export default async function FormPage({ params }: Params) {
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="wrap">
             <h2 style={{ fontSize: 22, fontWeight: 600, margin: '0 0 18px' }}>Связанные формы</h2>
-            <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <div className="mod-grid mod-grid--3">
               {related.map((r) => (
                 <Link key={r.slug} href={`/formy/${r.slug}`} className="mod-featured">
                   <div className="counter-label" style={{ marginTop: 0, color: 'var(--acc)' }}>

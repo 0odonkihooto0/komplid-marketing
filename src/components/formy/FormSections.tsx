@@ -89,7 +89,7 @@ export function FormTimeline({ form }: { form: DocForm }) {
           <span className="eyebrow-ref">Сроки</span>
           <h2>Когда оформляется</h2>
         </div>
-        <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+        <div className="mod-grid mod-grid--4">
           {form.timeline.map((step) => (
             <div className="mod-featured" key={step.when}>
               <div

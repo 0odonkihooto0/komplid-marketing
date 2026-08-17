@@ -104,7 +104,7 @@ export default async function SchemaPage({ params }: Params) {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="wrap">
           <h2 style={{ fontSize: 22, fontWeight: 600, margin: '0 0 18px' }}>Другие схемы пакета</h2>
-          <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <div className="mod-grid mod-grid--3">
             {others.map((s) => (
               <Link key={s.slug} href={`/isup/${s.slug}`} className="mod-featured">
                 <div className="counter-label" style={{ marginTop: 0, color: 'var(--acc)' }}>

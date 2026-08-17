@@ -16,7 +16,7 @@ export const NAV_LINKS: readonly NavLink[] = [
   { href: '/#modules', label: 'Модули' },
   { href: '/#price', label: 'Тарифы' },
   { href: '/normativ', label: 'Нормативы' },
-  { href: '/sravnenie', label: 'Сравнение' },
+  { href: '/formy', label: 'Формы ИД' },
+  { href: '/kalkulyator', label: 'Калькуляторы' },
   { href: '/blog', label: 'Блог' },
-  { href: '/#faq', label: 'FAQ' },
 ];

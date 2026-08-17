@@ -78,7 +78,7 @@ export function RolePains({ role }: { role: RoleSolution }) {
           <h2>{role.painTitle}</h2>
           <p>{role.painLead}</p>
         </div>
-        <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="mod-grid mod-grid--3">
           {role.pains.map((pain) => (
             <div className="mod-featured" key={pain.n}>
               <div className="counter-label" style={{ marginTop: 0, color: 'var(--acc)' }}>
@@ -108,7 +108,7 @@ export function RoleDay({ role }: { role: RoleSolution }) {
           <h2>{role.dayTitle}</h2>
           <p>{role.dayLead}</p>
         </div>
-        <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+        <div className="mod-grid mod-grid--4">
           {role.day.map((step) => (
             <div className="mod-featured" key={step.when}>
               <div

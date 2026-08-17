@@ -1136,3 +1136,25 @@ img {
     gap: 10px !important;
   }
 }
+
+/* Число колонок сетки .mod-grid.
+   Классами, а не инлайновым style: атрибут сильнее таблицы стилей и
+   перебивал бы медиазапросы, из-за чего страницы разъезжались на телефоне. */
+.mod-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.mod-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.mod-grid--5 { grid-template-columns: repeat(5, 1fr); }
+
+@media (max-width: 1100px) {
+  .mod-grid--4,
+  .mod-grid--5 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .mod-grid--3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .mod-grid--3,
+  .mod-grid--4,
+  .mod-grid--5 { grid-template-columns: 1fr; }
+}

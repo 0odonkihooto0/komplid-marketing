@@ -53,7 +53,7 @@ export function ClauseDocs({ clause }: { clause: SpClause }) {
           <span className="eyebrow-ref">Документы</span>
           <h2>Какие документы требует этот пункт</h2>
         </div>
-        <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+        <div className="mod-grid mod-grid--4">
           {clause.docs.map((doc) => (
             <div className="mod-featured" key={doc.name}>
               <span

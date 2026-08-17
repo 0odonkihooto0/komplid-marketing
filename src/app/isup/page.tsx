@@ -100,7 +100,7 @@ export default function IsupPage() {
           <h2 style={{ fontSize: 22, fontWeight: 600, margin: '0 0 18px' }}>
             Порядок сдачи, если делаете это впервые
           </h2>
-          <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)', marginBottom: 40 }}>
+          <div className="mod-grid mod-grid--5" style={{ marginBottom: 40 }}>
             {ISUP_FLOW.map((step) => (
               <div className="mod-featured" key={step.n}>
                 <div className="counter-label" style={{ marginTop: 0, color: 'var(--acc)' }}>
@@ -117,7 +117,7 @@ export default function IsupPage() {
           </div>
 
           <h2 style={{ fontSize: 22, fontWeight: 600, margin: '0 0 18px' }}>Разобранные схемы</h2>
-          <div className="mod-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <div className="mod-grid mod-grid--3">
             {XSD_SCHEMAS.map((s) => (
               <Link key={s.slug} href={`/isup/${s.slug}`} className="mod-featured">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

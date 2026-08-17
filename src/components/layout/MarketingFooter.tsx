@@ -47,6 +47,9 @@ export function MarketingFooter() {
             <Link href="/pto">ИД-Мастер</Link>
             <Link href="/prorab">Прораб-Журнал</Link>
             <Link href="/kalkulyator">Калькуляторы</Link>
+            <Link href="/formy">Формы ИД</Link>
+            <Link href="/glossariy">Глоссарий ИД</Link>
+            <Link href="/isup">Схемы для ИСУП</Link>
           </div>
 
           {/* Для компаний */}
