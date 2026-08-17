@@ -8,8 +8,13 @@
 ───────────────────────────────────────────────── */
 
 :root {
-  --font-ui: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  /* Шрифты подключает next/font/google в src/app/layout.tsx — он самостоятельно
+     хостит файлы и генерирует уникальные имена семейств, поэтому здесь только
+     переменные. Разметку, скопированную из эталона, надо переводить с литералов
+     'Geologica' / 'Onest' / 'JetBrains Mono' на эти переменные. */
+  --font-ui: var(--font-onest), system-ui, sans-serif;
+  --font-display: var(--font-geologica), var(--font-onest), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, Menlo, monospace;
   --font-sans: var(--font-ui);
 
   /* Spacing scale */
@@ -65,7 +70,10 @@
   --accent-ui-foreground: var(--ink);
   --destructive:         var(--err);
   --destructive-foreground: oklch(1 0 0);
-  --border:              var(--border);
+  /* --border здесь не переопределяем: он уже задан выше, а строка
+     «--border: var(--border)» ссылалась сама на себя и делала токен
+     невалидным. Сейчас это маскируется тем, что data-theme на html стоит
+     всегда и перекрывает поломанное значение. */
   --input:               var(--border);
   --ring:                var(--accent);
   --radius: 0.5rem;
@@ -141,6 +149,136 @@ html[data-palette="lime"] {
   --accent-ink:   #0e1806;
 }
 
+/* ─────────────────────────────────────────────────
+   Шкала эталона (design/landing-reference.html)
+
+   Вторая шкала рядом с исторической --bg-*/--ink-* не по недосмотру: у них
+   разная семантика. В старой --bg-hover светлее фона темнее самого фона (это
+   состояние наведения), в новой --panel3 — наоборот, приподнятая поверхность.
+   Свести их в одну без перерисовки всех страниц нельзя, а расхождение по
+   светлоте меньше 0.03 и глазом не ловится.
+
+   Правило: новые блоки пишутся на этой шкале — тогда разметка копируется
+   из эталона без правок. Старые страницы остаются на --bg-*/--ink-*.
+   Имена в camelCase (--accSoft, --lineSoft) повторяют эталон намеренно:
+   иначе copy-paste ломается.
+───────────────────────────────────────────────── */
+:root {
+  --bg2: oklch(0.955 0.004 85);
+  --bg3: oklch(0.965 0.003 85);
+  --bg4: oklch(0.94 0.004 85);
+  --panel:    oklch(1 0 0);
+  --panel2:   oklch(1 0 0);
+  --panel3:   oklch(0.975 0.002 85);
+  --panelAlt: oklch(0.972 0.002 85);
+  --inset:    oklch(0.96 0.003 85);
+  --line:     oklch(0.91 0.004 255);
+  --line2:    oklch(0.89 0.004 255);
+  --line3:    oklch(0.86 0.005 255);
+  --lineSoft: oklch(0.935 0.004 255);
+  --t1: oklch(0.2 0.008 255);
+  --t2: oklch(0.26 0.008 255);
+  --t3: oklch(0.44 0.008 255);
+  --t4: oklch(0.52 0.007 255);
+  --t5: oklch(0.58 0.007 255);
+  --accSoft: oklch(0.72 0.16 62 / 0.16);
+  --accCard: oklch(0.72 0.16 62 / 0.09);
+  --okLine: oklch(0.6 0.14 155);
+  --okSoft: oklch(0.65 0.14 155 / 0.14);
+  --grid:   oklch(0.84 0.005 255 / 0.55);
+  --navBg:  oklch(0.985 0.002 85 / 0.92);
+  --shadow: rgba(17, 24, 39, 0.13);
+  --hatchA: oklch(0.89 0.004 255);
+  --hatchB: oklch(0.94 0.004 255);
+  --qr:     oklch(0.25 0.008 255);
+  --glow1: oklch(0.72 0.16 62 / 0.16);
+  --glow2: oklch(0.62 0.12 250 / 0.08);
+  --sheen: oklch(0.72 0.16 62 / 0.14);
+  /* Знак-галочка на светлом фоне темнее — в брендбуке это #E4891A */
+  --logoMark: oklch(0.66 0.17 58);
+  /* Тёмная полоса бегущей строки одинакова в обеих темах */
+  --tick: oklch(0.14 0.008 255);
+}
+
+/* Светлая тема повторяет :root — как и у исторической шкалы выше: на html
+   всегда стоит явный data-theme, а :root нужен на случай его отсутствия. */
+html[data-theme="light"] {
+  --bg2: oklch(0.955 0.004 85);
+  --bg3: oklch(0.965 0.003 85);
+  --bg4: oklch(0.94 0.004 85);
+  --panel:    oklch(1 0 0);
+  --panel2:   oklch(1 0 0);
+  --panel3:   oklch(0.975 0.002 85);
+  --panelAlt: oklch(0.972 0.002 85);
+  --inset:    oklch(0.96 0.003 85);
+  --line:     oklch(0.91 0.004 255);
+  --line2:    oklch(0.89 0.004 255);
+  --line3:    oklch(0.86 0.005 255);
+  --lineSoft: oklch(0.935 0.004 255);
+  --t1: oklch(0.2 0.008 255);
+  --t2: oklch(0.26 0.008 255);
+  --t3: oklch(0.44 0.008 255);
+  --t4: oklch(0.52 0.007 255);
+  --t5: oklch(0.58 0.007 255);
+  --accSoft: oklch(0.72 0.16 62 / 0.16);
+  --accCard: oklch(0.72 0.16 62 / 0.09);
+  --okLine: oklch(0.6 0.14 155);
+  --okSoft: oklch(0.65 0.14 155 / 0.14);
+  --grid:   oklch(0.84 0.005 255 / 0.55);
+  --navBg:  oklch(0.985 0.002 85 / 0.92);
+  --shadow: rgba(17, 24, 39, 0.13);
+  --hatchA: oklch(0.89 0.004 255);
+  --hatchB: oklch(0.94 0.004 255);
+  --qr:     oklch(0.25 0.008 255);
+  --glow1: oklch(0.72 0.16 62 / 0.16);
+  --glow2: oklch(0.62 0.12 250 / 0.08);
+  --sheen: oklch(0.72 0.16 62 / 0.14);
+  --logoMark: oklch(0.66 0.17 58);
+  --tick: oklch(0.14 0.008 255);
+}
+
+html[data-theme="dark"] {
+  --bg2: oklch(0.15 0.008 255);
+  --bg3: oklch(0.14 0.008 255);
+  --bg4: oklch(0.12 0.008 255);
+  --panel:    oklch(0.2 0.008 255);
+  --panel2:   oklch(0.19 0.008 255);
+  --panel3:   oklch(0.22 0.008 255);
+  --panelAlt: oklch(0.185 0.008 255);
+  --inset:    oklch(0.16 0.008 255);
+  --line:     oklch(0.26 0.008 255);
+  --line2:    oklch(0.28 0.008 255);
+  --line3:    oklch(0.31 0.008 255);
+  --lineSoft: oklch(0.235 0.008 255);
+  --t1: oklch(0.97 0.004 255);
+  --t2: oklch(0.93 0.004 255);
+  --t3: oklch(0.74 0.007 255);
+  --t4: oklch(0.6 0.008 255);
+  --t5: oklch(0.54 0.008 255);
+  --accSoft: oklch(0.72 0.16 62 / 0.18);
+  --accCard: oklch(0.21 0.012 62);
+  --okLine: oklch(0.65 0.14 155);
+  --okSoft: oklch(0.65 0.14 155 / 0.16);
+  --grid:   oklch(0.28 0.008 255 / 0.5);
+  --navBg:  oklch(0.17 0.008 255 / 0.92);
+  --shadow: rgba(0, 0, 0, 0.5);
+  --hatchA: oklch(0.3 0.008 255);
+  --hatchB: oklch(0.24 0.008 255);
+  --qr:     oklch(0.95 0.004 255);
+  --glow1: oklch(0.72 0.16 62 / 0.17);
+  --glow2: oklch(0.62 0.12 250 / 0.12);
+  --sheen: oklch(0.72 0.16 62 / 0.1);
+  --logoMark: oklch(0.76 0.16 66);
+}
+
+/* Алиасы коротких имён эталона на палитру проекта: в скопированной разметке
+   акцент записан как var(--acc), а не var(--accent). */
+:root {
+  --acc: var(--accent);
+  --accH: var(--accent-strong);
+  --accT: var(--accent-ink);
+}
+
 /* ─── Map to Tailwind v4 theme ─── */
 @theme inline {
   --color-background:          var(--bg);
@@ -200,6 +338,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Заголовки и крупные числа — Geologica, остальной текст — Onest (эталон §2.5) */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+/* Ручной перенос строки в заголовках героя. Класс использовался на четырёх
+   страницах, а правила для него не было — строки склеивались в одну. */
+.line {
+  display: block;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -245,40 +395,41 @@ img {
   .nav-inner { padding: 0 16px; gap: 16px; }
 }
 
+/* Локап: знак-галочка + начертание «Комплид» (design/brand-kit.html).
+   Знак всегда амброй, слово всегда контрастно фону. */
 .brand-link {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: -0.01em;
+  gap: 11px;
   color: var(--ink);
   flex-shrink: 0;
   text-decoration: none;
 }
 
 .brand-mark {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
-  background: var(--bg-invert);
-  color: var(--ink-invert);
-  display: grid;
-  place-items: center;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
+  flex: none;
+  display: block;
+  width: 27px;
+  height: 22px;
+  fill: var(--logoMark);
 }
 
-.brand-dot {
-  position: absolute;
-  right: -2px;
-  top: -2px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
+.brand-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Подпись под словом — только в подвале, в шапке её нет */
+.brand-tagline {
+  display: block;
+  margin-top: 4px;
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  color: var(--ink-mute);
 }
 
 .nav-links {
@@ -516,6 +667,14 @@ img {
 .btn-accent:hover {
   background: var(--accent-strong);
   border-color: var(--accent-strong);
+}
+
+/* Компактный вариант — под высоту шапки */
+.btn-accent--sm {
+  height: 36px;
+  padding: 0 17px;
+  font-size: 13.5px;
+  font-weight: 600;
 }
 
 .btn-outline {
