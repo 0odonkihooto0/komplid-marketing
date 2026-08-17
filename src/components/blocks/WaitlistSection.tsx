@@ -16,7 +16,7 @@ interface Props {
 export function WaitlistSection({
   source,
   eyebrow = 'Пре-лонч',
-  title = 'Komplid ещё не запущен — займите место в очереди',
+  title = '«Комплид» ещё не запущен — займите место в очереди',
   description = 'Мы открываем доступ постепенно. Оставьте почту: напишем в день запуска и закрепим скидку раннего доступа.',
 }: Props) {
   if (!WAITLIST_MODE) return null;

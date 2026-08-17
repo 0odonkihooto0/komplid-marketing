@@ -3,9 +3,9 @@ import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { company } from '@/lib/company';
 
 export const metadata: Metadata = {
-  title: 'Контакты Komplid — связаться с нами',
+  title: 'Контакты Комплид — связаться с нами',
   description:
-    'Связаться с Komplid: почта hello@komplid.ru, Telegram @komplid. Работаем онлайн по всей России, поддержка 10:00–19:00 МСК. Реквизиты ИП.',
+    'Связаться с Комплид: почта hello@komplid.ru, Telegram @komplid. Работаем онлайн по всей России, поддержка 10:00–19:00 МСК. Реквизиты ИП.',
   alternates: { canonical: 'https://komplid.ru/company/contact' },
 };
 
@@ -21,7 +21,7 @@ export default function ContactPage() {
 
       <div className="section" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="wrap">
-          <span className="eyebrow">Komplid · Контакты</span>
+          <span className="eyebrow">Комплид · Контакты</span>
           <h1
             className="mb-4 mt-3 text-4xl font-medium tracking-tight"
             style={{ letterSpacing: '-0.025em', color: 'var(--ink)' }}

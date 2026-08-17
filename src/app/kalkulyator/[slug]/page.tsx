@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!calc) return {};
   const url = `https://komplid.ru/kalkulyator/${slug}`;
   return {
-    // Суффикс «| Komplid» добавляет title.template корневого layout — не дублируем
+    // Суффикс «| Комплид» добавляет title.template корневого layout — не дублируем
     title: calc.title,
     description: calc.description,
     keywords: calc.keywords,
@@ -114,7 +114,7 @@ export default async function CalcPage({ params }: Props) {
 
       <article className="section">
         <div className="wrap" style={{ maxWidth: 900 }}>
-          <span className="eyebrow">Komplid · Калькуляторы</span>
+          <span className="eyebrow">Комплид · Калькуляторы</span>
           <h1
             style={{
               marginTop: 12,
@@ -176,8 +176,8 @@ export default async function CalcPage({ params }: Props) {
       />
 
       <Cta
-        eyebrow="Komplid · Бесплатный триал"
-        title="Упростите работу — попробуйте Komplid"
+        eyebrow="Комплид · Бесплатный триал"
+        title="Упростите работу — попробуйте Комплид"
         description="Автоматические КС-2, КС-3, расчёт аванса и сроков прямо в системе управления проектом. Триал 14 дней без карты."
         primary={{
           label: 'Попробовать бесплатно',

@@ -13,7 +13,7 @@ function comparison(slug: string, opts: { competitor?: string; publishedAt?: str
   const { competitor = slug.toUpperCase(), publishedAt = '2026-01-01' } = opts;
   return [
     '---',
-    `title: "Komplid vs ${competitor}"`,
+    `title: "Комплид vs ${competitor}"`,
     `slug: "${slug}"`,
     `publishedAt: "${publishedAt}"`,
     `competitor: "${competitor}"`,

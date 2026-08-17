@@ -4,9 +4,9 @@ import { getAllComparisons } from '@/content-loader/sravneniya';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 export const metadata: Metadata = {
-  title: 'Сравнение Komplid с конкурентами — ЦУС, Exon, Pragmacore',
+  title: 'Сравнение Комплид с конкурентами — ЦУС, Exon, Pragmacore',
   description:
-    'Честное сравнение Komplid с ведущими платформами для управления строительством. Функциональность, цены, внедрение — по 20-25 критериям.',
+    'Честное сравнение Комплид с ведущими платформами для управления строительством. Функциональность, цены, внедрение — по 20-25 критериям.',
   alternates: { canonical: 'https://komplid.ru/sravnenie' },
 };
 
@@ -24,12 +24,12 @@ export default async function ComparisonsPage() {
 
       <div className="section" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="wrap">
-          <span className="eyebrow">Komplid · Сравнение</span>
+          <span className="eyebrow">Комплид · Сравнение</span>
           <h1
             className="mb-4 mt-3 text-4xl font-medium tracking-tight"
             style={{ letterSpacing: '-0.025em', color: 'var(--ink)' }}
           >
-            Komplid vs конкуренты
+            Комплид vs конкуренты
           </h1>
           <p className="max-w-xl text-lg" style={{ color: 'var(--ink-soft)' }}>
             Честные сравнения с другими платформами для цифрового управления строительством в России.
@@ -71,7 +71,7 @@ export default async function ComparisonsPage() {
                     className="mb-2 text-xl font-semibold leading-snug transition-colors group-hover:text-[var(--accent-strong)]"
                     style={{ color: 'var(--ink)' }}
                   >
-                    Komplid vs {comparison.competitor}
+                    Комплид vs {comparison.competitor}
                   </h2>
 
                   <p

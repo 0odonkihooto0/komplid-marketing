@@ -70,7 +70,7 @@ export default async function ComparisonPage({ params }: PageProps) {
         description={comparison.description}
         url={url}
         publishedAt={comparison.publishedAt}
-        authorName="Komplid"
+        authorName="Комплид"
       />
       {faqs.length > 0 && <FaqSchema items={faqs} />}
 
@@ -105,7 +105,7 @@ export default async function ComparisonPage({ params }: PageProps) {
               className="flex flex-wrap items-center gap-4 text-sm"
               style={{ color: 'var(--ink-mute)' }}
             >
-              <span>Komplid</span>
+              <span>Комплид</span>
               <span>·</span>
               <time dateTime={comparison.publishedAt}>
                 {new Date(comparison.publishedAt).toLocaleDateString('ru-RU', {
@@ -173,10 +173,10 @@ export default async function ComparisonPage({ params }: PageProps) {
               className="mb-3 text-2xl font-semibold"
               style={{ letterSpacing: '-0.02em', color: 'var(--ink-invert)' }}
             >
-              Попробуйте Komplid на реальном объекте
+              Попробуйте Комплид на реальном объекте
             </h2>
             <p className="mb-6 text-sm" style={{ color: 'var(--ink-invert-mute)' }}>
-              Настройка за день. Триал — все 18 модулей без ограничений.
+              Настройка за день. Триал — все 21 модуль без ограничений.
             </p>
             <a
               href={`https://app.komplid.ru/signup?utm_source=comparison&utm_campaign=vs_${slug}&utm_medium=organic`}

@@ -12,7 +12,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { code } = await params;
   return {
-    title: 'Вы приглашены в Komplid',
+    title: 'Вы приглашены в Комплид',
     description: `Приглашение в ERP Komplid. Активируйте код ${code} и получите скидку на первый месяц подписки.`,
     robots: { index: false, follow: false },
   };
@@ -31,17 +31,17 @@ export default async function ReferralPage({ params }: PageProps) {
   const titleContent = info?.inviterName ? (
     <>
       Вас пригласил <em>{info.inviterName}</em>
-      <br />в Komplid
+      <br />в Комплид
     </>
   ) : (
     <>
-      Вы приглашены в <em>Komplid</em>
+      Вы приглашены в <em>Комплид</em>
     </>
   );
 
   const subtitle =
     `Активируйте код и получите ${discount}% скидку на первый месяц подписки. ` +
-    `Попробуйте все 18 модулей 14 дней бесплатно — скидка применится автоматически при оплате.`;
+    `Попробуйте все 21 модуль 14 дней бесплатно — скидка применится автоматически при оплате.`;
 
   const signupUrl =
     `https://app.komplid.ru/signup?ref=${encodeURIComponent(code)}&utm_source=referral`;
@@ -59,7 +59,7 @@ export default async function ReferralPage({ params }: PageProps) {
         title={titleContent}
         subtitle={subtitle}
         primaryCta={{ label: 'Зарегистрироваться со скидкой', href: signupUrl }}
-        secondaryCta={{ label: 'Узнать больше о Komplid', href: '/' }}
+        secondaryCta={{ label: 'Узнать больше о Комплид', href: '/' }}
         variant="compact"
       />
     </>

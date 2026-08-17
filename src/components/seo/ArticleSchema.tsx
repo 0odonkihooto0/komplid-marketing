@@ -34,7 +34,7 @@ export function ArticleSchema({
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Komplid',
+      name: 'Комплид',
       logo: {
         '@type': 'ImageObject',
         url: 'https://komplid.ru/icons/logo-512.png',

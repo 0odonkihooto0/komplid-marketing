@@ -7,7 +7,7 @@ export function OrganizationSchema() {
     '@id': 'https://komplid.ru/#organization',
     name: 'Комплид',
     // «Komplid Systems» убран: такого юрлица и бренда нет (BRAND_STRATEGY §4.3).
-    // Латиница осталась вторым именем: по ней ищут и на неё ведёт домен.
+    // Латиница остаётся вторым именем: по ней ищут и на неё ведёт домен.
     alternateName: ['Komplid'],
     url: 'https://komplid.ru',
     logo: {

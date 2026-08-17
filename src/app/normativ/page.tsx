@@ -40,7 +40,7 @@ export default async function NormativPage() {
 
       <div className="section" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="wrap">
-          <span className="eyebrow">Komplid · Нормативы</span>
+          <span className="eyebrow">Комплид · Нормативы</span>
           <h1
             className="mb-4 mt-3 text-4xl font-medium"
             style={{ letterSpacing: '-0.025em', color: 'var(--ink)' }}

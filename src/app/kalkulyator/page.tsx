@@ -47,7 +47,7 @@ function pluralCalc(n: number): string {
 const COUNT = CALCULATORS.length;
 
 export const metadata: Metadata = {
-  // Суффикс «| Komplid» добавляет title.template корневого layout — не дублируем
+  // Суффикс «| Комплид» добавляет title.template корневого layout — не дублируем
   title: `${COUNT} бесплатных ${pluralCalc(COUNT)} для строительства 2026`,
   description:
     'Онлайн-калькуляторы для стройки: деньги и договоры (аванс, КС-2, неустойка), материалы (бетон, кирпич, плитка), инженерные расчёты по СП. Бесплатно, без регистрации.',
@@ -110,7 +110,7 @@ export default function KalkulyatorPage() {
         ]}
       />
       <ItemListSchema
-        name="Бесплатные калькуляторы для строительства — Komplid"
+        name="Бесплатные калькуляторы для строительства — Комплид"
         items={CALCULATORS.map(c => ({
           name: c.titleShort,
           url: `https://komplid.ru/kalkulyator/${c.slug}`,
@@ -119,7 +119,7 @@ export default function KalkulyatorPage() {
 
       <div className="section" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="wrap">
-          <span className="eyebrow">Komplid · Калькуляторы</span>
+          <span className="eyebrow">Комплид · Калькуляторы</span>
           <h1
             style={{
               marginTop: 12,
