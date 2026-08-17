@@ -1128,3 +1128,11 @@ img {
 @media (max-width: 980px) {
   .hero-grid { grid-template-columns: minmax(0, 1fr) !important; }
 }
+
+/* Ролевые страницы: строка модуля на узком экране складывается в колонку */
+@media (max-width: 760px) {
+  .role-module-row {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+}
