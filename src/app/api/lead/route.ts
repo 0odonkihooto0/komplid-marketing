@@ -6,9 +6,14 @@ import { appendLead, notifyTelegram } from '@/lib/leads-store';
 export const dynamic = 'force-dynamic';
 
 const schema = z.object({
-  email: z.string().email(),
+  // Контакт: почта или телефон — хотя бы один, проверка ниже в .refine().
+  // Форма раннего доступа даёт выбрать, куда отвечать; требовать почту
+  // от человека, который оставил номер, значит потерять заявку.
+  email: z.string().email().optional(),
   name: z.string().optional(),
-  phone: z.string().optional(),
+  // Свободная строка: номера пишут и через +7, и через 8, и со скобками.
+  // Жёсткая маска здесь отсекала бы живые заявки ради красоты хранилища.
+  phone: z.string().trim().min(6).max(32).optional(),
   company: z.string().optional(),
   role: z.enum(['director', 'pto', 'prorab', 'smetchik', 'sk', 'other']).optional(),
   interest: z.string().optional(),
@@ -20,7 +25,11 @@ const schema = z.object({
   pdConsentVersion: z.string().optional(),
   utm: z.record(z.string(), z.string()).optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
-});
+})
+  .refine((d) => Boolean(d.email || d.phone), {
+    message: 'Нужна почта или телефон',
+    path: ['email'],
+  });
 
 /**
  * Приём лида.
@@ -58,13 +67,13 @@ export async function POST(req: NextRequest) {
   const forwarded = await postToInternalApi('/leads', lead);
   if (!forwarded.ok) {
     console.warn(
-      `[api/lead] лид ${lead.email} не ушёл в приложение (${forwarded.reason}), ` +
+      `[api/lead] лид ${lead.email ?? lead.phone} не ушёл в приложение (${forwarded.reason}), ` +
         `сохранён локально: ${stored}`,
     );
   }
 
   await notifyTelegram(
-    `Новый лид · ${lead.source}\n${lead.email}` +
+    `Новый лид · ${lead.source}\n${lead.email ?? lead.phone ?? '—'}` +
       (lead.role ? `\nроль: ${lead.role}` : '') +
       (lead.company ? `\nкомпания: ${lead.company}` : ''),
   );

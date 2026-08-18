@@ -6,8 +6,14 @@ COPY package.json package-lock.json ./
 
 RUN npm ci
 
+COPY docker/dev-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
+RUN chmod +x /usr/local/bin/dev-entrypoint.sh
+
 COPY . .
 
 EXPOSE 3200
 
+# Точка входа доустанавливает зависимости, если package-lock.json разошёлся
+# с содержимым тома node_modules.
+ENTRYPOINT ["dev-entrypoint.sh"]
 CMD ["npm", "run", "dev"]

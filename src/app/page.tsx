@@ -11,7 +11,7 @@ import { TrustStrip } from '@/components/home/TrustStrip';
 import { Features } from '@/components/blocks/Features';
 import { Faq } from '@/components/blocks/Faq';
 import { LatestPosts } from '@/components/blocks/LatestPosts';
-import { WaitlistSection } from '@/components/blocks/WaitlistSection';
+import { BetaCtaSection } from '@/components/home/BetaCtaSection';
 import { SoftwareAppSchema } from '@/components/seo/SoftwareAppSchema';
 
 export const metadata: Metadata = {
@@ -126,7 +126,7 @@ export default function HomePage() {
 
       <LatestPosts limit={3} />
 
-      <WaitlistSection source="homepage" />
+      <BetaCtaSection />
     </>
   );
 }

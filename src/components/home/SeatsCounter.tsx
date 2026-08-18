@@ -33,5 +33,21 @@ export function SeatsCounter() {
 
   if (left === null) return null;
 
-  return <span style={{ color: 'var(--t4)' }}>закрытая бета · {seatsPhrase(left)}</span>;
+  return (
+    <>
+      {/* Точка пульсирует, только когда число мест реальное: мигающий индикатор
+          рядом с пустотой обещал бы дефицит, которого мы не считали. */}
+      <span
+        className="anim-pulse"
+        style={{
+          width: 5,
+          height: 5,
+          borderRadius: '50%',
+          background: 'var(--acc)',
+          flex: 'none',
+        }}
+      />
+      <span style={{ color: 'var(--t4)' }}>закрытая бета · {seatsPhrase(left)}</span>
+    </>
+  );
 }

@@ -15,9 +15,26 @@ export function StagesTimeline() {
   return (
     <section className="section" id="stages" style={{ scrollMarginTop: 72, paddingBottom: 76 }}>
       <div className="wrap">
-        <div className="section-head" style={{ maxWidth: 700 }}>
-          <span className="eyebrow-ref">Жизненный цикл объекта</span>
-          <h2>Данные вводятся один раз и живут до ввода в эксплуатацию.</h2>
+        <div className="stages-head">
+          <div className="section-head" style={{ maxWidth: 700, marginBottom: 0 }}>
+            <span className="eyebrow-ref">Жизненный цикл объекта</span>
+            <h2>Данные вводятся один раз и живут до ввода в эксплуатацию.</h2>
+          </div>
+          {/* Подсказка, что блок переключается: без неё пять вкладок читаются
+              как заголовки колонок, а не как выбор. */}
+          <div style={{ flex: 'none', textAlign: 'right' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                fontWeight: 500,
+                color: 'var(--acc)',
+              }}
+            >
+              {active + 1} / {STAGES.length}
+            </div>
+            <div style={{ marginTop: 8, fontSize: 12.5, color: 'var(--t4)' }}>Выберите этап</div>
+          </div>
         </div>
 
         {/* Ось прогресса */}

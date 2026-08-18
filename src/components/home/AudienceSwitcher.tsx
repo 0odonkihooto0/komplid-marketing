@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AUDIENCES } from '@/lib/audience-data';
+import { AudienceAside } from './AudienceAside';
 import { CheckItem } from './CheckItem';
 import { ProfiPackages } from './ProfiPackages';
 import { TariffCards } from './TariffCards';
@@ -49,19 +50,31 @@ export function AudienceSwitcher() {
           </div>
         </div>
 
-        <div className="split-2" style={{ marginTop: 22, marginBottom: 40 }}>
+        <div className="audience-grid" style={{ marginTop: 22, marginBottom: 40 }}>
           <div>
             <h2 style={{ margin: 0, fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 500 }}>
               {audience.title}
             </h2>
-            <p style={{ margin: '14px 0 0', fontSize: 16.5, lineHeight: 1.6, color: 'var(--t3)' }}>
+            <p
+              style={{
+                margin: '14px 0 26px',
+                fontSize: 16.5,
+                lineHeight: 1.6,
+                color: 'var(--t3)',
+              }}
+            >
               {audience.subtitle}
             </p>
+            <div style={{ display: 'grid', gap: 12 }}>
+              {audience.items.map((item) => (
+                <CheckItem key={item} text={item} />
+              ))}
+            </div>
           </div>
-          <div style={{ display: 'grid', gap: 12 }}>
-            {audience.items.map((item) => (
-              <CheckItem key={item} text={item} />
-            ))}
+
+          {/* Справа — что человек получает: профиль и заказы либо состав команды */}
+          <div>
+            <AudienceAside specialist={isSpecialist} />
           </div>
         </div>
 
