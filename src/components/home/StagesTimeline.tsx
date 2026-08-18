@@ -14,7 +14,7 @@ export function StagesTimeline() {
 
   return (
     <section className="section" id="stages" style={{ scrollMarginTop: 72, paddingBottom: 76 }}>
-      <div className="wrap">
+      <div className="wrap-bleed">
         <div className="stages-head">
           <div className="section-head" style={{ maxWidth: 700, marginBottom: 0 }}>
             <span className="eyebrow-ref">Жизненный цикл объекта</span>

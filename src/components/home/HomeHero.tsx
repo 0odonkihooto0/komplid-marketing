@@ -10,7 +10,7 @@ const TRUST_LINE = ['Данные в РФ · ФЗ-152', 'Работает без
 export function HomeHero() {
   return (
     <div className="grid-bg">
-      <div className="wrap" style={{ paddingTop: 66, paddingBottom: 60 }}>
+      <div className="wrap-bleed" style={{ paddingTop: 66, paddingBottom: 60 }}>
         <div
           style={{
             display: 'grid',

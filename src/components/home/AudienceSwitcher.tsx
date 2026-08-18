@@ -23,7 +23,7 @@ export function AudienceSwitcher() {
       id="who"
       style={{ scrollMarginTop: 72, background: 'var(--bg3)', borderTop: '1px solid var(--lineSoft)' }}
     >
-      <div className="wrap">
+      <div className="wrap-bleed">
         <div
           style={{
             display: 'flex',
