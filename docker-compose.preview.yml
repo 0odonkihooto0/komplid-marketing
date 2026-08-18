@@ -1,0 +1,35 @@
+# Локальный просмотр в прод-режиме — запасной путь, когда dev-режим не работает.
+#
+# Зачем: в dev-режиме Next.js не гидратирует страницу, если не встал HMR-вебсокет
+# (docs/memory/dev-hmr-websocket-hydration.md). Сайт при этом отрисован, но не
+# реагирует на клики. Прод-сборка HMR-клиента не содержит и от этого не страдает.
+#
+# Отличие от docker-compose.prod.yml: тот берёт серверный .env.production
+# с секретами, которого на рабочей машине нет. Здесь — тот же .env.local,
+# что и у dev-режима.
+#
+# Цена: горячей перезагрузки нет. После правок — снова с --build.
+#   docker compose -f docker-compose.preview.yml up --build
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3200}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://app.komplid.ru}
+        # NEXT_PUBLIC_WAITLIST_MODE здесь намеренно нет: Dockerfile не объявляет
+        # для него ARG, поэтому передавать его в сборку бессмысленно. В
+        # docker-compose.prod.yml он передаётся и молча игнорируется — режим
+        # waitlist всегда остаётся включённым. Отдельная правка, не эта.
+        NEXT_PUBLIC_YANDEX_METRIKA_ID: ${NEXT_PUBLIC_YANDEX_METRIKA_ID:-}
+        NEXT_PUBLIC_YANDEX_VERIFICATION: ${NEXT_PUBLIC_YANDEX_VERIFICATION:-}
+        NEXT_PUBLIC_GOOGLE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_VERIFICATION:-}
+    ports:
+      - "3200:3000"
+    env_file:
+      - .env.local
+    environment:
+      # Лиды складываются во временный каталог контейнера: это просмотр,
+      # а не рабочая база — тома намеренно нет, чтобы ничего не копилось.
+      LEADS_DATA_DIR: /tmp/leads
