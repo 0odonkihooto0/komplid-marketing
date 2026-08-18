@@ -21,9 +21,13 @@ function dataDir(): string {
   return process.env.LEADS_DATA_DIR ?? path.join(process.cwd(), '.data');
 }
 
-/** Что приходит из формы: email и source обязательны, остальное свободно. */
+/**
+ * Что приходит из формы. Обязателен только source; контакт — почта или телефон,
+ * хотя бы один (проверяет схема роута). Остальное свободно.
+ */
 export interface LeadInput {
-  email: string;
+  email?: string;
+  phone?: string;
   source: string;
   [key: string]: unknown;
 }
@@ -60,27 +64,52 @@ export async function appendLead(lead: LeadInput): Promise<boolean> {
  * считаем реальные строки файла. Уникальность по почте: один человек, дважды
  * заполнивший форму, не должен съедать два места.
  *
+ * Заявка без почты, но с телефоном — тоже занятое место: считаем по контакту,
+ * какой бы он ни был, иначе счётчик занижал бы очередь и обещал места, которых нет.
+ *
  * Файла может не быть (свежий том, никто ещё не записался) — это ноль, а не ошибка.
  */
 export async function countWaitlistLeads(): Promise<number> {
   try {
     const raw = await readFile(path.join(dataDir(), 'leads.jsonl'), 'utf8');
-    const emails = new Set<string>();
+    const contacts = new Set<string>();
 
     for (const line of raw.split('\n')) {
       if (!line.trim()) continue;
       try {
         const lead = JSON.parse(line) as Partial<StoredLead>;
-        if (typeof lead.email === 'string') emails.add(lead.email.trim().toLowerCase());
+        const key = contactKey(lead);
+        if (key) contacts.add(key);
       } catch {
         // Битую строку пропускаем: она не должна ронять счётчик целиком.
       }
     }
 
-    return emails.size;
+    return contacts.size;
   } catch {
     return 0;
   }
+}
+
+/**
+ * Ключ, по которому заявки считаются за одного человека.
+ *
+ * Почта приводится к нижнему регистру, телефон — к одним цифрам: «+7 (999)
+ * 123-45-67» и «89991234567» это один номер, и два места он занимать не должен.
+ * Российские номера дополнительно сводим к виду 7XXXXXXXXXX — иначе тот же
+ * номер, записанный с восьмёрки, посчитался бы вторым.
+ */
+export function contactKey(lead: Partial<StoredLead>): string | null {
+  if (typeof lead.email === 'string' && lead.email.trim()) {
+    return `email:${lead.email.trim().toLowerCase()}`;
+  }
+  if (typeof lead.phone === 'string') {
+    let digits = lead.phone.replace(/\D/g, '');
+    if (digits.length === 11 && digits.startsWith('8')) digits = `7${digits.slice(1)}`;
+    if (digits.length === 10) digits = `7${digits}`;
+    if (digits) return `phone:${digits}`;
+  }
+  return null;
 }
 
 /**

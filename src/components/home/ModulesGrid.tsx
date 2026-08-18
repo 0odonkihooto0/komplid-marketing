@@ -32,8 +32,10 @@ export function ModulesGrid() {
           hint="всё, что происходит на стройке: документы, деньги, сроки, качество"
         />
         <div className="mod-grid">
-          {featured.map((m) => (
-            <FeaturedModuleCard key={m.no} mod={m} />
+          {featured.map((m, i) => (
+            /* Шаг 1.1 с — как в эталоне: за девять секунд цикла подсветка
+               обходит четыре карточки по очереди, а не мигает всей сеткой. */
+            <FeaturedModuleCard key={m.no} mod={m} wakeDelay={`${i * 1.1}s`} />
           ))}
         </div>
         <div className="mod-compact-grid" style={{ marginTop: 12 }}>

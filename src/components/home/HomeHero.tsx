@@ -97,6 +97,9 @@ export function HomeHero() {
         </div>
       </div>
 
+      {/* Отбивка «стройплощадка» между героем и счётчиками — как в эталоне */}
+      <div className="hatch-rule" />
+
       <SiteCounters />
     </div>
   );

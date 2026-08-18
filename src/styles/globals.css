@@ -876,8 +876,101 @@ img {
   to   { transform: translateX(-50%); }
 }
 
+/* ─────────────────────────────────────────────────
+   Анимации эталона (design/landing-reference.html)
+
+   Все девять переносятся один в один, включая длительности и задержки:
+   в прототипе они складываются в один такт — полосы цепочки документов
+   заполняются по очереди, точка пробегает рейку за то же время, штамп
+   ставится в конце. Разъехавшиеся тайминги ломают именно этот смысл.
+
+   Имена без префикса k-: в эталоне он отделял анимации прототипа от чужих,
+   здесь таблица стилей своя. Соответствие — в комментарии у каждой.
+   ───────────────────────────────────────────────── */
+
+/* k-fill · полоса прогресса заполняется слева направо */
+@keyframes fill {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* k-travel · точка пробегает рейку цепочки документов сверху вниз */
+@keyframes travel {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(196px); opacity: 0; }
+}
+
+/* k-stamp · штамп приёмки прикладывается с отскоком */
+@keyframes stamp {
+  0%   { transform: scale(1.35) rotate(-14deg); opacity: 0; }
+  55%  { transform: scale(1) rotate(-7deg); opacity: 1; }
+  64%  { transform: scale(1.04) rotate(-7deg); }
+  100% { transform: scale(1) rotate(-7deg); opacity: 1; }
+}
+
+/* k-rise · строка списка всплывает снизу */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* k-scan · полоса сканера проходит по карточке героя */
+@keyframes scan {
+  0%   { transform: translateY(-40px); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translateY(340px); opacity: 0; }
+}
+
+/* k-pulse · точка «сейчас» и QR мигают */
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50%      { opacity: 1; }
+}
+
+/* k-wake · карточка модуля коротко подсвечивается, как будто в ней событие */
+@keyframes wake {
+  0%, 100%  { background: transparent; border-color: transparent; }
+  45%, 55%  { background: oklch(0.72 0.16 62 / 0.09); border-color: oklch(0.72 0.16 62 / 0.4); }
+}
+
+/* k-sheen · блик проходит по карточке формы */
+@keyframes sheen {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+/* Утилиты поверх этих кадров — чтобы в разметке не появлялось
+   inline-свойство animation, которое нечем погасить медиазапросом. */
+.anim-fill   { animation: fill 1.1s ease-out both; }
+.anim-travel { animation: travel 4.6s cubic-bezier(.5, 0, .5, 1) infinite; }
+.anim-stamp  { animation: stamp 4.6s cubic-bezier(.2, 1.4, .4, 1) infinite; transform-origin: right center; }
+.anim-rise   { animation: rise 0.5s ease-out both; }
+.anim-scan   { animation: scan 4.6s cubic-bezier(.4, 0, .6, 1) infinite; }
+.anim-pulse  { animation: pulse 1.8s ease-in-out infinite; }
+.anim-pulse-slow { animation: pulse 3.4s ease-in-out infinite; }
+.anim-wake   { animation: wake 9s ease-in-out infinite; }
+.anim-sheen  { animation: sheen 6s ease-in-out infinite; }
+
+/*
+  Уважение к системной настройке. Раньше здесь гасился только тикер — теперь
+  анимаций девять, и перечислять их по одной значит однажды забыть новую.
+  Гасим всё разом: на маркетинговом сайте ни одна анимация не несёт смысла,
+  который потерялся бы в статике.
+*/
 @media (prefers-reduced-motion: reduce) {
-  .ticker__track { animation: none; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Полосы прогресса должны остаться заполненными, а не схлопнуться в ноль */
+  .anim-fill { width: 100%; }
 }
 
 /* Табы-таблетки — этапы, роли, аудитории */
@@ -1204,4 +1297,192 @@ img {
 
   .policy-table th { padding-bottom: 4px; }
   .policy-table td { padding-top: 0; }
+}
+
+/* Шапка секции этапов: заголовок слева, счётчик «N / 5» справа */
+.stages-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 700px) {
+  /* Счётчик под заголовком: справа он на узком экране жмёт заголовок в колонку */
+  .stages-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .stages-head > div:last-child { text-align: left !important; }
+}
+
+/* Карточки правой колонки секции «Для кого» */
+.aside-card {
+  background: var(--panel2);
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Полосатая лента поверху — та же «стройплощадка», что в отбивках */
+.aside-card__tape {
+  height: 8px;
+  background-image: repeating-linear-gradient(115deg, var(--acc) 0 12px, var(--panel2) 12px 24px);
+}
+
+/* Штриховка вместо фотографии: рисовать чьё-то лицо в примере нечем и незачем */
+.aside-card__photo {
+  flex: none;
+  width: 86px;
+  height: 104px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background-image: repeating-linear-gradient(135deg, var(--hatchA) 0 6px, var(--hatchB) 6px 12px);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: var(--t4);
+}
+
+.aside-card__qr {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 6px;
+  background-color: var(--qr);
+  background-image:
+    repeating-linear-gradient(90deg, var(--panel2) 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(0deg, var(--panel2) 0 4px, transparent 4px 8px);
+}
+
+/* Секция «Для кого»: слева текст и список, справа карточка-результат */
+.audience-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .audience-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+/* Финальный экран главной: заявка в бету */
+.beta-cta {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg3);
+  border-top: 1px solid var(--lineSoft);
+}
+
+.beta-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(720px 340px at 78% 0%, var(--glow1), transparent 65%);
+  pointer-events: none;
+}
+
+.beta-cta__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 44px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .beta-cta__grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+.beta-form {
+  padding: 30px;
+  background: var(--panel2);
+  border: 1px solid var(--line3);
+  border-radius: 14px;
+}
+
+/* Блик по карточке. Собственный слой, потому что градиент должен ехать
+   поверх содержимого, не перехватывая клики по полю и кнопке. */
+.beta-form__sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 110px;
+  background: linear-gradient(90deg, transparent, var(--sheen), transparent);
+  pointer-events: none;
+}
+
+.beta-form__input {
+  margin-top: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 48px;
+  padding: 0 15px;
+  border-radius: 9px;
+  background: var(--inset);
+  border: 1px solid var(--line3);
+  color: var(--t1);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  outline: none;
+}
+
+.beta-form__input:focus-visible {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px var(--accSoft);
+}
+
+.beta-form__submit {
+  margin-top: 14px;
+  width: 100%;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.beta-form__submit[disabled] { opacity: 0.6; cursor: progress; }
+
+/* Чипы выбора: канал связи и размер команды */
+.chip-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 8px 12px;
+  border-radius: 7px;
+  background: var(--inset);
+  border: 1px solid var(--line2);
+  color: var(--t4);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.chip:hover { color: var(--t2); border-color: var(--line3); }
+
+.chip[data-on] {
+  background: var(--panel3);
+  border-color: var(--acc);
+  color: var(--t1);
+}
+
+/* Канал связи — таблетки, а не прямоугольники */
+.chip--round { border-radius: 999px; padding: 7px 14px; font-size: 12px; border-color: transparent; }
+.chip--round[data-on] { background: var(--acc); color: var(--accT); border-color: transparent; }
+
+/* Подпись только для скринридеров */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

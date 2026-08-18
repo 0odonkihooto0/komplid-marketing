@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { countWaitlistLeads } from './leads-store';
+import { contactKey, countWaitlistLeads } from './leads-store';
 
 /**
  * Счётчик мест в бете показывается на главной, поэтому ошибаться ему нельзя:
@@ -54,5 +54,28 @@ describe('countWaitlistLeads', () => {
         '{"email":"b@example.ru"}\n',
     );
     expect(await countWaitlistLeads()).toBe(2);
+  });
+});
+
+describe('contactKey', () => {
+  it('почту приводит к нижнему регистру', () => {
+    expect(contactKey({ email: ' Ivan@Company.RU ' })).toBe('email:ivan@company.ru');
+  });
+
+  it('один номер в разных записях даёт один ключ', () => {
+    // иначе тот же человек, записавшийся с +7 и с 8, съел бы два места в бете
+    const plus = contactKey({ phone: '+7 (999) 123-45-67' });
+    expect(contactKey({ phone: '8 999 123 45 67' })).toBe(plus);
+    expect(contactKey({ phone: '9991234567' })).toBe(plus);
+    expect(plus).toBe('phone:79991234567');
+  });
+
+  it('почта важнее телефона — по ней и считаем', () => {
+    expect(contactKey({ email: 'a@b.ru', phone: '+79991234567' })).toBe('email:a@b.ru');
+  });
+
+  it('без контакта ключа нет', () => {
+    expect(contactKey({ source: 'x' })).toBeNull();
+    expect(contactKey({ email: '   ' })).toBeNull();
   });
 });

@@ -155,6 +155,37 @@ describe('POST /api/lead', () => {
     expect(await storedLeads()).toHaveLength(1);
   });
 
+  it('принимает заявку с телефоном вместо почты', async () => {
+    // Форма раннего доступа даёт выбрать, куда отвечать. Требовать при этом
+    // ещё и почту — значит терять заявку человека, оставившего номер.
+    const res = await POST(
+      makeReq(JSON.stringify({ phone: '+7 (999) 123-45-67', source: 'homepage-cta' })),
+    );
+
+    expect(res.status).toBe(200);
+    expect((await storedLeads())[0]).toMatchObject({ phone: '+7 (999) 123-45-67' });
+  });
+
+  it('возвращает 400, если нет ни почты, ни телефона', async () => {
+    const res = await POST(makeReq(JSON.stringify({ source: 'homepage-cta' })));
+    expect(res.status).toBe(400);
+  });
+
+  it('сохраняет размер команды из формы', async () => {
+    const res = await POST(
+      makeReq(
+        JSON.stringify({
+          email: 'a@b.ru',
+          source: 'homepage-cta',
+          metadata: { teamSize: '10-50' },
+        }),
+      ),
+    );
+
+    expect(res.status).toBe(200);
+    expect((await storedLeads())[0]).toMatchObject({ metadata: { teamSize: '10-50' } });
+  });
+
   it('дописывает несколько лидов в один файл', async () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
     await POST(makeReq(validLead));

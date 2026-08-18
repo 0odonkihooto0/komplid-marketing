@@ -20,11 +20,29 @@ function ModuleIcon({ no, size }: { no: string; size: number }) {
   return <Icon size={size} strokeWidth={1.7} />;
 }
 
-/** Крупная карточка ключевого модуля: описание и ярлыки возможностей. */
-export function FeaturedModuleCard({ mod }: { mod: Module }) {
+/**
+ * Крупная карточка ключевого модуля: описание и ярлыки возможностей.
+ *
+ * `wakeDelay` — очередь подсветки из эталона: карточки по очереди коротко
+ * загораются, будто в модуле произошло событие. Разъехавшиеся задержки
+ * превращают это в мигание всей сетки, поэтому шаг задаёт вызывающий.
+ */
+export function FeaturedModuleCard({ mod, wakeDelay }: { mod: Module; wakeDelay?: string }) {
   return (
-    <div className="mod-featured">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div className="mod-featured" style={{ position: 'relative', overflow: 'hidden' }}>
+      <span
+        className="anim-wake"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: 'inherit',
+          border: '1px solid transparent',
+          pointerEvents: 'none',
+          animationDelay: wakeDelay,
+        }}
+      />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
         <span
           style={{
             flex: 'none',
@@ -48,10 +66,20 @@ export function FeaturedModuleCard({ mod }: { mod: Module }) {
           </h3>
         </div>
       </div>
-      <p style={{ margin: '14px 0 0', fontSize: 12.5, lineHeight: 1.55, color: 'var(--t3)' }}>
+      <p
+        style={{
+          position: 'relative',
+          margin: '14px 0 0',
+          fontSize: 12.5,
+          lineHeight: 1.55,
+          color: 'var(--t3)',
+        }}
+      >
         {mod.description}
       </p>
-      <div style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+      <div
+        style={{ position: 'relative', marginTop: 14, display: 'flex', flexWrap: 'wrap', gap: 6 }}
+      >
         {mod.tags?.map((tag) => (
           <span
             key={tag}
