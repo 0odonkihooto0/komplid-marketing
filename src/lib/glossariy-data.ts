@@ -478,7 +478,7 @@ export const GLOSSARY_TERMS: readonly GlossaryTerm[] = [
       },
       {
         kind: 'Решение',
-        text: 'Komplid для технадзора',
+        text: '«Комплид» для технадзора',
         url: '/solutions/technical-supervisor',
       },
       {

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { code } = await params;
   return {
     title: 'Вы приглашены в Комплид',
-    description: `Приглашение в ERP Komplid. Активируйте код ${code} и получите скидку на первый месяц подписки.`,
+    description: `Приглашение в ERP «Комплид». Активируйте код ${code} и получите скидку на первый месяц подписки.`,
     robots: { index: false, follow: false },
   };
 }
