@@ -125,6 +125,36 @@ describe('POST /api/lead', () => {
     expect(await storedLeads()).toHaveLength(1);
   });
 
+  // Согласие на обработку ПДн — доказательство по 152-ФЗ: галочка в форме
+  // бессмысленна, если её значение не доезжает до записи о лиде.
+  it('сохраняет факт согласия на обработку ПДн и редакцию политики', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
+
+    const res = await POST(
+      makeReq(
+        JSON.stringify({
+          email: 'user@example.com',
+          source: 'waitlist',
+          pdConsent: true,
+          pdConsentVersion: '2026-08-17',
+        }),
+      ),
+    );
+
+    expect(res.status).toBe(200);
+    const leads = await storedLeads();
+    expect(leads[0]).toMatchObject({ pdConsent: true, pdConsentVersion: '2026-08-17' });
+  });
+
+  // Клиент с закэшированной страницей ещё не знает про новые поля — такой лид
+  // всё равно должен сохраниться, а не отвалиться на валидации.
+  it('принимает лид без полей согласия', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
+    const res = await POST(makeReq(validLead));
+    expect(res.status).toBe(200);
+    expect(await storedLeads()).toHaveLength(1);
+  });
+
   it('дописывает несколько лидов в один файл', async () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
     await POST(makeReq(validLead));
