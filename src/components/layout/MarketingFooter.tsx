@@ -5,7 +5,7 @@ import { BrandLogo } from './BrandLogo';
 export function MarketingFooter() {
   return (
     <footer className="footer-root">
-      <div className="wrap">
+      <div className="wrap-bleed">
         <div className="foot-grid">
           {/* Бренд */}
           <div className="foot-col">

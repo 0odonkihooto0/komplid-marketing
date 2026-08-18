@@ -12,7 +12,7 @@ import { SeatsCounter } from './SeatsCounter';
 export function BetaCtaSection() {
   return (
     <section className="section beta-cta" id="ranniy-dostup-section">
-      <div className="wrap">
+      <div className="wrap-bleed">
         <div className="beta-cta__grid">
           <div>
             <div

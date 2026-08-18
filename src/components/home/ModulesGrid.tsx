@@ -13,7 +13,7 @@ export function ModulesGrid() {
 
   return (
     <section className="section" id="modules" style={{ scrollMarginTop: 72, paddingTop: 0 }}>
-      <div className="wrap">
+      <div className="wrap-bleed">
         <div className="section-head">
           <span className="eyebrow-ref">{total} модуля · два контура</span>
           <h2>

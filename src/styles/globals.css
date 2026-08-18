@@ -371,6 +371,24 @@ img {
   .wrap { padding: 0 16px; }
 }
 
+/* Лендинг и оболочка сайта идут во всю ширину окна — как в эталоне
+   (design/landing-reference.html: секции свёрстаны как padding: 70px 48px 76px
+   без контейнера с потолком). .wrap с потолком 1240px остаётся для блога,
+   статей и шаблонов: длинная строка на широком мониторе читается плохо. */
+.wrap-bleed {
+  max-width: none;
+  margin: 0;
+  padding: 0 48px;
+}
+
+@media (max-width: 900px) {
+  .wrap-bleed { padding: 0 24px; }
+}
+
+@media (max-width: 640px) {
+  .wrap-bleed { padding: 0 16px; }
+}
+
 /* ─── Navigation bar ─── */
 .nav-bar {
   position: sticky;
@@ -382,13 +400,15 @@ img {
 }
 
 .nav-inner {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 48px;
   height: 60px;
   display: flex;
   align-items: center;
   gap: 32px;
+}
+
+@media (max-width: 900px) {
+  .nav-inner { padding: 0 24px; }
 }
 
 @media (max-width: 640px) {
@@ -439,7 +459,11 @@ img {
   margin-left: 12px;
 }
 
-@media (max-width: 767px) {
+/* Порог мобильной шапки — 1023px, а не 767px. Десктопная навигация (шесть
+   ссылок, переключатель темы, «Войти» и «Попробовать») требует ~970px и
+   на планшете распирала страницу: горизонтальная прокрутка на 69px при 900px
+   и на 201px при 768px. Все три правила ниже переключаются вместе. */
+@media (max-width: 1023px) {
   .nav-links { display: none; }
 }
 
@@ -472,7 +496,7 @@ img {
    .btn-ghost / .btn-accent, а те объявлены ниже по файлу и задают свой display.
    При равной специфичности побеждало объявление ниже — «Войти» и «Попробовать»
    не прятались на телефоне и распирали страницу на 13 px. */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .nav-right .nav-desktop-only { display: none; }
 }
 
@@ -480,7 +504,7 @@ img {
   display: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .nav-right .nav-mobile-only { display: flex; }
 }
 
@@ -599,7 +623,8 @@ img {
 .foot-bottom a:hover { color: var(--ink-soft); }
 
 /* ─── Marketing block utilities ─── */
-.section { padding: 96px 0; }
+/* Ритм эталона: 70–72px сверху, 76px снизу (design/landing-reference.html) */
+.section { padding: 72px 0 76px; }
 
 .section--invert {
   background: var(--bg-invert);
