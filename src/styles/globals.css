@@ -468,8 +468,12 @@ img {
   display: flex;
 }
 
+/* Селекторы утяжелены родителем намеренно. Кнопки шапки несут ещё и класс
+   .btn-ghost / .btn-accent, а те объявлены ниже по файлу и задают свой display.
+   При равной специфичности побеждало объявление ниже — «Войти» и «Попробовать»
+   не прятались на телефоне и распирали страницу на 13 px. */
 @media (max-width: 767px) {
-  .nav-desktop-only { display: none; }
+  .nav-right .nav-desktop-only { display: none; }
 }
 
 .nav-mobile-only {
@@ -477,7 +481,7 @@ img {
 }
 
 @media (max-width: 767px) {
-  .nav-mobile-only { display: flex; }
+  .nav-right .nav-mobile-only { display: flex; }
 }
 
 /* ─── Shared button styles ─── */

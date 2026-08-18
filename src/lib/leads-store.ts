@@ -1,5 +1,6 @@
 import { appendFile, mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { envOr } from './env';
 
 /**
  * Локальное хранилище лидов — JSONL-файл на диске сайта.
@@ -18,7 +19,7 @@ import path from 'node:path';
 // Путь читаем при каждом вызове, а не при импорте модуля: значение, снятое один раз
 // на этапе загрузки, невозможно переопределить ни в тестах, ни при смене конфигурации.
 function dataDir(): string {
-  return process.env.LEADS_DATA_DIR ?? path.join(process.cwd(), '.data');
+  return envOr(process.env.LEADS_DATA_DIR, path.join(process.cwd(), '.data'));
 }
 
 /**
