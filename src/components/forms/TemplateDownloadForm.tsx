@@ -196,7 +196,7 @@ export function TemplateDownloadForm({ slug, filename }: Props) {
             style={{ accentColor: 'var(--accent)' }}
           />
           <span>
-            Хочу ранний доступ к Komplid. <strong>{WAITLIST_OFFER}</strong>
+            Хочу ранний доступ к «Комплид». <strong>{WAITLIST_OFFER}</strong>
           </span>
         </label>
       )}
