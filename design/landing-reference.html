@@ -46,6 +46,11 @@ input{font-family:'Onest',sans-serif}
 @keyframes k-pulse{0%,100%{opacity:.2}50%{opacity:1}}
 @keyframes k-wake{0%,100%{background:transparent;border-color:transparent}45%,55%{background:oklch(0.72 0.16 62 / 0.09);border-color:oklch(0.72 0.16 62 / 0.4)}}
 @keyframes k-sheen{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+/* Наведение для блоков, которые собирает скрипт интерактивности: проход по
+   style-hover случается один раз при загрузке и до этих узлов не доходит. */
+.ref-doc:hover{border-color:var(--acc)}
+.ref-cta:hover{background:var(--accH);color:var(--accT)}
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
 </style>
 </head>
 <body>
@@ -57,7 +62,14 @@ input{font-family:'Onest',sans-serif}
   Полные данные всех состояний — в <script id="reference-data"> в конце файла.
 
   Намерения по наведению записаны в нестандартном атрибуте style-hover — в React
-  они переносятся в обычный CSS :hover.
+  они переносятся в обычный CSS :hover; в самом файле их разворачивает в правила
+  скрипт интерактивности в конце.
+
+  ВНИМАНИЕ ПРИ ПЕРЕГЕНЕРАЦИИ. Генератор срезает обработчики кликов, поэтому
+  интерактивность (вкладки этапов, ролей, аудитории, профи-пакетов и переключатель
+  темы) дописана вручную: атрибуты data-ref по разметке и <script> в конце файла.
+  Их надо перенести в новую сборку, иначе эталон снова станет картинкой,
+  по которой нельзя проверить ни одно состояние кроме исходного.
 
   Отличия от прототипа, внесённые сознательно:
   · «ФГИС ЦС» → «справочники ФСНБ-2022»: живого хода во внешний реестр нет
@@ -65,7 +77,10 @@ input{font-family:'Onest',sans-serif}
   · счётчик мест беты — подстановка {seatsLeft} вместо захардкоженного «34»:
     на сайте он считается из реальных заявок.
 -->
-<div data-theme="light" style="background:var(--bg);color:var(--t1);min-width:1180px">
+<!-- Обёртка страницы. data-theme здесь НЕ ставим: атрибут на этом узле перебивал бы
+     переключатель темы на <html> — светлая палитра описана селектором [data-theme="light"],
+     который матчится на любом элементе. -->
+<div style="background:var(--bg);color:var(--t1);min-width:1180px">
 
 <div data-screen-label="Навигация" style="position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:26px;height:66px;padding:0 48px;background:var(--navBg);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)">
   <div style="display:flex;align-items:center;gap:11px">
@@ -81,8 +96,8 @@ input{font-family:'Onest',sans-serif}
     <a href="#base" style="color:inherit" style-hover="color:var(--t1)">Нормативка</a>
   </div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
-    <div style="display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);color:var(--t3);font:500 11px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer" style-hover="border-color:var(--acc);color:var(--t1)">
-      <span style="width: 11px; height: 11px; border-radius: 3px; background: oklch(0.2 0.008 255); border: 1px solid var(--line3)"></span>Тёмная
+    <div style="display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);color:var(--t3);font:500 11px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer" style-hover="border-color:var(--acc);color:var(--t1)" data-theme-toggle>
+      <span data-ref="theme-swatch" style="width: 11px; height: 11px; border-radius: 3px; background: oklch(0.2 0.008 255); border: 1px solid var(--line3)"></span><span data-ref="theme-label">Тёмная</span>
     </div>
     <span style="font:500 13.5px 'Onest',sans-serif;color:var(--t3);cursor:pointer" style-hover="color:var(--t1)">Войти</span>
     <a href="#cta" style="display:inline-flex;align-items:center;height:36px;padding:0 17px;border-radius:8px;background:var(--acc);color:var(--accT);font:600 13.5px 'Onest',sans-serif" style-hover="background:var(--accH);color:var(--accT)">Ранний доступ</a>
@@ -183,15 +198,15 @@ input{font-family:'Onest',sans-serif}
       <h2 style="margin:16px 0 0;font:500 42px/1.05 'Geologica',sans-serif;letter-spacing:-.033em;color:var(--t1);max-width:700px">Данные вводятся один раз и живут до ввода в эксплуатацию.</h2>
     </div>
     <div style="flex:none;text-align:right">
-      <div style="font:500 12px 'JetBrains Mono',monospace;color:var(--acc)">3 / 5</div>
+      <div data-ref="stage-counter" style="font:500 12px 'JetBrains Mono',monospace;color:var(--acc)">3 / 5</div>
       <div style="margin-top:8px;font:12.5px 'Onest',sans-serif;color:var(--t4)">Выберите этап</div>
     </div>
   </div>
 
   <div style="position:relative;height:3px;background:var(--line)">
-    <div style="position:absolute;left:0;top:0;bottom:0;background:var(--acc);width:60%;transition:width .45s cubic-bezier(.4,0,.2,1)"></div>
+    <div data-ref="stage-progress" style="position:absolute;left:0;top:0;bottom:0;background:var(--acc);width:60%;transition:width .45s cubic-bezier(.4,0,.2,1)"></div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(5,1fr)">
+  <div data-ref="stage-tabs" style="display:grid;grid-template-columns:repeat(5,1fr)">
     
       <div style="cursor: pointer; padding: 18px 20px 20px; background: transparent; color: var(--t4); border-right: 1px solid var(--line); border-left: 1px solid transparent; transition: background .25s, color .25s">
         <div style="display:flex;align-items:center;gap:9px">
@@ -235,7 +250,7 @@ input{font-family:'Onest',sans-serif}
     
   </div>
 
-  <div style="display:grid;grid-template-columns:1.08fr 1fr;background:var(--panel);border:1px solid var(--line2);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;min-height:326px">
+  <div data-ref="stage-body" style="display:grid;grid-template-columns:1.08fr 1fr;background:var(--panel);border:1px solid var(--line2);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;min-height:326px">
     <div style="padding:36px 38px 34px;border-right:1px solid var(--line2)">
       <div style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)">Этап 03</div>
       <h3 style="margin:16px 0 14px;font:500 34px/1.08 'Geologica',sans-serif;letter-spacing:-.032em;color:var(--t1)">СМР</h3>
@@ -529,7 +544,7 @@ input{font-family:'Onest',sans-serif}
 <div data-screen-label="Роли" id="roles" style="padding:70px 48px 76px;background:var(--bg3);border-top:1px solid var(--lineSoft);scroll-margin-top:66px">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:40px;height:40px">
     <div style="display:inline-flex;align-items:center;gap:10px;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)"><span style="width:20px;height:1px;background:var(--acc)"></span>Роли и право подписи</div>
-    <div style="display:inline-flex;padding:5px;border-radius:999px;background:var(--panel);border:1px solid var(--line2)">
+    <div data-ref="role-tabs" style="display:inline-flex;padding:5px;border-radius:999px;background:var(--panel);border:1px solid var(--line2)">
       
         <div style="cursor: pointer; padding: 9px 17px; border-radius: 999px; font: 600 13.5px Onest, sans-serif; background: var(--acc); color: var(--accT); transition: background .2s, color .2s">В пространстве · 10</div>
       
@@ -539,15 +554,15 @@ input{font-family:'Onest',sans-serif}
   </div>
   <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:40px;margin-top:22px;align-items:start">
     <div>
-      <h2 style="margin:0;min-height:88px;font:500 40px/1.06 'Geologica',sans-serif;letter-spacing:-.032em;color:var(--t1)">Роль открывает разделы. Полномочия дают право подписи.</h2>
-      <p style="margin:14px 0 0;font:16.5px/1.6 'Onest',sans-serif;color:var(--t3);text-wrap:pretty">Десять ролей в пространстве компании: от владельца до строителя, который видит только своё задание. Внешние участники — заказчик, стройконтроль, проектировщик — заходят по ссылке на один объект и места в тарифе не занимают.</p>
+      <h2 data-ref="role-title" style="margin:0;min-height:88px;font:500 40px/1.06 'Geologica',sans-serif;letter-spacing:-.032em;color:var(--t1)">Роль открывает разделы. Полномочия дают право подписи.</h2>
+      <p data-ref="role-sub" style="margin:14px 0 0;font:16.5px/1.6 'Onest',sans-serif;color:var(--t3);text-wrap:pretty">Десять ролей в пространстве компании: от владельца до строителя, который видит только своё задание. Внешние участники — заказчик, стройконтроль, проектировщик — заходят по ссылке на один объект и места в тарифе не занимают.</p>
     </div>
     <div style="padding:20px;border-radius:12px;background:var(--panel);border:1px solid var(--line2)">
       <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)">Что это меняет</div>
-      <div style="margin-top:10px;font:13.5px/1.6 'Onest',sans-serif;color:var(--t3)">Прораб не видит денег, бухгалтер не правит журналы, а гость не может ничего сломать. Матрица прав — по шести разделам: объекты, исполнительная, журналы, сметы, подпись, деньги.</div>
+      <div data-ref="role-note" style="margin-top:10px;font:13.5px/1.6 'Onest',sans-serif;color:var(--t3)">Прораб не видит денег, бухгалтер не правит журналы, а гость не может ничего сломать. Матрица прав — по шести разделам: объекты, исполнительная, журналы, сметы, подпись, деньги.</div>
     </div>
   </div>
-  <div style="margin-top:24px;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden">
+  <div data-ref="role-grid" style="margin-top:24px;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden">
     
       <div style="background: var(--panel); padding: 20px 18px 22px; min-height: 146px">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
@@ -645,7 +660,7 @@ input{font-family:'Onest',sans-serif}
 <div data-screen-label="Для кого" id="who" style="padding:70px 48px 76px;background:var(--bg3);border-top:1px solid var(--lineSoft);scroll-margin-top:66px">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:40px;height:40px">
     <div style="display:inline-flex;align-items:center;gap:10px;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)"><span style="width:20px;height:1px;background:var(--acc)"></span>Две точки входа</div>
-    <div style="display:inline-flex;padding:5px;border-radius:999px;background:var(--panel);border:1px solid var(--line2)">
+    <div data-ref="aud-tabs" style="display:inline-flex;padding:5px;border-radius:999px;background:var(--panel);border:1px solid var(--line2)">
       
         <div style="cursor: pointer; padding: 9px 17px; border-radius: 999px; font: 600 13.5px Onest, sans-serif; background: var(--acc); color: var(--accT); transition: background .2s, color .2s">Я специалист</div>
       
@@ -656,9 +671,9 @@ input{font-family:'Onest',sans-serif}
 
   <div style="display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:40px;margin-top:22px;align-items:start">
     <div style="min-height:472px">
-      <h2 style="margin:0;min-height:88px;font:500 40px/1.06 'Geologica',sans-serif;letter-spacing:-.032em;color:var(--t1)">Ваш опыт наконец видно.</h2>
-      <p style="margin:14px 0 26px;min-height:104px;font:16.5px/1.6 'Onest',sans-serif;color:var(--t3);text-wrap:pretty">Бесплатный тариф без карты: нормативы, справочники и калькуляторы. Профиль специалиста собирается сам из объектов и сданных актов — компании ищут людей уже по нему, а не по резюме.</p>
-      <div style="display:grid;gap:12px">
+      <h2 data-ref="aud-title" style="margin:0;min-height:88px;font:500 40px/1.06 'Geologica',sans-serif;letter-spacing:-.032em;color:var(--t1)">Ваш опыт наконец видно.</h2>
+      <p data-ref="aud-sub" style="margin:14px 0 26px;min-height:104px;font:16.5px/1.6 'Onest',sans-serif;color:var(--t3);text-wrap:pretty">Бесплатный тариф без карты: нормативы, справочники и калькуляторы. Профиль специалиста собирается сам из объектов и сданных актов — компании ищут людей уже по нему, а не по резюме.</p>
+      <div data-ref="aud-items" style="display:grid;gap:12px">
         
           <div style="display:flex;gap:12px;align-items:flex-start;font:14.5px/1.45 'Onest',sans-serif;color:var(--t2)">
             <span style="flex:none;margin-top:2px;width:18px;height:18px;border-radius:5px;background:var(--accSoft);color:var(--acc);display:grid;place-items:center;font:700 10px 'JetBrains Mono',monospace">✓</span>«Базовый» 1 900 ₽/мес или «Про» 2 900 ₽ — платите за себя, не за компанию
@@ -679,7 +694,7 @@ input{font-family:'Onest',sans-serif}
       </div>
     </div>
 
-    <div style="min-height:472px">
+    <div data-ref="aud-side" style="min-height:472px">
       
       <div style="background:var(--panel2);border:1px solid var(--line2);border-radius:14px;overflow:hidden">
         <div style="height:8px;background-image:repeating-linear-gradient(115deg,var(--acc) 0 12px,var(--panel2) 12px 24px)"></div>
@@ -715,7 +730,7 @@ input{font-family:'Onest',sans-serif}
     </div>
   </div>
 
-  <div id="price" style="margin-top:12px;scroll-margin-top:80px">
+  <div id="price" data-ref="price" style="margin-top:12px;scroll-margin-top:80px">
     
     <div style="border:1px solid var(--line2);border-radius:14px;background:var(--panel2);overflow:hidden;min-height:280px">
       <div style="display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line)">
@@ -1211,16 +1226,324 @@ input{font-family:'Onest',sans-serif}
 }
 </script>
 <script>
-  // Переключатель тем эталона: на сайте это src/components/layout/ThemeToggle.tsx
-  var root = document.documentElement;
-  root.setAttribute('data-theme', localStorage.getItem('komplid_ref_theme') || 'light');
-  document.querySelectorAll('[data-theme-toggle]').forEach(function (el) {
-    el.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('komplid_ref_theme', next);
+/* ──────────────────────────────────────────────────────────────────────
+   Интерактивность эталона. Дописана вручную поверх генерации из прототипа
+   Claude Design: генератор срезает onClick-обработчики, и без этого слоя
+   файл выглядит как лендинг, но не переключается — ни вкладки, ни тема.
+
+   ПРИ СЛЕДУЮЩЕЙ ПЕРЕГЕНЕРАЦИИ ЭТОТ БЛОК И АТРИБУТЫ data-ref НАДО ПЕРЕНЕСТИ.
+
+   Данные всех состояний лежат выше в <script id="reference-data">, разметка
+   собирается из них — поэтому вкладки показывают ровно те тексты, которые
+   потом уезжают в src/lib/home-data.ts и src/lib/audience-data.ts.
+   ────────────────────────────────────────────────────────────────────── */
+(function () {
+  var D = JSON.parse(document.getElementById('reference-data').textContent);
+  var $ = function (name) { return document.querySelector('[data-ref="' + name + '"]'); };
+  var esc = function (t) {
+    return String(t).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
     });
-  });
+  };
+
+  /* ── style-hover → настоящий :hover ────────────────────────────────
+     В прототипе намерения по наведению записаны нестандартным атрибутом,
+     который браузер игнорирует. Разворачиваем его в правила таблицы стилей:
+     руками их полсотни, и любое расхождение было бы правкой в двух местах. */
+  (function () {
+    var nodes = document.querySelectorAll('[style-hover]');
+    if (!nodes.length) return;
+    var css = [];
+    Array.prototype.forEach.call(nodes, function (el, i) {
+      var cls = 'ref-h-' + i;
+      el.classList.add(cls);
+      css.push('.' + cls + ':hover{' + el.getAttribute('style-hover') + '}');
+    });
+    var tag = document.createElement('style');
+    tag.textContent = css.join('\n');
+    document.head.appendChild(tag);
+  })();
+
+  /* ── тема ──────────────────────────────────────────────────────────── */
+  (function () {
+    var root = document.documentElement;
+    var apply = function (t) {
+      root.setAttribute('data-theme', t);
+      var label = $('theme-label'), swatch = $('theme-swatch');
+      if (label) label.textContent = t === 'light' ? 'Тёмная' : 'Светлая';
+      if (swatch) swatch.style.background = t === 'light'
+        ? 'oklch(0.2 0.008 255)' : 'oklch(0.98 0.002 85)';
+    };
+    var saved = null;
+    try { saved = localStorage.getItem('komplid_ref_theme'); } catch (e) {}
+    apply(saved === 'dark' || saved === 'light' ? saved : 'light');
+    Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'), function (el) {
+      el.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        apply(next);
+        try { localStorage.setItem('komplid_ref_theme', next); } catch (e) {}
+      });
+    });
+  })();
+
+  /* ── общее: полоска вкладок ────────────────────────────────────────── */
+  function pills(host, labels, active, onPick, size) {
+    var f = size === 'sm' ? '12.5px' : '13.5px';
+    host.innerHTML = labels.map(function (label, i) {
+      var on = i === active;
+      return '<div data-i="' + i + '" style="cursor:pointer;padding:9px 17px;border-radius:999px;'
+        + 'font:600 ' + f + " Onest,sans-serif;background:" + (on ? 'var(--acc)' : 'transparent')
+        + ';color:' + (on ? 'var(--accT)' : 'var(--t3)')
+        + ';transition:background .2s,color .2s">' + esc(label) + '</div>';
+    }).join('');
+    Array.prototype.forEach.call(host.children, function (el) {
+      el.addEventListener('click', function () { onPick(+el.getAttribute('data-i')); });
+    });
+  }
+
+  var MONO = "'JetBrains Mono',monospace";
+  var UI = "'Onest',sans-serif";
+  var DISPLAY = "'Geologica',sans-serif";
+
+  /* ── этапы объекта ─────────────────────────────────────────────────── */
+  var stageIndex = 2;
+  function renderStages() {
+    var st = D.stages[stageIndex];
+
+    $('stage-counter').textContent = (stageIndex + 1) + ' / ' + D.stages.length;
+    $('stage-progress').style.width = ((stageIndex + 1) / D.stages.length * 100) + '%';
+
+    var tabs = $('stage-tabs');
+    tabs.innerHTML = D.stages.map(function (s, i) {
+      var on = i === stageIndex;
+      return '<div data-i="' + i + '" style="cursor:pointer;padding:18px 20px 20px;'
+        + 'background:' + (on ? 'var(--panel)' : 'transparent')
+        + ';color:' + (on ? 'var(--t1)' : 'var(--t4)')
+        + ';border-right:1px solid var(--line);border-left:1px solid '
+        + (on ? 'var(--line2)' : 'transparent') + ';transition:background .25s,color .25s">'
+        + '<div style="display:flex;align-items:center;gap:9px">'
+        + '<span style="width:7px;height:7px;border-radius:50%;background:'
+        + (on ? 'var(--acc)' : 'var(--line3)') + '"></span>'
+        + '<span style="font:500 10.5px ' + MONO + ';letter-spacing:.14em">' + esc(s.no) + '</span></div>'
+        + '<div style="margin-top:11px;font:500 16px ' + UI + '">' + esc(s.name) + '</div></div>';
+    }).join('');
+    Array.prototype.forEach.call(tabs.children, function (el) {
+      el.addEventListener('click', function () {
+        stageIndex = +el.getAttribute('data-i');
+        renderStages();
+      });
+    });
+
+    var stat = function (v, l) {
+      return '<div><div style="font:500 26px/1 ' + DISPLAY + ';letter-spacing:-.03em;color:var(--t1)">'
+        + esc(v) + '</div><div style="margin-top:8px;font:11px ' + MONO
+        + ';letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">' + esc(l) + '</div></div>';
+    };
+
+    $('stage-body').innerHTML =
+      '<div style="padding:36px 38px 34px;border-right:1px solid var(--line2)">'
+      + '<div style="font:500 11px ' + MONO + ';letter-spacing:.18em;text-transform:uppercase;color:var(--acc)">Этап '
+      + esc(st.no) + '</div>'
+      + '<h3 style="margin:16px 0 14px;font:500 34px/1.08 ' + DISPLAY + ';letter-spacing:-.032em;color:var(--t1)">'
+      + esc(st.name) + '</h3>'
+      + '<p style="margin:0 0 26px;font:15.5px/1.6 ' + UI + ';color:var(--t3);text-wrap:pretty">'
+      + esc(st.desc) + '</p>'
+      + '<div style="display:flex;gap:34px;padding-top:22px;border-top:1px solid var(--line)">'
+      + stat(st.statN, st.statL) + stat(st.stat2N, st.stat2L) + '</div></div>'
+      + '<div style="padding:36px 38px 34px;background:var(--panelAlt)">'
+      + '<div style="font:500 11px ' + MONO + ';letter-spacing:.18em;text-transform:uppercase;color:var(--t4);margin-bottom:18px">Документы и модули этапа</div>'
+      + '<div style="display:grid;gap:9px">'
+      + st.docs.map(function (d) {
+          return '<div class="ref-doc" style="display:flex;align-items:center;gap:13px;padding:14px 16px;'
+            + 'background:var(--panel3);border:1px solid var(--line2);border-radius:8px">'
+            + '<span style="width:6px;height:6px;background:var(--acc)"></span>'
+            + '<span style="font:500 14px ' + UI + ';color:var(--t2)">' + esc(d.t) + '</span>'
+            + '<span style="margin-left:auto;font:11px ' + MONO
+            + ';letter-spacing:.08em;text-transform:uppercase;color:var(--t4)">' + esc(d.m) + '</span></div>';
+        }).join('')
+      + '</div></div>';
+  }
+
+  /* ── роли ──────────────────────────────────────────────────────────── */
+  var ROLE_VIEWS = [
+    {
+      tab: 'В пространстве · ' + D.spaceRoles.length,
+      title: 'Роль открывает разделы. Полномочия дают право подписи.',
+      sub: 'Десять ролей в пространстве компании: от владельца до строителя, который видит только своё задание. Внешние участники — заказчик, стройконтроль, проектировщик — заходят по ссылке на один объект и места в тарифе не занимают.',
+      note: 'Прораб не видит денег, бухгалтер не правит журналы, а гость не может ничего сломать. Матрица прав — по шести разделам: объекты, исполнительная, журналы, сметы, подпись, деньги.',
+      roles: D.spaceRoles
+    },
+    {
+      tab: 'Стороны по ГрК · ' + D.orgRoles.length,
+      title: 'Каждый пункт акта подписывает своя сторона.',
+      sub: 'Восемь сторон, названных Градостроительным кодексом и приказом 344/пр. Роль в пространстве отвечает на вопрос «что видно», сторона — на вопрос «чья подпись стоит под пунктом акта».',
+      note: 'Стороны берутся из договора, а не выбираются вручную при каждом акте. Поэтому в акте не появляется подписант без действующего приказа о назначении — систему предупреждает до подписи, а не инспектор после.',
+      roles: D.orgRoles
+    }
+  ];
+  var roleView = 0;
+  function renderRoles() {
+    var v = ROLE_VIEWS[roleView];
+    pills($('role-tabs'), ROLE_VIEWS.map(function (x) { return x.tab; }), roleView, function (i) {
+      roleView = i; renderRoles();
+    });
+    $('role-title').textContent = v.title;
+    $('role-sub').textContent = v.sub;
+    $('role-note').textContent = v.note;
+    $('role-grid').innerHTML = v.roles.map(function (r) {
+      return '<div style="background:var(--panel);padding:20px 18px 22px;min-height:146px">'
+        + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'
+        + '<span style="font:500 14.5px/1.3 ' + UI + ';color:var(--t1)">' + esc(r.name) + '</span>'
+        + '<span title="' + (r.free ? 'Не занимает место в тарифе' : '') + '" style="flex:none;margin-top:5px;width:7px;height:7px;border-radius:50%;background:'
+        + (r.free ? 'var(--ok)' : 'var(--acc)') + '"></span></div>'
+        + '<div style="margin-top:9px;font:10.5px ' + MONO + ';letter-spacing:.08em;color:var(--acc)">' + esc(r.meta) + '</div>'
+        + '<div style="margin-top:9px;font:12px/1.45 ' + UI + ';color:var(--t4)">' + esc(r.desc) + '</div></div>';
+    }).join('');
+  }
+
+  /* ── аудитория, профи-пакеты и тарифы ──────────────────────────────── */
+  var audIndex = 0, profiIndex = 1;
+
+  function specialistSide() {
+    /* Карточка профиля и лента заказов — ПРИМЕР вида, а не данные клиента:
+       имя и цифры вымышлены и на сайт в таком виде не переносятся (CLAUDE.md §21). */
+    var counter = function (v, l, color) {
+      return '<div><div style="font:500 24px/1 ' + DISPLAY + ';color:' + (color || 'var(--t1)')
+        + ';font-variant-numeric:tabular-nums">' + esc(v) + '</div><div style="margin-top:7px;font:10px '
+        + MONO + ';letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">' + esc(l) + '</div></div>';
+    };
+    var order = function (t, sum, delay) {
+      return '<div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--lineSoft);animation:k-rise .5s ease-out '
+        + delay + ' both"><span style="width:6px;height:6px;border-radius:50%;background:var(--acc)"></span>'
+        + '<span style="font:13.5px ' + UI + ';color:var(--t2)">' + esc(t) + '</span>'
+        + '<span style="margin-left:auto;font:500 12.5px ' + MONO + ';color:var(--t1)">' + esc(sum) + '</span></div>';
+    };
+    return '<div style="background:var(--panel2);border:1px solid var(--line2);border-radius:14px;overflow:hidden">'
+      + '<div style="height:8px;background-image:repeating-linear-gradient(115deg,var(--acc) 0 12px,var(--panel2) 12px 24px)"></div>'
+      + '<div style="padding:22px 24px 24px">'
+      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">'
+      + '<div style="font:500 10px ' + MONO + ';letter-spacing:.16em;text-transform:uppercase;color:var(--t4)">Профиль специалиста<br><span style="color:var(--acc)">пример вида · данные вымышлены</span></div>'
+      + '<div style="flex:none;width:52px;height:52px;border-radius:6px;background-color:var(--qr);background-image:repeating-linear-gradient(90deg,var(--panel2) 0 4px,transparent 4px 8px),repeating-linear-gradient(0deg,var(--panel2) 0 4px,transparent 4px 8px);animation:k-pulse 3.4s ease-in-out infinite"></div></div>'
+      + '<div style="display:flex;gap:18px;margin-top:22px;align-items:flex-end">'
+      + '<div style="width:86px;height:104px;border-radius:8px;background-image:repeating-linear-gradient(135deg,var(--hatchA) 0 6px,var(--hatchB) 6px 12px);display:grid;place-items:center;font:9.5px ' + MONO + ';letter-spacing:.12em;color:var(--t4);flex:none">ФОТО</div>'
+      + '<div><div style="font:500 26px/1.1 ' + DISPLAY + ';letter-spacing:-.03em;color:var(--t1)">Инженер ПТО</div>'
+      + '<div style="margin-top:7px;font:14px ' + UI + ';color:var(--acc)">стаж, объекты, сданные акты</div>'
+      + '<div style="margin-top:10px;font:11px ' + MONO + ';letter-spacing:.1em;color:var(--t4)">номер профиля · город</div></div></div>'
+      + '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--line2);display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'
+      + counter('—', 'объектов') + counter('—', 'актов сдано') + counter('—', 'возвратов', 'var(--ok)')
+      + '</div></div></div>'
+      + '<div style="margin-top:14px;background:var(--panel);border:1px solid var(--line2);border-radius:12px;overflow:hidden">'
+      + '<div style="padding:14px 20px;border-bottom:1px solid var(--line);font:500 10px ' + MONO + ';letter-spacing:.14em;text-transform:uppercase;color:var(--t4)">Заказы под ваш профиль · пример</div>'
+      + order('Комплект ИД на объект, 3 месяца', 'бюджет', '.1s')
+      + order('Технадзор, объект под ключ', 'бюджет', '.3s')
+      + order('Разовая сборка АОСР', 'бюджет', '.5s')
+      + '</div>';
+  }
+
+  function companySide() {
+    /* У компании справа — состав пространства: те же роли, но взглядом
+       того, кто заводит команду. Данные те же, что в секции ролей. */
+    return '<div style="background:var(--panel2);border:1px solid var(--line2);border-radius:14px;overflow:hidden">'
+      + '<div style="height:8px;background-image:repeating-linear-gradient(115deg,var(--acc) 0 12px,var(--panel2) 12px 24px)"></div>'
+      + '<div style="padding:20px 24px 8px;font:500 10px ' + MONO + ';letter-spacing:.16em;text-transform:uppercase;color:var(--t4)">Кто заходит в пространство</div>'
+      + '<div style="padding:0 24px 20px">'
+      + D.spaceRoles.map(function (r) {
+          return '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--lineSoft)">'
+            + '<span style="width:6px;height:6px;border-radius:50%;background:' + (r.free ? 'var(--ok)' : 'var(--acc)') + '"></span>'
+            + '<span style="font:13.5px ' + UI + ';color:var(--t2)">' + esc(r.name) + '</span>'
+            + '<span style="margin-left:auto;font:10.5px ' + MONO + ';letter-spacing:.08em;color:'
+            + (r.free ? 'var(--ok)' : 'var(--t4)') + '">' + (r.free ? 'без места' : 'место в тарифе') + '</span></div>';
+        }).join('')
+      + '</div></div>';
+  }
+
+  function profiWidget() {
+    var r = D.profiRoles[profiIndex];
+    var host = document.createElement('div');
+    host.style.cssText = 'border:1px solid var(--line2);border-radius:14px;background:var(--panel2);overflow:hidden;min-height:280px';
+    host.innerHTML =
+      '<div style="display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line)">'
+      + '<span style="font:500 11px ' + MONO + ';letter-spacing:.16em;text-transform:uppercase;color:var(--t4)">Тариф «Себе» · платит специалист, не компания</span>'
+      + '<div data-ref="profi-tabs" style="margin-left:auto;display:flex;gap:6px;padding:4px;border-radius:999px;background:var(--inset)"></div></div>'
+      + '<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 300px">'
+      + '<div style="padding:26px 28px;border-right:1px solid var(--line)">'
+      + '<div style="font:500 10.5px ' + MONO + ';letter-spacing:.14em;text-transform:uppercase;color:var(--t4)">Боль</div>'
+      + '<div style="margin-top:12px;font:17px/1.5 ' + UI + ';color:var(--t1);text-wrap:pretty">' + esc(r.pain) + '</div></div>'
+      + '<div style="padding:26px 28px;border-right:1px solid var(--line)">'
+      + '<div style="font:500 10.5px ' + MONO + ';letter-spacing:.14em;text-transform:uppercase;color:var(--acc)">Что даёт пакет</div>'
+      + '<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px 20px">'
+      + r.items.map(function (it) {
+          return '<div style="display:flex;gap:11px;align-items:flex-start;font:13.5px/1.45 ' + UI + ';color:var(--t2)">'
+            + '<span style="flex:none;margin-top:3px;width:15px;height:15px;border-radius:50%;background:var(--accSoft);color:var(--acc);display:grid;place-items:center;font:700 9px ' + MONO + '">✓</span>'
+            + esc(it) + '</div>';
+        }).join('')
+      + '</div></div>'
+      + '<div style="padding:26px 28px;background:var(--inset);display:flex;flex-direction:column">'
+      + '<div style="font:500 10.5px ' + MONO + ';letter-spacing:.14em;text-transform:uppercase;color:var(--acc)">' + esc(r.pack) + '</div>'
+      + '<div style="margin-top:14px;display:flex;align-items:baseline;gap:7px;white-space:nowrap">'
+      + '<span style="font:500 38px/1 ' + DISPLAY + ';letter-spacing:-.035em;color:var(--t1)">' + esc(r.price) + '</span>'
+      + '<span style="font:500 13px ' + UI + ';color:var(--t4)">₽ / мес</span></div>'
+      + '<div style="margin-top:11px;font:12.5px/1.5 ' + UI + ';color:var(--t4)">2 объекта, 5 ГБ. Годовая −20% · 18 240 ₽. В «Про» за 2 900 ₽ — документы без лимита, 5 объектов, 25 ГБ и файл для Минстроя.</div>'
+      + '<a href="#cta" class="ref-cta" style="margin-top:auto;display:inline-flex;align-items:center;justify-content:center;height:44px;border-radius:9px;background:var(--acc);color:var(--accT);font:600 14px ' + UI + '">Занять место в бете</a>'
+      + '</div></div>';
+    pills(host.querySelector('[data-ref="profi-tabs"]'),
+      D.profiRoles.map(function (x) { return x.tab; }), profiIndex,
+      function (i) { profiIndex = i; renderAudience(); }, 'sm');
+    return host;
+  }
+
+  function tariffCards() {
+    var host = document.createElement('div');
+    host.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:12px';
+    host.innerHTML = D.tariffs.map(function (t) {
+      return '<div style="padding:26px 28px;border-radius:14px;background:var(--panel2);border:1px solid '
+        + (t.accent ? 'var(--acc)' : 'var(--line2)') + ';display:flex;flex-direction:column;min-height:280px">'
+        + '<div style="font:500 10.5px ' + MONO + ';letter-spacing:.14em;text-transform:uppercase;color:'
+        + (t.accent ? 'var(--acc)' : 'var(--t4)') + '">' + esc(t.name) + ' · ' + esc(t.tag) + '</div>'
+        + '<div style="margin-top:14px;display:flex;align-items:baseline;gap:7px;white-space:nowrap">'
+        + '<span style="font:500 38px/1 ' + DISPLAY + ';letter-spacing:-.035em;color:var(--t1)">' + esc(t.price) + '</span>'
+        + (t.unit ? '<span style="font:500 13px ' + UI + ';color:var(--t4)">' + esc(t.unit) + '</span>' : '')
+        + '</div>'
+        + '<div style="margin-top:11px;font:12.5px/1.5 ' + UI + ';color:var(--t4)">' + esc(t.desc) + '</div>'
+        + '<div style="margin-top:16px;display:grid;gap:9px">'
+        + t.items.map(function (it) {
+            return '<div style="display:flex;gap:11px;align-items:flex-start;font:13px/1.45 ' + UI + ';color:var(--t2)">'
+              + '<span style="flex:none;margin-top:3px;width:15px;height:15px;border-radius:50%;background:var(--accSoft);color:var(--acc);display:grid;place-items:center;font:700 9px ' + MONO + '">✓</span>'
+              + esc(it) + '</div>';
+          }).join('')
+        + '</div>'
+        + '<a href="#cta" class="ref-cta" style="margin-top:auto;padding-top:20px;display:inline-flex;align-items:center;justify-content:center;height:44px;border-radius:9px;background:'
+        + (t.accent ? 'var(--acc)' : 'transparent') + ';color:' + (t.accent ? 'var(--accT)' : 'var(--t2)')
+        + (t.accent ? '' : ';border:1px solid var(--line3)') + ';font:600 14px ' + UI + '">' + esc(t.btn) + '</a></div>';
+    }).join('');
+    return host;
+  }
+
+  function renderAudience() {
+    var a = D.audiences[audIndex];
+    var specialist = audIndex === 0;
+
+    pills($('aud-tabs'), D.audiences.map(function (x) { return x.tab; }), audIndex, function (i) {
+      audIndex = i; renderAudience();
+    });
+    $('aud-title').textContent = a.title;
+    $('aud-sub').textContent = a.sub;
+    $('aud-items').innerHTML = a.items.map(function (it) {
+      return '<div style="display:flex;gap:12px;align-items:flex-start;font:14.5px/1.45 ' + UI + ';color:var(--t2)">'
+        + '<span style="flex:none;margin-top:2px;width:18px;height:18px;border-radius:5px;background:var(--accSoft);color:var(--acc);display:grid;place-items:center;font:700 10px ' + MONO + '">✓</span>'
+        + esc(it) + '</div>';
+    }).join('');
+    $('aud-side').innerHTML = specialist ? specialistSide() : companySide();
+
+    var price = $('price');
+    price.innerHTML = '';
+    price.appendChild(specialist ? profiWidget() : tariffCards());
+  }
+
+  renderStages();
+  renderRoles();
+  renderAudience();
+})();
 </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import { MarketingHeader } from '@/components/layout/MarketingHeader';
 import { MarketingFooter } from '@/components/layout/MarketingFooter';
 import { OrganizationSchema } from '@/components/seo/OrganizationSchema';
 import { YandexMetrika } from '@/components/analytics/YandexMetrika';
+import { THEME_INIT_SCRIPT } from '@/lib/theme';
 import '@/styles/globals.css';
 
 /**
@@ -91,7 +92,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-theme="light"
       data-palette="steel"
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      // data-theme правится скриптом ниже до гидратации — предупреждение о
+      // расхождении с серверной разметкой здесь ожидаемо и не информативно.
+      suppressHydrationWarning
     >
+      <head>
+        {/*
+          Тема ставится до первой отрисовки, иначе выбранная тёмная моргает
+          светлой на каждой перезагрузке и каждом переходе между страницами.
+          Атрибут data-theme на <html> выше — только SSR-значение по умолчанию.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body
         style={{
           minHeight: '100vh',
