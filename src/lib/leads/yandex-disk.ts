@@ -98,7 +98,13 @@ async function readWorkbook(cfg: DiskConfig): Promise<ExcelJS.Workbook> {
 
   const res = await fetch(link);
   if (!res.ok) throw new Error(`Яндекс.Диск: скачивание → HTTP ${res.status}`);
-  await workbook.xlsx.load(await res.arrayBuffer());
+  // Именно Buffer: от голого ArrayBuffer exceljs молча возвращает пустую книгу,
+  // и очередная заявка затирала бы всё, что было в таблице до неё.
+  // Именно Node-Buffer: от голого ArrayBuffer exceljs молча возвращает пустую
+  // книгу, и очередная заявка затирала бы всё, что было в таблице до неё.
+  // Приведение нужно потому, что exceljs объявляет собственный тип Buffer.
+  type LoadArg = Parameters<typeof workbook.xlsx.load>[0];
+  await workbook.xlsx.load(Buffer.from(await res.arrayBuffer()) as unknown as LoadArg);
 
   // Файл на Диске могли подменить или удалить лист — тогда начинаем заново,
   // данные всё равно есть в основном хранилище.
@@ -114,30 +120,38 @@ function startWorkbook(workbook: ExcelJS.Workbook): ExcelJS.Workbook {
   return workbook;
 }
 
-/** Значения полей заявки в порядке колонок; неизвестные поля сводятся в «Прочее». */
-function toRow(lead: StoredLead): Record<string, string> {
+/**
+ * Значения полей заявки **в порядке колонок**; неизвестные поля сводятся
+ * в «Прочее».
+ *
+ * Массивом, а не объектом с ключами: при чтении готового файла exceljs
+ * не восстанавливает `key` у колонок, и `addRow({ email: ... })` добавлял
+ * в скачанную с Диска таблицу пустую строку — заявка молча терялась.
+ */
+function toRow(lead: StoredLead): string[] {
   const rest = Object.entries(lead)
     .filter(([key, value]) => !KNOWN.has(key) && value !== undefined && value !== null)
     .map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : String(value)}`)
     .join('; ');
 
   const flag = (v: unknown) => (v === true ? 'да' : v === false ? 'нет' : '');
+  const str = (v: unknown) => (typeof v === 'string' ? v : '');
 
-  return {
+  return [
     // Время в московской зоне: таблицу читает человек, а не машина.
-    receivedAt: new Date(lead.receivedAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
-    email: lead.email ?? '',
-    phone: lead.phone ?? '',
-    name: typeof lead['name'] === 'string' ? lead['name'] : '',
-    company: typeof lead['company'] === 'string' ? lead['company'] : '',
-    role: typeof lead['role'] === 'string' ? lead['role'] : '',
-    source: lead.source,
-    earlyAccess: flag(lead['earlyAccess']),
-    newsletterConsent: flag(lead['newsletterConsent']),
-    pdConsent: flag(lead['pdConsent']),
-    pdConsentVersion: typeof lead['pdConsentVersion'] === 'string' ? lead['pdConsentVersion'] : '',
+    new Date(lead.receivedAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
+    lead.email ?? '',
+    lead.phone ?? '',
+    str(lead['name']),
+    str(lead['company']),
+    str(lead['role']),
+    lead.source,
+    flag(lead['earlyAccess']),
+    flag(lead['newsletterConsent']),
+    flag(lead['pdConsent']),
+    str(lead['pdConsentVersion']),
     rest,
-  };
+  ];
 }
 
 async function upload(cfg: DiskConfig, workbook: ExcelJS.Workbook): Promise<void> {

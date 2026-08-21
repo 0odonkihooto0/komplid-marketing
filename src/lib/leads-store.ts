@@ -1,5 +1,7 @@
+import { after } from 'next/server';
 import { diskDriver } from './leads/disk';
 import { s3Driver, s3Config } from './leads/s3';
+import { appendToSheet, diskConfig, rebuildSheet } from './leads/yandex-disk';
 import { contactKey, type LeadInput, type StoredLead } from './leads/types';
 
 /**
@@ -25,11 +27,49 @@ function driver() {
   return s3Config() ? s3Driver : diskDriver;
 }
 
+/**
+ * Выполняет работу после того, как ответ уже ушёл пользователю.
+ *
+ * Запись строки в таблицу на Диске — это скачать файл, дополнить и залить
+ * обратно: секунда-две. Держать на этом форму незачем, заявка к тому моменту
+ * уже сохранена. `after` из next/server как раз для такого и существует.
+ *
+ * Вне контекста запроса (тесты, скрипты) `after` бросает — тогда просто ждём
+ * обычным способом.
+ */
+function afterResponse(work: () => Promise<unknown>): void {
+  try {
+    after(work);
+  } catch {
+    void work();
+  }
+}
+
 /** Сохраняет заявку. Возвращает false, только если не удалось записать вообще. */
 export async function appendLead(lead: LeadInput): Promise<boolean> {
   // receivedAt после спреда — чтобы данными из формы его нельзя было подменить.
   const record: StoredLead = { ...lead, receivedAt: new Date().toISOString() };
-  return driver().append(record);
+  const stored = await driver().append(record);
+
+  // Зеркало в таблицу на Яндекс.Диске — удобство просмотра, а не хранилище.
+  // Только для сохранённых заявок: дублировать в таблицу то, что не удалось
+  // записать, значит вводить владельца в заблуждение.
+  if (stored && diskConfig()) {
+    afterResponse(() => appendToSheet(record));
+  }
+
+  return stored;
+}
+
+/**
+ * Пересобирает таблицу-зеркало из хранилища и возвращает число строк.
+ *
+ * Нужна, когда таблица разошлась с хранилищем: Диск был недоступен, токен
+ * протух или строку потеряла гонка двух одновременных заявок.
+ */
+export async function rebuildLeadsSheet(): Promise<number> {
+  const leads = await driver().list();
+  return rebuildSheet(leads);
 }
 
 /**
