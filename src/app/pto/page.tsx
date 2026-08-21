@@ -79,15 +79,15 @@ const FEATURES: FeatureItem[] = [
 ];
 
 const COMPARISON_ROWS = [
-  { feature: 'Шаблоны АОСР по приказу №344/пр', values: ['50+', 'вручную', 'нет'] },
+  { feature: 'Шаблоны АОСР по приказу №344/пр', values: ['50+', 'вручную', 'есть'] },
   { feature: 'Автозаполнение АОСР из ОЖР', values: [true, false, false] },
   { feature: 'Электронный ОЖР', values: [true, false, true] },
   { feature: 'Маршруты согласования', values: [true, false, true] },
-  { feature: 'Подпись с GPS-привязкой и геозоной', values: [true, false, 'н/д'] },
-  { feature: 'Пакетный экспорт ZIP', values: [true, false, 'платно'] },
+  { feature: 'Подпись с GPS-привязкой и геозоной', values: [true, false, 'зависит от системы'] },
+  { feature: 'Пакетный экспорт ZIP', values: [true, false, 'зависит от системы'] },
   { feature: 'Экспорт XML по схемам Минстроя', values: [true, false, true] },
-  { feature: 'Мобильное приложение (офлайн)', values: [true, false, 'частично'] },
-  { feature: 'Цена от', values: ['1 900 ₽/мес', '0 (время дорогое)', '50 000+ ₽/мес'] },
+  { feature: 'Мобильное приложение (офлайн)', values: [true, false, 'зависит от системы'] },
+  { feature: 'Цена от', values: ['1 900 ₽/мес', '0 (время дорогое)', 'как правило, по запросу'] },
   { feature: 'Внедрение без интегратора', values: [true, true, false] },
 ];
 
@@ -179,8 +179,8 @@ export default function PtoPage() {
 
       <ComparisonTable
         eyebrow="Сравнение инструментов"
-        title="ИД-Мастер vs Word+Excel vs Корпоративный ЦУС"
-        columns={['ИД-Мастер', 'Word + Excel', 'Корпоративный ЦУС']}
+        title="ИД-Мастер, Word с Excel и корпоративная платформа"
+        columns={['ИД-Мастер', 'Word + Excel', 'Корпоративная платформа']}
         rows={COMPARISON_ROWS}
         highlightColumn={0}
       />
