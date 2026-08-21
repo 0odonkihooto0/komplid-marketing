@@ -11,6 +11,18 @@ import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { FaqSchema } from '@/components/seo/FaqSchema';
 import { TemplateDownloadForm } from '@/components/forms/TemplateDownloadForm';
 import { extractFaqFromContent } from '@/lib/extract-faq';
+import { WAITLIST_MODE, WAITLIST_OFFER } from '@/lib/waitlist';
+
+/**
+ * Куда ведёт CTA со страницы бланка — по категории каталога.
+ *
+ * Формы КС закрывают месяц и считаются по смете, поэтому уходят к сметчику;
+ * всё остальное — работа ПТО. Категория, которой нет в карте, ведёт на /pto:
+ * это верно для всех документов исполнительной документации.
+ */
+const CTA_BY_CATEGORY: Record<string, string> = {
+  'Приёмка работ': '/smetchik',
+};
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -55,12 +67,7 @@ export default async function ShablonPage({ params }: PageProps) {
     .map((s) => bySlug.get(s))
     .filter((t): t is (typeof allTemplates)[number] => Boolean(t));
 
-  const ctaHref =
-    tpl.category === 'Исполнительная документация' || tpl.category === 'Журналы работ'
-      ? '/pto'
-      : tpl.category === 'Приёмка работ'
-        ? '/smetchik'
-        : '/pto';
+  const ctaHref = CTA_BY_CATEGORY[tpl.category] ?? '/pto';
 
   return (
     <>
@@ -167,8 +174,11 @@ export default async function ShablonPage({ params }: PageProps) {
               Хотите автоматизировать работу с этими документами?
             </p>
             <p className="mb-5 text-sm" style={{ color: 'var(--ink-soft)' }}>
-              Комплид генерирует АОСР, ОЖР, КС-2 и КС-3 автоматически — из данных объекта и записей
-              журналов. Триал 14 дней без карты.
+              Комплид собирает акты и журналы из данных объекта: реквизиты сторон, материалы
+              и документы о качестве подставляются сами.{' '}
+              {/* До запуска обещать пробный период нельзя: регистрация закрыта,
+                  и кнопка ведёт на форму раннего доступа, а не в приложение. */}
+              {WAITLIST_MODE ? WAITLIST_OFFER + '.' : 'Пробный период 14 дней без карты.'}
             </p>
             <Link
               href={ctaHref}

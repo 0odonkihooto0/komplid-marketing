@@ -4,16 +4,55 @@ import { getAllTemplates, type TemplateFrontmatter } from '@/content-loader/shab
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 export const metadata: Metadata = {
-  title: 'Бесплатные шаблоны документов для стройки 2026',
+  title: 'Бесплатные шаблоны документов для стройки 2026 — 26 бланков',
   description:
-    'Шаблоны АОСР, ОЖР, КС-2, КС-3, КС-6а. Актуальные формы 2026 года по приказам Минстроя и Ростехнадзора. Бесплатно, форматы .docx и .xlsx.',
+    'Бланки исполнительной документации: акты по приказу Минстроя № 344/пр, общий журнал работ, КС-2, КС-3, КС-6а, специальные журналы и акты приёмки. Форматы .docx и .xlsx, без регистрации.',
   alternates: { canonical: 'https://komplid.ru/shablony' },
   openGraph: {
     type: 'website',
     title: 'Бесплатные шаблоны строительной документации',
-    description: 'АОСР, ОЖР, КС-2, КС-3, КС-6а — актуальные формы 2026 года. Скачать бесплатно.',
+    description:
+      'Акты по приказу № 344/пр, общий журнал работ, формы КС, специальные журналы и акты приёмки — 26 бланков. Скачать бесплатно.',
   },
 };
+
+/**
+ * Порядок разделов каталога.
+ *
+ * Задан явно, а не выводится из порядка файлов: категории собирались в Map по
+ * мере чтения каталога, то есть по дате публикации шаблонов. Раздел с формами
+ * по приказу № 344/пр от этого уезжал вниз, хотя именно за ними приходят чаще
+ * всего. Категория, которой нет в списке, выводится после перечисленных.
+ */
+const CATEGORY_ORDER = [
+  'Исполнительная документация',
+  'Журналы работ',
+  'Приёмка работ',
+  'Приёмка конструкций и покрытий',
+  'Свайные и земляные работы',
+] as const;
+
+/** Подпись под заголовком раздела — что за документы внутри. */
+const CATEGORY_HINT: Record<string, string> = {
+  'Исполнительная документация':
+    'Акты по приложениям к составу исполнительной документации, приказ Минстроя России от 16.05.2023 № 344/пр.',
+  'Журналы работ':
+    'Общий журнал работ по приказу № 1026/пр и специальные журналы из приложения Б.1 СП 48.13330.2019.',
+  'Приёмка работ':
+    'Унифицированные формы Госкомстата для расчётов с заказчиком: акт, справка о стоимости и журнал учёта.',
+  'Приёмка конструкций и покрытий':
+    'Итоговые акты по готовым конструкциям, покрытиям и результатам контроля сварных соединений.',
+  'Свайные и земляные работы':
+    'Котлованы, погружение и приёмка свай, испытания — документы нулевого цикла.',
+};
+
+function sortCategories(categories: string[]): string[] {
+  const rank = (name: string) => {
+    const i = CATEGORY_ORDER.indexOf(name as (typeof CATEGORY_ORDER)[number]);
+    return i === -1 ? CATEGORY_ORDER.length : i;
+  };
+  return [...categories].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, 'ru'));
+}
 
 export default async function ShablonyPage() {
   const templates = await getAllTemplates();
@@ -44,8 +83,9 @@ export default async function ShablonyPage() {
             Бесплатные шаблоны строительной документации
           </h1>
           <p className="max-w-xl text-lg" style={{ color: 'var(--ink-soft)' }}>
-            Актуальные формы 2026 года по приказам Минстроя и Ростехнадзора. Скачайте шаблон
-            в формате .docx или .xlsx — уже со всеми обязательными полями.
+            {templates.length} бланков в форматах .docx и .xlsx — акты по приказу Минстроя
+            № 344/пр, общий журнал работ, формы КС, специальные журналы и акты приёмки.
+            Скачивание без регистрации.
           </p>
         </div>
       </div>
@@ -55,16 +95,21 @@ export default async function ShablonyPage() {
           <p style={{ color: 'var(--ink-soft)' }}>Шаблоны скоро появятся.</p>
         ) : (
           <div className="flex flex-col gap-16">
-            {Array.from(byCategory.entries()).map(([category, items]) => (
+            {sortCategories(Array.from(byCategory.keys())).map((category) => (
               <section key={category}>
                 <h2
-                  className="mb-6 text-sm font-mono uppercase tracking-widest"
+                  className="mb-1 text-sm font-mono uppercase tracking-widest"
                   style={{ color: 'var(--ink-mute)', letterSpacing: '0.14em' }}
                 >
                   {category}
                 </h2>
+                {CATEGORY_HINT[category] && (
+                  <p className="mb-6 max-w-2xl text-sm" style={{ color: 'var(--ink-soft)' }}>
+                    {CATEGORY_HINT[category]}
+                  </p>
+                )}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {items.map((tpl) => (
+                  {(byCategory.get(category) ?? []).map((tpl) => (
                     <TemplateCard key={tpl.slug} tpl={tpl} />
                   ))}
                 </div>

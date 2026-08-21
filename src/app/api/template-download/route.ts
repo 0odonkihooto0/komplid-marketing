@@ -2,6 +2,11 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { postToInternalApi } from '@/lib/internal-api';
 import { appendLead, notifyTelegram } from '@/lib/leads-store';
+import { rateLimit, clientKey, tooManyRequests } from '@/lib/rate-limit';
+
+// Роут пишет заявку в хранилище и не должен попадать под статическую
+// оптимизацию — как и соседние /api/lead и /api/newsletter (CLAUDE.md §15.1).
+export const dynamic = 'force-dynamic';
 
 const schema = z.object({
   slug: z.string().min(1),
@@ -16,7 +21,14 @@ const schema = z.object({
   pdConsentVersion: z.string().optional(),
 });
 
+// Здесь лимит мягче, чем у заявки: человек честно скачивает несколько бланков
+// подряд — по акту на каждый вид работ.
+const LIMIT = { limit: 30, windowMs: 10 * 60_000 };
+
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(clientKey(req, 'template'), LIMIT);
+  if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
   let body: unknown;
   try {
     body = await req.json();

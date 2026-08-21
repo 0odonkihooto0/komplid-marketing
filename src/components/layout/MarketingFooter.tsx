@@ -78,6 +78,7 @@ export function MarketingFooter() {
           <span>Соответствие 152-ФЗ · данные в РФ</span>
           <span style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             <Link href="/legal/privacy">Политика конфиденциальности</Link>
+            <Link href="/legal/terms">Пользовательское соглашение</Link>
             <Link href="/legal/oferta">Публичная оферта</Link>
           </span>
         </div>

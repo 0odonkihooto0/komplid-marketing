@@ -13,7 +13,7 @@ import {
 
 import { NAV_LINKS } from './nav-links';
 import { ThemeToggle } from './ThemeToggle';
-import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
+import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
 
 export function MobileNav() {
   return (
@@ -88,22 +88,25 @@ export function MobileNav() {
             <ThemeToggle />
           </div>
 
-          <a
-            href="https://app.komplid.ru/login"
-            style={{
-              display: 'block',
-              padding: '10px 14px',
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 500,
-              textAlign: 'center',
-              color: 'var(--ink)',
-              background: 'var(--bg-inset)',
-              border: '1px solid var(--border)',
-            }}
-          >
-            Войти
-          </a>
+          {/* Скрыт на пре-лонче — как и в десктопной шапке. */}
+          {!WAITLIST_MODE && (
+            <a
+              href="https://app.komplid.ru/login"
+              style={{
+                display: 'block',
+                padding: '10px 14px',
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 500,
+                textAlign: 'center',
+                color: 'var(--ink)',
+                background: 'var(--bg-inset)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              Войти
+            </a>
+          )}
           {/* До запуска ведёт на форму раннего доступа, как и остальные первичные CTA */}
           <a
             href={primaryCtaHref('https://app.komplid.ru/signup')}

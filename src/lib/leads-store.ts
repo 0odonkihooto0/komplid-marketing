@@ -1,121 +1,95 @@
-import { appendFile, mkdir, readFile } from 'node:fs/promises';
-import path from 'node:path';
-import { envOr } from './env';
+import { after } from 'next/server';
+import { diskDriver } from './leads/disk';
+import { s3Driver, s3Config } from './leads/s3';
+import { appendToSheet, diskConfig, rebuildSheet } from './leads/yandex-disk';
+import { contactKey, type LeadInput, type StoredLead } from './leads/types';
 
 /**
- * Локальное хранилище лидов — JSONL-файл на диске сайта.
+ * Хранилище заявок сайта.
  *
- * Зачем: до запуска app.komplid.ru приложение недоступно, и раньше `/api/lead`
- * при недоступном INTERNAL_API_URL отдавал 500 — лид просто терялся. На пре-лонче
- * сбор базы и есть главная задача сайта (PROMOTION_STRATEGY §3), терять лиды нельзя.
+ * Зачем оно вообще: до запуска app.komplid.ru приложение недоступно, и раньше
+ * `/api/lead` при недоступном INTERNAL_API_URL отдавал 500 — заявка терялась.
+ * На пре-лонче сбор базы и есть главная задача сайта (PROMOTION_STRATEGY §3).
+ * Поэтому порядок такой: сначала пишем к себе, потом best-effort отправляем
+ * дальше. Успех для пользователя = запись легла в хранилище.
  *
- * Поэтому порядок такой: сначала пишем к себе, потом best-effort отправляем дальше.
- * Успех для пользователя = запись легла на диск.
- *
- * Каталог должен быть примонтирован томом (docker-compose.prod.yml), иначе файл
- * умрёт при первой пересборке образа — deploy.sh пересобирает его каждый раз.
+ * Драйвер выбирается по конфигурации, а не по флагу окружения:
+ *  · заданы S3_BUCKET и ключи → S3 (основной прод — Timeweb App Platform,
+ *    где контейнер эфемерный и файл не переживает деплой);
+ *  · не заданы → файл на диске (локальная разработка, тесты, запасной путь
+ *    на собственном VDS с примонтированным томом).
  */
 
-// Путь читаем при каждом вызове, а не при импорте модуля: значение, снятое один раз
-// на этапе загрузки, невозможно переопределить ни в тестах, ни при смене конфигурации.
-function dataDir(): string {
-  return envOr(process.env.LEADS_DATA_DIR, path.join(process.cwd(), '.data'));
+export type { LeadInput, StoredLead };
+export { contactKey };
+
+function driver() {
+  return s3Config() ? s3Driver : diskDriver;
 }
 
 /**
- * Что приходит из формы. Обязателен только source; контакт — почта или телефон,
- * хотя бы один (проверяет схема роута). Остальное свободно.
+ * Выполняет работу после того, как ответ уже ушёл пользователю.
+ *
+ * Запись строки в таблицу на Диске — это скачать файл, дополнить и залить
+ * обратно: секунда-две. Держать на этом форму незачем, заявка к тому моменту
+ * уже сохранена. `after` из next/server как раз для такого и существует.
+ *
+ * Вне контекста запроса (тесты, скрипты) `after` бросает — тогда просто ждём
+ * обычным способом.
  */
-export interface LeadInput {
-  email?: string;
-  phone?: string;
-  source: string;
-  [key: string]: unknown;
-}
-
-/** Что ложится в файл. Отдельный тип, а не Omit: Omit над типом с индексной
- *  сигнатурой «съедает» обязательные поля и перестаёт их проверять. */
-export interface StoredLead extends LeadInput {
-  receivedAt: string;
-}
-
-/**
- * Дописывает лид в JSONL. Одна строка — один лид: формат переживает конкурентную
- * дозапись и не требует читать и разбирать весь файл ради одной новой записи.
- */
-export async function appendLead(lead: LeadInput): Promise<boolean> {
+function afterResponse(work: () => Promise<unknown>): void {
   try {
-    const dir = dataDir();
-    await mkdir(dir, { recursive: true });
-    // receivedAt после спреда — чтобы данными из формы его нельзя было подменить.
-    const record: StoredLead = { ...lead, receivedAt: new Date().toISOString() };
-    await appendFile(path.join(dir, 'leads.jsonl'), `${JSON.stringify(record)}\n`, 'utf8');
-    return true;
-  } catch (err) {
-    console.error('[leads-store] не удалось записать лид на диск:', err);
-    return false;
+    after(work);
+  } catch {
+    void work();
   }
 }
 
+/** Сохраняет заявку. Возвращает false, только если не удалось записать вообще. */
+export async function appendLead(lead: LeadInput): Promise<boolean> {
+  // receivedAt после спреда — чтобы данными из формы его нельзя было подменить.
+  const record: StoredLead = { ...lead, receivedAt: new Date().toISOString() };
+  const stored = await driver().append(record);
+
+  // Зеркало в таблицу на Яндекс.Диске — удобство просмотра, а не хранилище.
+  // Только для сохранённых заявок: дублировать в таблицу то, что не удалось
+  // записать, значит вводить владельца в заблуждение.
+  if (stored && diskConfig()) {
+    afterResponse(() => appendToSheet(record));
+  }
+
+  return stored;
+}
+
 /**
- * Сколько заявок в очереди раннего доступа уже лежит.
+ * Пересобирает таблицу-зеркало из хранилища и возвращает число строк.
  *
- * Нужно для счётчика мест на главной. Показывать выдуманное число нельзя —
- * это недостоверные сведения по ст. 5 ФЗ «О рекламе» (CLAUDE.md §21), поэтому
- * считаем реальные строки файла. Уникальность по почте: один человек, дважды
+ * Нужна, когда таблица разошлась с хранилищем: Диск был недоступен, токен
+ * протух или строку потеряла гонка двух одновременных заявок.
+ */
+export async function rebuildLeadsSheet(): Promise<number> {
+  const leads = await driver().list();
+  return rebuildSheet(leads);
+}
+
+/**
+ * Сколько мест в очереди раннего доступа уже занято.
+ *
+ * Нужно для счётчика на главной. Показывать выдуманное число нельзя — это
+ * недостоверные сведения по ст. 5 ФЗ «О рекламе» (CLAUDE.md §21), поэтому
+ * считаем реальные заявки. Уникальность по контакту: один человек, дважды
  * заполнивший форму, не должен съедать два места.
  *
  * Заявка без почты, но с телефоном — тоже занятое место: считаем по контакту,
  * какой бы он ни был, иначе счётчик занижал бы очередь и обещал места, которых нет.
- *
- * Файла может не быть (свежий том, никто ещё не записался) — это ноль, а не ошибка.
  */
 export async function countWaitlistLeads(): Promise<number> {
-  try {
-    const raw = await readFile(path.join(dataDir(), 'leads.jsonl'), 'utf8');
-    const contacts = new Set<string>();
-
-    for (const line of raw.split('\n')) {
-      if (!line.trim()) continue;
-      try {
-        const lead = JSON.parse(line) as Partial<StoredLead>;
-        const key = contactKey(lead);
-        if (key) contacts.add(key);
-      } catch {
-        // Битую строку пропускаем: она не должна ронять счётчик целиком.
-      }
-    }
-
-    return contacts.size;
-  } catch {
-    return 0;
-  }
+  return driver().count();
 }
 
 /**
- * Ключ, по которому заявки считаются за одного человека.
- *
- * Почта приводится к нижнему регистру, телефон — к одним цифрам: «+7 (999)
- * 123-45-67» и «89991234567» это один номер, и два места он занимать не должен.
- * Российские номера дополнительно сводим к виду 7XXXXXXXXXX — иначе тот же
- * номер, записанный с восьмёрки, посчитался бы вторым.
- */
-export function contactKey(lead: Partial<StoredLead>): string | null {
-  if (typeof lead.email === 'string' && lead.email.trim()) {
-    return `email:${lead.email.trim().toLowerCase()}`;
-  }
-  if (typeof lead.phone === 'string') {
-    let digits = lead.phone.replace(/\D/g, '');
-    if (digits.length === 11 && digits.startsWith('8')) digits = `7${digits.slice(1)}`;
-    if (digits.length === 10) digits = `7${digits}`;
-    if (digits) return `phone:${digits}`;
-  }
-  return null;
-}
-
-/**
- * Дублирует лид в Telegram, чтобы владелец видел заявки сразу, а не при разборе файла.
- * Полностью необязательно: без переменных окружения тихо пропускаем.
+ * Дублирует заявку в Telegram, чтобы владелец видел её сразу, а не при разборе
+ * хранилища. Полностью необязательно: без переменных окружения тихо пропускаем.
  */
 export async function notifyTelegram(text: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -129,7 +103,7 @@ export async function notifyTelegram(text: string): Promise<void> {
       body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
     });
   } catch (err) {
-    // Уведомление — не критичный путь: лид уже на диске.
+    // Уведомление — не критичный путь: заявка уже в хранилище.
     console.error('[leads-store] Telegram-уведомление не ушло:', err);
   }
 }

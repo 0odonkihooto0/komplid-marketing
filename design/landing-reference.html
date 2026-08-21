@@ -99,7 +99,12 @@ input{font-family:'Onest',sans-serif}
     <div style="display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);color:var(--t3);font:500 11px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer" style-hover="border-color:var(--acc);color:var(--t1)" data-theme-toggle>
       <span data-ref="theme-swatch" style="width: 11px; height: 11px; border-radius: 3px; background: oklch(0.2 0.008 255); border: 1px solid var(--line3)"></span><span data-ref="theme-label">Тёмная</span>
     </div>
-    <span style="font:500 13.5px 'Onest',sans-serif;color:var(--t3);cursor:pointer" style-hover="color:var(--t1)">Войти</span>
+    <!-- «Войти» на пре-лонче в шапке нет: app.komplid.ru закрыт, и кнопка вела бы
+         в тупик прямо из шапки каждой страницы. В коде она скрыта по флагу
+         WAITLIST_MODE (src/lib/waitlist.ts) и вернётся сама в день запуска —
+         разметка была такой:
+         <span style="font:500 13.5px 'Onest',sans-serif;color:var(--t3);cursor:pointer"
+               style-hover="color:var(--t1)">Войти</span> -->
     <a href="#cta" style="display:inline-flex;align-items:center;height:36px;padding:0 17px;border-radius:8px;background:var(--acc);color:var(--accT);font:600 13.5px 'Onest',sans-serif" style-hover="background:var(--accH);color:var(--accT)">Ранний доступ</a>
   </div>
 </div>

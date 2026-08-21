@@ -3,7 +3,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { MobileNav } from './MobileNav';
 import { BrandLogo } from './BrandLogo';
 import { NAV_LINKS } from './nav-links';
-import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
+import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
 
 export function MarketingHeader() {
   return (
@@ -28,9 +28,14 @@ export function MarketingHeader() {
             <ThemeToggle />
           </div>
 
-          <a href="https://app.komplid.ru/login" className="nav-desktop-only btn-ghost">
-            Войти
-          </a>
+          {/* На пре-лонче «Войти» скрыт: app.komplid.ru закрыт, и кнопка вела бы
+              в тупик из шапки каждой страницы. Вернётся сама, когда
+              NEXT_PUBLIC_WAITLIST_MODE поставят в 0 — как и первичные CTA. */}
+          {!WAITLIST_MODE && (
+            <a href="https://app.komplid.ru/login" className="nav-desktop-only btn-ghost">
+              Войти
+            </a>
+          )}
 
           <a
             href={primaryCtaHref('https://app.komplid.ru/signup')}

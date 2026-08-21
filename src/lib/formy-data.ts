@@ -66,6 +66,14 @@ export interface DocForm {
   faq: readonly FormFaq[];
   /** Слаги связанных форм */
   related: readonly string[];
+  /**
+   * Слаг бланка в /shablony, если он у нас есть.
+   *
+   * Реестр форм отвечает на вопрос «как это оформляется», каталог шаблонов
+   * отдаёт готовый файл. Раньше эти два раздела не были связаны вовсе:
+   * человек читал про АОСР и уходил искать бланк поиском.
+   */
+  templateSlug?: string;
 }
 
 /** Разделы каталога — первый пункт «Все разделы» служит фильтром по умолчанию. */
@@ -94,6 +102,7 @@ export const DOC_FORMS: readonly DocForm[] = [
   {
     code: 'АОСР',
     slug: 'aosr',
+    templateSlug: 'aosr',
     name: 'Акт освидетельствования скрытых работ',
     section: 'Скрытые работы',
     works: [
@@ -211,6 +220,7 @@ export const DOC_FORMS: readonly DocForm[] = [
   {
     code: 'АООК',
     slug: 'aook',
+    templateSlug: 'aook',
     name: 'Акт освидетельствования ответственных конструкций',
     section: 'Ответственные конструкции',
     works: [
@@ -310,6 +320,7 @@ export const DOC_FORMS: readonly DocForm[] = [
   {
     code: 'ОЖР',
     slug: 'ozhr',
+    templateSlug: 'ozr',
     name: 'Общий журнал работ',
     section: 'Журналы',
     works: [
@@ -596,6 +607,7 @@ export const DOC_FORMS: readonly DocForm[] = [
   {
     code: 'ЖБР',
     slug: 'zhurnal-betonnyh-rabot',
+    templateSlug: 'zhurnal-betonnyh-rabot',
     name: 'Журнал бетонных работ',
     section: 'Журналы',
     works: [

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Деплой на СОБСТВЕННЫЙ VDS — запасной путь.
+# Основной хостинг — Timeweb App Platform: она сама тянет репозиторий и собирает
+# образ из Dockerfile, этот скрипт там не нужен. Держим рабочим на случай
+# переезда обратно на свой сервер (docs/timeweb-launch-plan.md).
+
 # ─── Конфигурация ───────────────────────────────────────────────────────────
 # Хост сервера Timeweb берётся из окружения, чтобы IP не лежал в репозитории:
 #   export KOMPLID_DEPLOY_HOST="komplid@1.2.3.4"
@@ -38,7 +43,11 @@ ssh "${SERVER_HOST}" "
   git reset --hard origin/${BRANCH}
 
   echo '--- docker compose build + up ---'
-  docker compose -f docker-compose.prod.yml up -d --build
+  # --env-file обязателен: build-args в компоузе подставляются из окружения шелла
+  # или из файла .env рядом с компоузом, но НЕ из .env.production в env_file.
+  # Без него сборка уходила с пустыми NEXT_PUBLIC_* и COMPANY_*, то есть без
+  # Метрики и с дефолтными реквизитами в подвале.
+  docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
 
   echo '--- очистка старых образов ---'
   docker image prune -f

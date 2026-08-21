@@ -110,6 +110,42 @@ export default async function FormPage({ params }: Params) {
 
       <Faq eyebrow="Часто спрашивают" title={`Вопросы по форме «${form.code}»`} items={form.faq.map((f) => ({ question: f.q, answer: f.a }))} />
 
+      {form.templateSlug && (
+        <section className="section" style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: 16,
+                padding: '20px 24px',
+                borderRadius: 12,
+                background: 'var(--bg-inset)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              <div style={{ flex: '1 1 320px' }}>
+                <div className="counter-label" style={{ marginTop: 0, color: 'var(--acc)' }}>
+                  Готовый бланк
+                </div>
+                <p style={{ margin: '8px 0 0', fontSize: 14.5, color: 'var(--ink)' }}>
+                  Бланк формы «{form.code}» — заполненная шапка, таблицы и поля подписей.
+                  Скачивание без регистрации.
+                </p>
+              </div>
+              <Link
+                href={`/shablony/${form.templateSlug}`}
+                className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium"
+                style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}
+              >
+                Открыть бланк
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {related.length > 0 && (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="wrap">

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { postToInternalApi } from '@/lib/internal-api';
 import { appendLead, notifyTelegram } from '@/lib/leads-store';
+import { rateLimit, clientKey, tooManyRequests } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,7 +43,14 @@ const schema = z.object({
  * 500 отдаём только если лид не удалось сохранить вообще нигде — тогда
  * пользователю честно предлагаем повторить.
  */
+// Заявку человек отправляет раз, ну два. Десять за десять минут с одного
+// адреса — уже скрипт, а он набивает и базу, и счётчик мест на главной.
+const LIMIT = { limit: 10, windowMs: 10 * 60_000 };
+
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(clientKey(req, 'lead'), LIMIT);
+  if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
   let body: unknown;
   try {
     body = await req.json();

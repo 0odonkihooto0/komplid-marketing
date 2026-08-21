@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { postToInternalApi } from '@/lib/internal-api';
+import { rateLimit, clientKey, tooManyRequests } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +10,12 @@ const schema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+const LIMIT = { limit: 10, windowMs: 10 * 60_000 };
+
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(clientKey(req, 'newsletter'), LIMIT);
+  if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
   let body: unknown;
   try {
     body = await req.json();
