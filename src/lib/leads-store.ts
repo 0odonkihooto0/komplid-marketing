@@ -1,7 +1,7 @@
 import { after } from 'next/server';
 import { diskDriver } from './leads/disk';
 import { s3Driver, s3Config } from './leads/s3';
-import { appendToSheet, diskConfig, rebuildSheet } from './leads/yandex-disk';
+import { appendToSheet, rebuildSheet } from './leads/s3-sheet';
 import { contactKey, type LeadInput, type StoredLead } from './leads/types';
 
 /**
@@ -30,7 +30,7 @@ function driver() {
 /**
  * Выполняет работу после того, как ответ уже ушёл пользователю.
  *
- * Запись строки в таблицу на Диске — это скачать файл, дополнить и залить
+ * Запись строки в таблицу — это прочитать файл из бакета, дополнить и положить
  * обратно: секунда-две. Держать на этом форму незачем, заявка к тому моменту
  * уже сохранена. `after` из next/server как раз для такого и существует.
  *
@@ -51,10 +51,12 @@ export async function appendLead(lead: LeadInput): Promise<boolean> {
   const record: StoredLead = { ...lead, receivedAt: new Date().toISOString() };
   const stored = await driver().append(record);
 
-  // Зеркало в таблицу на Яндекс.Диске — удобство просмотра, а не хранилище.
+  // Зеркало таблицей XLSX в том же бакете — удобство просмотра, а не хранилище.
   // Только для сохранённых заявок: дублировать в таблицу то, что не удалось
-  // записать, значит вводить владельца в заблуждение.
-  if (stored && diskConfig()) {
+  // записать, значит вводить владельца в заблуждение. На файловом драйвере
+  // (локальная разработка, запасной путь на VDS) зеркала нет: там и так лежит
+  // читаемый JSON, а бакета может не быть вовсе.
+  if (stored && s3Config()) {
     afterResponse(() => appendToSheet(record));
   }
 
@@ -64,8 +66,8 @@ export async function appendLead(lead: LeadInput): Promise<boolean> {
 /**
  * Пересобирает таблицу-зеркало из хранилища и возвращает число строк.
  *
- * Нужна, когда таблица разошлась с хранилищем: Диск был недоступен, токен
- * протух или строку потеряла гонка двух одновременных заявок.
+ * Нужна, когда таблица разошлась с хранилищем: запись файла не прошла или
+ * строку потеряла гонка двух одновременных заявок.
  */
 export async function rebuildLeadsSheet(): Promise<number> {
   const leads = await driver().list();
