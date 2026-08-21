@@ -3,6 +3,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { POST } from './route';
+import { resetRateLimits } from '@/lib/rate-limit';
 
 const ENV_KEYS = ['INTERNAL_API_URL', 'INTERNAL_API_TOKEN', 'LEADS_DATA_DIR'] as const;
 const saved: Record<string, string | undefined> = {};
@@ -18,6 +19,13 @@ beforeEach(async () => {
   // прогон тестов «занимал» места в закрытой бете на машине разработчика.
   dataDir = await mkdtemp(path.join(tmpdir(), 'komplid-tpl-'));
   process.env.LEADS_DATA_DIR = dataDir;
+  // Заглушка сети по умолчанию. Без неё тест, который не подменил fetch сам,
+  // уходит реальным запросом на api.example.test и висит до сетевого таймаута —
+  // прогон падал «по таймауту 5000ms» в зависимости от скорости DNS.
+  vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
+  // Лимитер живёт в памяти модуля: без сброса тесты в одном файле
+  // складываются в один счётчик и упираются в 429.
+  resetRateLimits();
 });
 
 afterEach(async () => {

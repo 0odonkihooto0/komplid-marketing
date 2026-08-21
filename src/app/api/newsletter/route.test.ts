@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { POST } from './route';
+import { resetRateLimits } from '@/lib/rate-limit';
 
 const ENV_KEYS = ['INTERNAL_API_URL', 'INTERNAL_API_TOKEN'] as const;
 const saved: Record<string, string | undefined> = {};
@@ -8,6 +9,13 @@ beforeEach(() => {
   for (const k of ENV_KEYS) saved[k] = process.env[k];
   process.env.INTERNAL_API_URL = 'https://api.example.test';
   process.env.INTERNAL_API_TOKEN = 'test-token';
+  // Заглушка сети по умолчанию. Без неё тест, который не подменил fetch сам,
+  // уходит реальным запросом на api.example.test и висит до сетевого таймаута —
+  // прогон падал «по таймауту 5000ms» в зависимости от скорости DNS.
+  vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
+  // Лимитер живёт в памяти модуля: без сброса тесты в одном файле
+  // складываются в один счётчик и упираются в 429.
+  resetRateLimits();
 });
 
 afterEach(() => {

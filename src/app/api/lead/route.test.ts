@@ -3,6 +3,7 @@ import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { POST } from './route';
+import { resetRateLimits } from '@/lib/rate-limit';
 
 const ENV_KEYS = [
   'INTERNAL_API_URL',
@@ -25,6 +26,13 @@ beforeEach(async () => {
   // Telegram-уведомления в тестах не шлём.
   delete process.env.TELEGRAM_BOT_TOKEN;
   delete process.env.TELEGRAM_CHAT_ID;
+  // Заглушка сети по умолчанию. Без неё тест, который не подменил fetch сам,
+  // уходит реальным запросом на api.example.test и висит до сетевого таймаута —
+  // прогон падал «по таймауту 5000ms» в зависимости от скорости DNS.
+  vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: true } as Response)));
+  // Лимитер живёт в памяти модуля: без сброса тесты в одном файле
+  // складываются в один счётчик и упираются в 429.
+  resetRateLimits();
   vi.spyOn(console, 'warn').mockImplementation(() => {});
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
@@ -164,6 +172,42 @@ describe('POST /api/lead', () => {
 
     expect(res.status).toBe(200);
     expect((await storedLeads())[0]).toMatchObject({ phone: '+7 (999) 123-45-67' });
+  });
+
+  it('отсекает набивку: сверх лимита отдаёт 429 и не пишет заявку', async () => {
+    // Открытый POST, который пишет в хранилище, скриптом набивает и базу,
+    // и счётчик мест на главной — а счётчик это публичное обещание.
+    const headers = { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.7' };
+    const flood = () =>
+      POST(
+        new Request('http://localhost/api/lead', {
+          method: 'POST',
+          headers,
+          body: validLead,
+        }) as unknown as Parameters<typeof POST>[0],
+      );
+
+    for (let i = 0; i < 10; i += 1) expect((await flood()).status).toBe(200);
+
+    const blocked = await flood();
+    expect(blocked.status).toBe(429);
+    expect(blocked.headers.get('Retry-After')).toBeTruthy();
+    expect(await storedLeads()).toHaveLength(10);
+  });
+
+  it('лимит считается по адресу, а не на всех сразу', async () => {
+    const send = (ip: string) =>
+      POST(
+        new Request('http://localhost/api/lead', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-forwarded-for': ip },
+          body: validLead,
+        }) as unknown as Parameters<typeof POST>[0],
+      );
+
+    for (let i = 0; i < 11; i += 1) await send('203.0.113.7');
+
+    expect((await send('203.0.113.8')).status).toBe(200);
   });
 
   it('возвращает 400, если нет ни почты, ни телефона', async () => {
