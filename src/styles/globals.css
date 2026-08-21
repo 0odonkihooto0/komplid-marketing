@@ -494,6 +494,32 @@ img {
   display: flex;
 }
 
+/* Почта в шапке. Порог у неё свой, 1199px: полный состав шапки требует ~970px,
+   и контакт добавляет к нему ещё ~140px — на планшете он бы вернул ту самую
+   горизонтальную прокрутку, ради которой навигация прячется на 1023px.
+   Селектор утяжелён родителем по той же причине, что и .nav-desktop-only ниже. */
+.nav-contact {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.nav-contact:hover {
+  background: var(--bg-inset);
+  color: var(--ink);
+}
+
+@media (max-width: 1199px) {
+  .nav-right .nav-contact { display: none; }
+}
+
 /* Селекторы утяжелены родителем намеренно. Кнопки шапки несут ещё и класс
    .btn-ghost / .btn-accent, а те объявлены ниже по файлу и задают свой display.
    При равной специфичности побеждало объявление ниже — «Войти» и «Попробовать»

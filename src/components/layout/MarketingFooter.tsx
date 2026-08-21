@@ -59,13 +59,12 @@ export function MarketingFooter() {
             <Link href="/solutions/customer">Заказчику</Link>
             <Link href="/solutions/designer">Проектировщику</Link>
             <Link href="/solutions/technical-supervisor">Технадзору</Link>
-            <Link href="/sravnenie">Сравнение с ЦУС, Exon</Link>
           </div>
 
           {/* Контакты */}
           <div className="foot-col">
             <h5>Контакты</h5>
-            <a href="mailto:hello@komplid.ru">hello@komplid.ru</a>
+            <a href={`mailto:${company.email}`}>{company.email}</a>
             <a href="https://t.me/komplid" target="_blank" rel="noopener noreferrer">
               Telegram · @komplid
             </a>

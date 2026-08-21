@@ -3,6 +3,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { MobileNav } from './MobileNav';
 import { BrandLogo } from './BrandLogo';
 import { NAV_LINKS } from './nav-links';
+import { company } from '@/lib/company';
 import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
 
 export function MarketingHeader() {
@@ -24,6 +25,15 @@ export function MarketingHeader() {
 
         {/* Правая часть */}
         <div className="nav-right">
+          {/* Почта — единственный публичный канал связи до запуска приложения.
+              Прячется раньше остальной навигации (порог 1200px, а не 1023px):
+              шесть ссылок, тема и CTA уже занимают ~970px, и на планшете
+              контакт распирал бы шапку. На узких экранах он есть
+              в мобильном меню и в подвале. */}
+          <a href={`mailto:${company.email}`} className="nav-contact">
+            {company.email}
+          </a>
+
           <div className="nav-desktop-only">
             <ThemeToggle />
           </div>
