@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Hero } from '@/components/blocks/Hero';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { validateRefCode } from '@/lib/referral';
+import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,12 +40,17 @@ export default async function ReferralPage({ params }: PageProps) {
     </>
   );
 
-  const subtitle =
-    `Активируйте код и получите ${discount}% скидку на первый месяц подписки. ` +
-    `Попробуйте все 21 модуль 14 дней бесплатно — скидка применится автоматически при оплате.`;
+  // До запуска приложения регистрации нет, и обещать пробный период с оплатой
+  // нельзя (CLAUDE.md §21): код запоминается в cookie и сработает при открытии.
+  const subtitle = WAITLIST_MODE
+    ? `Код сохранён — ${discount}% скидка закрепится за вами и применится при первой оплате, ` +
+      `когда откроется доступ. Оставьте почту, чтобы мы написали в день запуска.`
+    : `Активируйте код и получите ${discount}% скидку на первый месяц подписки. ` +
+      `Попробуйте все 21 модуль 14 дней бесплатно — скидка применится автоматически при оплате.`;
 
-  const signupUrl =
-    `https://app.komplid.ru/signup?ref=${encodeURIComponent(code)}&utm_source=referral`;
+  const signupUrl = primaryCtaHref(
+    `https://app.komplid.ru/signup?ref=${encodeURIComponent(code)}&utm_source=referral`,
+  );
 
   return (
     <>
@@ -58,7 +64,10 @@ export default async function ReferralPage({ params }: PageProps) {
         eyebrow={eyebrow}
         title={titleContent}
         subtitle={subtitle}
-        primaryCta={{ label: 'Зарегистрироваться со скидкой', href: signupUrl }}
+        primaryCta={{
+          label: primaryCtaLabel('Зарегистрироваться со скидкой'),
+          href: signupUrl,
+        }}
         secondaryCta={{ label: 'Узнать больше о Комплид', href: '/' }}
         variant="compact"
       />

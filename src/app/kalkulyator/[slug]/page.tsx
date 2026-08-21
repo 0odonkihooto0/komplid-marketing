@@ -31,6 +31,7 @@ import { SnegCalculator } from '@/components/calculators/SnegCalculator';
 import { VeterCalculator } from '@/components/calculators/VeterCalculator';
 import { PandusCalculator } from '@/components/calculators/PandusCalculator';
 import { LestnitsaCalculator } from '@/components/calculators/LestnitsaCalculator';
+import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -176,12 +177,14 @@ export default async function CalcPage({ params }: Props) {
       />
 
       <Cta
-        eyebrow="Комплид · Бесплатный триал"
+        eyebrow="Комплид · Ранний доступ"
         title="Упростите работу — попробуйте Комплид"
-        description="Автоматические КС-2, КС-3, расчёт аванса и сроков прямо в системе управления проектом. Триал 14 дней без карты."
+        description="Автоматические КС-2, КС-3, расчёт аванса и сроков прямо в системе управления проектом."
         primary={{
-          label: 'Попробовать бесплатно',
-          href: 'https://app.komplid.ru/signup?utm_source=landing&utm_medium=organic&utm_campaign=calculator',
+          label: primaryCtaLabel('Попробовать бесплатно'),
+          href: primaryCtaHref(
+            'https://app.komplid.ru/signup?utm_source=landing&utm_medium=organic&utm_campaign=calculator',
+          ),
         }}
         secondary={{ label: 'Изучить ИД-Мастер', href: '/pto' }}
       />

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { CheckIcon, CrossIcon } from '@/components/ui/icons';
+import { primaryCtaHref, WAITLIST_MODE } from '@/lib/waitlist';
 
 // Общий блок B2C-тарифов для ролевых посадочных (/pto, /smetchik, /prorab).
 // Раньше вёрстка тумблера, карточек, иконок и formatPrice дублировалась в трёх
@@ -198,7 +199,7 @@ export function RolePricing({ eyebrow, title, description, tiers }: RolePricingP
               </ul>
 
               <a
-                href={tier.ctaHref}
+                href={primaryCtaHref(tier.ctaHref)}
                 className={tier.featured ? 'btn-accent' : 'btn-outline'}
                 style={{
                   marginTop: 'auto',
@@ -209,7 +210,10 @@ export function RolePricing({ eyebrow, title, description, tiers }: RolePricingP
                   gap: 6,
                 }}
               >
-                {tier.ctaLabel}
+                {/* До запуска платные кнопки не «выбирают тариф», а занимают
+                    место в бете: выбрать пока нечего. Формулировка — из эталона
+                    дизайна. Бесплатный тариф свою подпись сохраняет. */}
+                {WAITLIST_MODE && tier.monthlyPrice !== 0 ? 'Занять место в бете' : tier.ctaLabel}
                 {tier.featured && <ArrowRight size={14} />}
               </a>
             </div>
