@@ -63,4 +63,23 @@ async function count(): Promise<number> {
   }
 }
 
-export const diskDriver: LeadsDriver = { append, count };
+/** Все заявки из файла. Битые строки пропускаются, а не роняют выгрузку. */
+async function list(): Promise<StoredLead[]> {
+  try {
+    const raw = await readFile(path.join(dataDir(), 'leads.jsonl'), 'utf8');
+    const leads: StoredLead[] = [];
+    for (const line of raw.split('\n')) {
+      if (!line.trim()) continue;
+      try {
+        leads.push(JSON.parse(line) as StoredLead);
+      } catch {
+        // Битую строку пропускаем.
+      }
+    }
+    return leads;
+  } catch {
+    return [];
+  }
+}
+
+export const diskDriver: LeadsDriver = { append, count, list };

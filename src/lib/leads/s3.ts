@@ -3,6 +3,7 @@ import {
   S3Client,
   PutObjectCommand,
   ListObjectsV2Command,
+  GetObjectCommand,
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 import { envOr } from '../env';
@@ -163,4 +164,49 @@ async function count(): Promise<number> {
   return total;
 }
 
-export const s3Driver: LeadsDriver = { append, count };
+/**
+ * Все заявки из истории. Читает каждый объект префикса events/ — операция
+ * дорогая, поэтому вызывается только при пересборке таблицы-зеркала.
+ */
+async function list(): Promise<StoredLead[]> {
+  const cfg = s3Config();
+  if (!cfg) return [];
+
+  const s3 = client(cfg);
+  const keys: string[] = [];
+  let token: string | undefined;
+
+  try {
+    do {
+      const page = await s3.send(
+        new ListObjectsV2Command({
+          Bucket: cfg.bucket,
+          Prefix: EVENTS_PREFIX,
+          ContinuationToken: token,
+        }),
+      );
+      for (const item of page.Contents ?? []) {
+        if (item.Key) keys.push(item.Key);
+      }
+      token = page.IsTruncated ? page.NextContinuationToken : undefined;
+    } while (token);
+
+    const leads: StoredLead[] = [];
+    for (const Key of keys) {
+      const obj = await s3.send(new GetObjectCommand({ Bucket: cfg.bucket, Key }));
+      const body = await obj.Body?.transformToString();
+      if (!body) continue;
+      try {
+        leads.push(JSON.parse(body) as StoredLead);
+      } catch {
+        // Битый объект пропускаем — остальные заявки важнее.
+      }
+    }
+    return leads;
+  } catch (err) {
+    console.error('[leads-store] не удалось выгрузить заявки из S3:', err);
+    return [];
+  }
+}
+
+export const s3Driver: LeadsDriver = { append, count, list };
