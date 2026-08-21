@@ -34,7 +34,7 @@ const EVENTS_PREFIX = 'leads/events/';
 /** Счётчик остатка мест дёргается с каждой загрузки главной. */
 const COUNT_TTL_MS = 60_000;
 
-interface S3Config {
+export interface S3Config {
   bucket: string;
   region: string;
   endpoint: string;
@@ -60,7 +60,11 @@ export function s3Config(): S3Config | null {
 
 let cached: { key: string; client: S3Client } | null = null;
 
-function client(cfg: S3Config): S3Client {
+/**
+ * Клиент с кэшем. Экспортируется ради `s3-sheet.ts`: таблица-зеркало живёт
+ * в том же бакете, и второй клиент с той же конфигурацией был бы лишним.
+ */
+export function s3Client(cfg: S3Config): S3Client {
   // Ключ кэша — вся конфигурация: смена бакета или ключей должна поднять
   // новый клиент, а не молча писать в старый.
   const key = `${cfg.endpoint}|${cfg.region}|${cfg.bucket}|${cfg.accessKey}`;
@@ -85,7 +89,7 @@ async function append(record: StoredLead): Promise<boolean> {
   const cfg = s3Config();
   if (!cfg) return false;
 
-  const s3 = client(cfg);
+  const s3 = s3Client(cfg);
   const body = JSON.stringify(record);
   // Двоеточия из ISO-времени в ключе допустимы, но мешают при выгрузке
   // бакета на диск: в именах файлов Windows их нет.
@@ -137,7 +141,7 @@ async function count(): Promise<number> {
   const now = Date.now();
   if (countCache && now - countCache.at < COUNT_TTL_MS) return countCache.value;
 
-  const s3 = client(cfg);
+  const s3 = s3Client(cfg);
   let total = 0;
   let token: string | undefined;
 
@@ -172,7 +176,7 @@ async function list(): Promise<StoredLead[]> {
   const cfg = s3Config();
   if (!cfg) return [];
 
-  const s3 = client(cfg);
+  const s3 = s3Client(cfg);
   const keys: string[] = [];
   let token: string | undefined;
 

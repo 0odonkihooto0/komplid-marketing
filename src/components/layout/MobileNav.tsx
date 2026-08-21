@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/sheet';
 
 import { NAV_LINKS } from './nav-links';
+import { company } from '@/lib/company';
 import { ThemeToggle } from './ThemeToggle';
 import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
 
@@ -83,6 +84,22 @@ export function MobileNav() {
             gap: 8,
           }}
         >
+          {/* Почта из шапки на этой ширине скрыта — контакт живёт здесь */}
+          <a
+            href={`mailto:${company.email}`}
+            style={{
+              display: 'block',
+              padding: '10px 12px',
+              textAlign: 'center',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12.5,
+              letterSpacing: '0.02em',
+              color: 'var(--ink-soft)',
+            }}
+          >
+            {company.email}
+          </a>
+
           {/* В шапке переключатель темы виден только на десктопе */}
           <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8 }}>
             <ThemeToggle />

@@ -14,7 +14,7 @@
  *
  * Менять при каждом изменении текста политики — вместе с датой в шапке страницы.
  */
-export const PRIVACY_POLICY_VERSION = '2026-08-17';
+export const PRIVACY_POLICY_VERSION = '2026-08-21';
 
 /** Канонический адрес политики. С /privacy стоит 301 в next.config.mjs. */
 export const PRIVACY_POLICY_PATH = '/legal/privacy';

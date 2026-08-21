@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getAllBlogPosts } from '@/content-loader/blog';
 import { getAllTemplates } from '@/content-loader/shablony';
-import { getAllComparisons } from '@/content-loader/sravneniya';
 import { CALCULATORS } from '@/lib/calculators-data';
 import { getAllNormativDocs } from '@/lib/normativ-data';
 import { SP_CLAUSES, clauseUrl } from '@/lib/normativ-clauses';
@@ -25,7 +24,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/isup', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/shablony', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/kalkulyator', priority: 0.7, changeFrequency: 'monthly' as const },
-    { path: '/sravnenie', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/solutions/general-contractor', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/solutions/customer', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/solutions/technical-supervisor', priority: 0.7, changeFrequency: 'monthly' as const },
@@ -42,10 +40,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
-  const [posts, templates, comparisons, normativDocs] = await Promise.all([
+  const [posts, templates, normativDocs] = await Promise.all([
     getAllBlogPosts(),
     getAllTemplates(),
-    getAllComparisons(),
     getAllNormativDocs(),
   ]);
 
@@ -59,13 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const templatePages: MetadataRoute.Sitemap = templates.map((tpl) => ({
     url: `${BASE_URL}/shablony/${tpl.slug}`,
     lastModified: new Date(tpl.publishedAt),
-    changeFrequency: 'monthly',
-    priority: 0.7,
-  }));
-
-  const comparisonPages: MetadataRoute.Sitemap = comparisons.map((cmp) => ({
-    url: `${BASE_URL}/sravnenie/${cmp.slug}`,
-    lastModified: new Date(cmp.publishedAt),
     changeFrequency: 'monthly',
     priority: 0.7,
   }));
@@ -119,7 +109,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...calcPages,
     ...postPages,
     ...templatePages,
-    ...comparisonPages,
     ...normativPages,
     ...clausePages,
     ...formPages,

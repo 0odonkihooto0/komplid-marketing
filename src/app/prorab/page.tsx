@@ -79,15 +79,15 @@ const FEATURES: FeatureItem[] = [
 ];
 
 const COMPARISON_ROWS = [
-  { feature: 'Офлайн-режим', values: [true, false, 'частично'] },
-  { feature: 'Голосовой ввод ОЖР', values: [true, false, false] },
-  { feature: 'Фото с GPS-координатами', values: [true, false, 'частично'] },
+  { feature: 'Офлайн-режим', values: [true, false, 'зависит от системы'] },
+  { feature: 'Голосовой ввод ОЖР', values: [true, false, 'редко'] },
+  { feature: 'Фото с GPS-координатами', values: [true, false, 'зависит от системы'] },
   { feature: 'Фиксация дефектов', values: [true, false, true] },
-  { feature: 'Синхронизация с ПТО-модулем', values: [true, false, 'платно'] },
+  { feature: 'Синхронизация с ПТО-модулем', values: [true, false, true] },
   { feature: 'Установка без магазина приложений', values: [true, true, false] },
   { feature: 'Соответствие приказу №1026/пр', values: [true, 'зависит от формы', true] },
-  { feature: 'Автогенерация АОСР из ОЖР', values: [true, false, 'платно'] },
-  { feature: 'Цена от', values: ['1 900 ₽/мес', '0 (время дорогое)', '50 000+ ₽/мес'] },
+  { feature: 'Автогенерация АОСР из ОЖР', values: [true, false, 'зависит от системы'] },
+  { feature: 'Цена от', values: ['1 900 ₽/мес', '0 (время дорогое)', 'как правило, по запросу'] },
 ];
 
 const FAQ_ITEMS = [
@@ -173,8 +173,8 @@ export default function ProrabPage() {
 
       <ComparisonTable
         eyebrow="Сравнение инструментов"
-        title="Прораб-Журнал vs бумажный ОЖР vs ЦУС мобильный"
-        columns={['Прораб-Журнал', 'Бумажный ОЖР', 'ЦУС мобильный']}
+        title="Прораб-Журнал, бумажный журнал и мобильный модуль корпоративной системы"
+        columns={['Прораб-Журнал', 'Бумажный ОЖР', 'Мобильный модуль корпоративной системы']}
         rows={COMPARISON_ROWS}
         highlightColumn={0}
       />

@@ -26,7 +26,7 @@ export interface LeadsDriver {
   append(record: StoredLead): Promise<boolean>;
   count(): Promise<number>;
   /**
-   * Все заявки — для пересборки таблицы-зеркала на Яндекс.Диске.
+   * Все заявки — для пересборки таблицы-зеркала (`leads/zayavki.xlsx`).
    * Операция редкая и дорогая (в S3 это чтение каждого объекта), в обычном
    * потоке не вызывается.
    */
