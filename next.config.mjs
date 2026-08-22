@@ -50,6 +50,17 @@ const nextConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          // HSTS. На собственном VDS его ставил бы nginx, но основной хостинг —
+          // App Platform, и там веб-сервер платформы этого заголовка не добавляет:
+          // проверено на живом домене после первого выката. Без него первый заход
+          // по http остаётся перехватываемым, несмотря на 308 редирект, — а сайт
+          // принимает персональные данные через форму.
+          //
+          // includeSubDomains намеренно нет: заголовок обяжет каждый будущий
+          // поддомен иметь валидный TLS, а app.komplid.ru ещё не поднят.
+          // preload тоже нет — это односторонняя дверь: попадание в список
+          // браузеров откатывается месяцами.
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000' },
         ],
       },
     ];
