@@ -1,52 +1,32 @@
 import Link from 'next/link';
-import { DocumentChain } from './DocumentChain';
+import { HeroShowcase } from './HeroShowcase';
 import { SeatsCounter } from './SeatsCounter';
 import { SiteCounters } from './SiteCounters';
+import { HERO_BULLETS } from '@/lib/home-data';
 import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
-
-/** Что заявляем под кнопками — всё проверяется прямо сейчас. */
-const TRUST_LINE = ['Данные в РФ · ФЗ-152', 'Работает без связи на объекте', 'Без карты'];
 
 export function HomeHero() {
   return (
     <div className="grid-bg">
-      <div className="wrap-bleed" style={{ paddingTop: 66, paddingBottom: 60 }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.04fr) minmax(0, 1fr)',
-            gap: 36,
-            alignItems: 'center',
-          }}
-          className="hero-grid"
-        >
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span className="eyebrow-ref">Управление стройкой в одном контуре</span>
+      {/* Правый отступ нулевой: снимок интерфейса должен уходить за край окна */}
+      <div className="hero-bleed">
+        <div className="hero-grid">
+          <div className="hero-copy">
+            <div className="eyebrow-ref">
+              Закрытая бета
               <SeatsCounter />
             </div>
 
-            {/* Прямой ответ «что это» — первым же экраном, для AEO */}
-            <h1
-              style={{
-                margin: '22px 0 20px',
-                fontSize: 'clamp(32px, 4.6vw, 50px)',
-                lineHeight: 1.04,
-                fontWeight: 500,
-              }}
-            >
-              <span className="line">Каждый акт — по СП.</span>
-              <span className="line">Каждая подпись —</span>
-              <span className="line">с координатами.</span>
-            </h1>
+            {/* Прямой ответ «что это» — сразу под заголовком, для AEO */}
+            <h1 className="hero-title">Вся стройка на одном столе.</h1>
 
             <p
               style={{
-                margin: '0 0 30px',
-                maxWidth: 560,
+                margin: '0 0 28px',
                 fontSize: 16.5,
                 lineHeight: 1.55,
                 color: 'var(--t3)',
+                textWrap: 'pretty',
               }}
             >
               «Комплид» ведёт объект от сметы до ввода в эксплуатацию: журнал смены с телефона
@@ -72,28 +52,20 @@ export function HomeHero() {
               </Link>
             </div>
 
-            <div
-              style={{
-                marginTop: 30,
-                paddingTop: 20,
-                borderTop: '1px solid var(--line)',
-                display: 'flex',
-                gap: 28,
-                flexWrap: 'wrap',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: 'var(--t4)',
-              }}
-            >
-              {TRUST_LINE.map((t) => (
-                <span key={t}>{t}</span>
+            <ul className="hero-bullets">
+              {HERO_BULLETS.map((bullet) => (
+                <li key={bullet.text}>
+                  <span
+                    className="hero-bullets__dot"
+                    style={{ background: bullet.tone === 'acc' ? 'var(--acc)' : 'var(--ok)' }}
+                  />
+                  {bullet.text}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
-          <DocumentChain />
+          <HeroShowcase />
         </div>
       </div>
 
