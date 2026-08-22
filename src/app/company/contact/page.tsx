@@ -5,7 +5,7 @@ import { company } from '@/lib/company';
 export const metadata: Metadata = {
   title: 'Контакты Комплид — связаться с нами',
   description:
-    'Связаться с Комплид: почта hello@komplid.ru, Telegram @komplid. Работаем онлайн по всей России, поддержка 10:00–19:00 МСК. Реквизиты ИП.',
+    'Связаться с Комплид: почта hello@komplid.ru, Telegram @komplid. Команда в Санкт-Петербурге, работаем онлайн по всей России, поддержка 10:00–19:00 МСК. Реквизиты ИП.',
   alternates: { canonical: 'https://komplid.ru/company/contact' },
 };
 
@@ -29,8 +29,8 @@ export default function ContactPage() {
             Связаться с нами
           </h1>
           <p className="max-w-xl text-lg" style={{ color: 'var(--ink-soft)' }}>
-            Работаем онлайн по всей России. Поддержка 10:00–19:00 МСК — отвечаем в течение рабочего
-            дня.
+            Команда в Санкт-Петербурге, работаем онлайн по всей России. Поддержка 10:00–19:00 МСК
+            — отвечаем в течение рабочего дня.
           </p>
         </div>
       </div>
@@ -88,6 +88,7 @@ export default function ContactPage() {
             style={{ color: 'var(--ink-soft)', listStyle: 'none', padding: 0, margin: 0 }}
           >
             <li>{company.name}</li>
+            <li>Санкт-Петербург</li>
             <li>ИНН {company.inn}</li>
             <li>ОГРНИП {company.ogrnip}</li>
             <li>НДС не облагается (ИП на УСН)</li>
