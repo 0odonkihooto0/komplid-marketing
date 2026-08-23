@@ -3,6 +3,7 @@ import { Hero } from '@/components/blocks/Hero';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { validateRefCode } from '@/lib/referral';
 import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,6 +72,8 @@ export default async function ReferralPage({ params }: PageProps) {
         secondaryCta={{ label: 'Узнать больше о Комплид', href: '/' }}
         variant="compact"
       />
+
+      <WaitlistSection source="ref" />
     </>
   );
 }

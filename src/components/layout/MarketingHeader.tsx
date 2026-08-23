@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
 import { MobileNav } from './MobileNav';
+import { HeaderCta } from './HeaderCta';
 import { BrandLogo } from './BrandLogo';
 import { NAV_LINKS } from './nav-links';
 import { company } from '@/lib/company';
-import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
+import { WAITLIST_MODE } from '@/lib/waitlist';
 
 export function MarketingHeader() {
   return (
@@ -47,12 +48,7 @@ export function MarketingHeader() {
             </a>
           )}
 
-          <a
-            href={primaryCtaHref('https://app.komplid.ru/signup')}
-            className="nav-desktop-only btn-accent btn-accent--sm"
-          >
-            {primaryCtaLabel('Попробовать')}
-          </a>
+          <HeaderCta className="nav-desktop-only btn-accent btn-accent--sm" />
 
           <div className="nav-mobile-only">
             <MobileNav />

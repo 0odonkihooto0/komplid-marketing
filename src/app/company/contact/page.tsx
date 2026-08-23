@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { company } from '@/lib/company';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 export const metadata: Metadata = {
   title: 'Контакты Комплид — связаться с нами',
@@ -98,6 +99,8 @@ export default function ContactPage() {
           </p>
         </div>
       </div>
+
+      <WaitlistSection source="contact" />
     </>
   );
 }

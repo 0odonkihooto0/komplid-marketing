@@ -36,6 +36,19 @@ export function primaryCtaHref(signupHref: string): string {
   return WAITLIST_MODE ? WAITLIST_ANCHOR : signupHref;
 }
 
+/**
+ * Адрес формы для кнопок, которые живут на каждой странице сайта — в шапке
+ * и мобильном меню.
+ *
+ * Локальный якорь там ненадёжен: `id` раннего доступа ставит сама форма
+ * (WaitlistForm, BetaAccessForm), поэтому на странице без формы `#ranniy-dostup`
+ * ведёт в пустоту, и кнопка просто ничего не делает. Ссылка на главную с якорем
+ * работает всегда — в том числе с выключенным JS и на странице 404.
+ */
+export function globalCtaHref(signupHref: string): string {
+  return WAITLIST_MODE ? `/${WAITLIST_ANCHOR}` : signupHref;
+}
+
 /** Подпись первичной кнопки: обещать «14 дней» до запуска нельзя. */
 export function primaryCtaLabel(launchedLabel: string): string {
   return WAITLIST_MODE ? 'Получить ранний доступ' : launchedLabel;

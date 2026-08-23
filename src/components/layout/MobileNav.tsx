@@ -14,7 +14,8 @@ import {
 import { NAV_LINKS } from './nav-links';
 import { company } from '@/lib/company';
 import { ThemeToggle } from './ThemeToggle';
-import { primaryCtaHref, primaryCtaLabel, WAITLIST_MODE } from '@/lib/waitlist';
+import { WAITLIST_MODE } from '@/lib/waitlist';
+import { HeaderCta } from './HeaderCta';
 
 export function MobileNav() {
   return (
@@ -124,9 +125,9 @@ export function MobileNav() {
               Войти
             </a>
           )}
-          {/* До запуска ведёт на форму раннего доступа, как и остальные первичные CTA */}
-          <a
-            href={primaryCtaHref('https://app.komplid.ru/signup')}
+          {/* До запуска ведёт на форму раннего доступа, как и остальные первичные CTA.
+              Адрес зависит от страницы — этим занимается HeaderCta. */}
+          <HeaderCta
             style={{
               display: 'block',
               padding: '10px 14px',
@@ -138,9 +139,7 @@ export function MobileNav() {
               background: 'var(--accent)',
               border: '1px solid var(--accent)',
             }}
-          >
-            {primaryCtaLabel('Попробовать')}
-          </a>
+          />
         </div>
       </SheetContent>
     </Sheet>

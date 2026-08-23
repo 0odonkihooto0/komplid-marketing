@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getAllNormativDocs, getNormativByCategory } from '@/lib/normativ-data';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { ItemListSchema } from '@/components/seo/ItemListSchema';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 export const metadata: Metadata = {
   title: 'Своды правил (СП) — актуальные тексты с поиском и навигацией',
@@ -98,6 +99,8 @@ export default async function NormativPage() {
           ))}
         </div>
       </div>
+
+      <WaitlistSection source="normativ" />
     </>
   );
 }

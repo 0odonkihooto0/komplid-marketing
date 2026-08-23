@@ -12,6 +12,7 @@ import { FaqSchema } from '@/components/seo/FaqSchema';
 import { TemplateDownloadForm } from '@/components/forms/TemplateDownloadForm';
 import { extractFaqFromContent } from '@/lib/extract-faq';
 import { WAITLIST_MODE, WAITLIST_OFFER } from '@/lib/waitlist';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 /**
  * Куда ведёт CTA со страницы бланка — по категории каталога.
@@ -193,6 +194,8 @@ export default async function ShablonPage({ params }: PageProps) {
           </div>
         </div>
       </article>
+
+      <WaitlistSection source="shablony-item" />
     </>
   );
 }

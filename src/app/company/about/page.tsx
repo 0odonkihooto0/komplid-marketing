@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 export const metadata: Metadata = {
   title: 'О компании Комплид — ERP для строительных проектов',
@@ -83,6 +84,8 @@ export default function AboutPage() {
           .
         </p>
       </div>
+
+      <WaitlistSection source="about" />
     </>
   );
 }

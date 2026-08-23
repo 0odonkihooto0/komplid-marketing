@@ -811,6 +811,34 @@ img {
   }
 }
 
+/* Короткий перечень возможностей рядом с формой раннего доступа */
+.waitlist-bullets {
+  margin: 22px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.waitlist-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.waitlist-bullets__dot {
+  flex: none;
+  margin-top: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
 /* ─────────────────────────────────────────────────
    Главная страница — секции из эталона.
    Разметка перенесена из design/landing-reference.html; повторяющиеся

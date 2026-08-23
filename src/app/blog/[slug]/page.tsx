@@ -13,6 +13,7 @@ import { TableOfContents } from '@/components/blog/TableOfContents';
 import { ShareButtons } from '@/components/blog/ShareButtons';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { extractFaqFromContent } from '@/lib/extract-faq';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -186,6 +187,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           <RelatedPosts posts={related} />
         </div>
       </article>
+
+      <WaitlistSection source="blog-post" />
     </>
   );
 }

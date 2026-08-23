@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { seatsPhrase } from './waitlist';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import path from 'node:path';
+import { seatsPhrase, globalCtaHref, WAITLIST_ANCHOR, WAITLIST_MODE } from './waitlist';
 
 describe('seatsPhrase', () => {
   it('склоняет единственное число', () => {
@@ -27,5 +29,56 @@ describe('seatsPhrase', () => {
     expect(seatsPhrase(13)).toBe('13 мест');
     expect(seatsPhrase(14)).toBe('14 мест');
     expect(seatsPhrase(111)).toBe('111 мест');
+  });
+});
+
+describe('globalCtaHref', () => {
+  it('до запуска ведёт на главную с якорем, а не на локальный', () => {
+    // Локальный якорь ставит сама форма, поэтому на странице без неё он мёртв
+    expect(globalCtaHref('https://app.komplid.ru/signup')).toBe(`/${WAITLIST_ANCHOR}`);
+    expect(WAITLIST_ANCHOR.startsWith('#')).toBe(true);
+  });
+});
+
+/**
+ * Кнопка раннего доступа стоит в шапке, то есть на каждой странице сайта,
+ * а якорь для неё создаёт форма. Страница без формы = молча неработающая кнопка;
+ * ровно так и было на блоге, шаблонах и нормативах до 23.08.2026.
+ *
+ * Поэтому список страниц-исключений задан явно: новая страница без формы уронит
+ * прогон, и решение «а кнопка тут куда ведёт?» придётся принять осознанно.
+ */
+describe('форма раннего доступа на страницах', () => {
+  const APP_DIR = path.join(process.cwd(), 'src/app');
+
+  /** Юридические страницы намеренно строгие: там только текст документа. */
+  const WITHOUT_FORM = ['legal/oferta', 'legal/privacy', 'legal/terms'];
+
+  /** Компоненты, каждый из которых рендерит форму с якорем. */
+  const FORM_COMPONENTS = ['WaitlistSection', 'BetaCtaSection', 'RoleSolutionPage'];
+
+  function pages(dir: string, prefix = ''): Array<{ route: string; file: string }> {
+    const found: Array<{ route: string; file: string }> = [];
+    for (const entry of readdirSync(dir)) {
+      const full = path.join(dir, entry);
+      if (statSync(full).isDirectory()) {
+        if (entry === 'api') continue;
+        found.push(...pages(full, prefix ? `${prefix}/${entry}` : entry));
+      } else if (entry === 'page.tsx') {
+        found.push({ route: prefix, file: full });
+      }
+    }
+    return found;
+  }
+
+  it.runIf(WAITLIST_MODE)('есть везде, кроме явных исключений', () => {
+    const missing = pages(APP_DIR)
+      .filter(({ file }) => {
+        const src = readFileSync(file, 'utf8');
+        return !FORM_COMPONENTS.some((name) => src.includes(name));
+      })
+      .map(({ route }) => route);
+
+    expect(missing.sort()).toEqual(WITHOUT_FORM.sort());
   });
 });

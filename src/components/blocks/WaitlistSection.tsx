@@ -1,5 +1,6 @@
 import { WaitlistForm } from '@/components/forms/WaitlistForm';
 import { WAITLIST_MODE } from '@/lib/waitlist';
+import { WAITLIST_BULLETS } from '@/lib/home-data';
 
 interface Props {
   /** Откуда пришёл лид — попадает в source, чтобы считать конверсию по страницам. */
@@ -49,6 +50,17 @@ export function WaitlistSection({
             <p style={{ color: 'var(--ink-soft)', fontSize: 16, lineHeight: 1.55, margin: 0 }}>
               {description}
             </p>
+
+            {/* Что человек получит — коротко: на большинстве страниц этот блок
+                единственное место, где сказано, из чего состоит продукт. */}
+            <ul className="waitlist-bullets">
+              {WAITLIST_BULLETS.map((item) => (
+                <li key={item}>
+                  <span className="waitlist-bullets__dot" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
 
           <WaitlistForm source={source} />

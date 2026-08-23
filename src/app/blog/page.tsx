@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllBlogPosts } from '@/content-loader/blog';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 export const metadata: Metadata = {
   title: 'Блог — исполнительная документация, сметы, стройконтроль',
@@ -115,6 +116,8 @@ export default async function BlogPage() {
           </div>
         )}
       </div>
+
+      <WaitlistSection source="blog" />
     </>
   );
 }
