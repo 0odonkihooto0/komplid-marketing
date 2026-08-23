@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { seatsPhrase } from '@/lib/waitlist';
+import { BETA_SEATS_TOTAL, seatsPhrase } from '@/lib/waitlist';
 
 /**
  * Остаток мест в закрытой бете. Число подтягивается с /api/waitlist-seats
@@ -10,6 +10,9 @@ import { seatsPhrase } from '@/lib/waitlist';
  *
  * Пока число не приехало — не показываем ничего. Заглушка вроде «осталось
  * мало мест» была бы ровно тем недостоверным дефицитом, которого мы избегаем.
+ *
+ * Слово «бета» живёт в надзаголовке рядом, поэтому здесь остаются только места:
+ * «34 места из 100».
  */
 export function SeatsCounter() {
   const [left, setLeft] = useState<number | null>(null);
@@ -47,7 +50,9 @@ export function SeatsCounter() {
           flex: 'none',
         }}
       />
-      <span style={{ color: 'var(--t4)' }}>закрытая бета · {seatsPhrase(left)}</span>
+      <span style={{ color: 'var(--t4)' }}>
+        {seatsPhrase(left)} из {BETA_SEATS_TOTAL}
+      </span>
     </>
   );
 }

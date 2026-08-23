@@ -32,6 +32,7 @@ import { VeterCalculator } from '@/components/calculators/VeterCalculator';
 import { PandusCalculator } from '@/components/calculators/PandusCalculator';
 import { LestnitsaCalculator } from '@/components/calculators/LestnitsaCalculator';
 import { primaryCtaHref, primaryCtaLabel } from '@/lib/waitlist';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -188,6 +189,8 @@ export default async function CalcPage({ params }: Props) {
         }}
         secondary={{ label: 'Изучить ИД-Мастер', href: '/pto' }}
       />
+
+      <WaitlistSection source="kalkulyator-item" />
     </>
   );
 }

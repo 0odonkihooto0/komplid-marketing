@@ -19,10 +19,17 @@ export function OrganizationSchema() {
     description:
       'Платформа управления строительными проектами в России. 21 модуль: ИД, сметы, журналы, стройконтроль, ТИМ.',
     foundingDate: '2026',
+    // Город — тот же, что указан регионом сайта в Яндекс.Вебмастере: разметка,
+    // страница контактов и панель должны говорить одно и то же, иначе регион
+    // не подтверждается. areaServed отдельно: работаем онлайн по всей стране.
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'RU',
-      addressLocality: 'Москва',
+      addressLocality: 'Санкт-Петербург',
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'Россия',
     },
     contactPoint: {
       '@type': 'ContactPoint',

@@ -811,6 +811,34 @@ img {
   }
 }
 
+/* Короткий перечень возможностей рядом с формой раннего доступа */
+.waitlist-bullets {
+  margin: 22px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.waitlist-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.waitlist-bullets__dot {
+  flex: none;
+  margin-top: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
 /* ─────────────────────────────────────────────────
    Главная страница — секции из эталона.
    Разметка перенесена из design/landing-reference.html; повторяющиеся
@@ -832,8 +860,8 @@ img {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(880px 420px at 78% -10%, var(--glow1), transparent 62%),
-    radial-gradient(560px 320px at -6% 62%, var(--glow2), transparent 70%);
+    radial-gradient(880px 420px at 74% -12%, var(--glow1), transparent 62%),
+    radial-gradient(560px 320px at -6% 66%, var(--glow2), transparent 70%);
   pointer-events: none;
 }
 
@@ -857,6 +885,210 @@ img {
   width: 20px;
   height: 1px;
   background: var(--acc);
+}
+
+/* ─── Первый экран ───────────────────────────────────────────────────────────
+   Раскладка героя целиком здесь, а не инлайном в компоненте: правый снимок
+   намеренно шире своей колонки и уходит за край окна, и все брейкпоинты этого
+   выезда должны читаться в одном месте. */
+
+.hero-bleed {
+  /* Справа отступа нет — за этот край уходит снимок интерфейса */
+  padding: 56px 0 52px 48px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(560px, 0.8fr) minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.hero-copy { max-width: 560px; }
+
+.hero-title {
+  margin: 22px 0 18px;
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.038em;
+  color: var(--t1);
+}
+
+/* В одну строку заголовок помещается только на широком экране */
+@media (min-width: 1101px) {
+  .hero-title { white-space: nowrap; }
+}
+
+.hero-bullets {
+  margin: 28px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 11px;
+}
+
+.hero-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--t3);
+}
+
+.hero-bullets__dot {
+  flex: none;
+  margin-top: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.hero-showcase {
+  display: grid;
+  grid-template-columns: 184px minmax(0, 1fr);
+  column-gap: 18px;
+  row-gap: 14px;
+  align-items: start;
+}
+
+.hero-showcase__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hero-showcase__phone {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: 184px;
+}
+
+.hero-showcase__web {
+  position: relative;
+  height: 472px;
+}
+
+/* Рамка браузера. Ширина больше колонки, правой границы нет: снимок продолжается
+   за краем окна, и обрезает его переполнение секции, а не сама рамка. */
+.browser-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% + 130px);
+  border: 1px solid var(--line3);
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  background: var(--panel);
+  box-shadow: 0 34px 90px var(--shadow);
+  overflow: hidden;
+}
+
+.browser-frame__bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  background: var(--panel3);
+  border-bottom: 1px solid var(--line2);
+}
+
+.browser-frame__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line3);
+}
+
+.browser-frame__url {
+  margin-left: 10px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  background: var(--inset);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--t4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.browser-frame__viewport {
+  position: relative;
+  height: 436px;
+  overflow: hidden;
+}
+
+/* Снимок лежит поверх окна и обрезается им: видно верх интерфейса
+   в натуральную величину, а не всю страницу целиком. */
+.browser-frame__shot {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.hero-callout {
+  position: absolute;
+  left: 110px;
+  top: 56px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border-radius: 9px;
+  white-space: nowrap;
+  background: var(--bg2);
+  border: 1px solid var(--acc);
+  box-shadow: 0 14px 34px var(--shadow);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--t1);
+}
+
+.hero-callout > span:first-child { flex: none; }
+
+/* 1100px — телефон уже не помещается рядом с рамкой браузера, остаётся веб */
+@media (max-width: 1100px) {
+  .hero-showcase { grid-template-columns: minmax(0, 1fr); }
+  .hero-showcase__phone,
+  .hero-showcase__label--phone { display: none; }
+}
+
+/* 980px — иллюстрация уходит под текст и перестаёт вылезать за край */
+@media (max-width: 980px) {
+  .hero-bleed { padding: 48px 48px 52px; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero-copy { max-width: none; }
+  .hero-title { font-size: 36px; }
+  .hero-showcase__web { height: auto; }
+
+  .browser-frame {
+    position: static;
+    width: 100%;
+    border-right: 1px solid var(--line3);
+    border-radius: 12px;
+  }
+
+  /* Снимок перестаёт быть обрезанным куском и вписывается целиком:
+     обрезать нечего, поэтому и высота, и позиционирование — обычные */
+  .browser-frame__viewport { --shot-w: 100%; height: auto; }
+  .browser-frame__shot { position: static; }
+  .hero-callout { display: none; }
+}
+
+@media (max-width: 640px) {
+  .hero-bleed { padding: 36px 16px 40px; }
+  .hero-title { font-size: 30px; }
+  .hero-bullets { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* Счётчики платформы */
@@ -1272,11 +1504,6 @@ img {
 .hatch-rule {
   height: 10px;
   background-image: repeating-linear-gradient(115deg, var(--acc) 0 15px, var(--bg) 15px 30px);
-}
-
-/* Герой главной: на узких экранах иллюстрация уходит под текст */
-@media (max-width: 980px) {
-  .hero-grid { grid-template-columns: minmax(0, 1fr) !important; }
 }
 
 /* Ролевые страницы: строка модуля на узком экране складывается в колонку */

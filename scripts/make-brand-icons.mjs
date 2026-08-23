@@ -68,6 +68,11 @@ await png(iconSvg, `${OUT_ICONS}/icon-192.png`, 192, 192);
 await png(iconSvg, `${OUT_ICONS}/icon-512.png`, 512, 512);
 await png(maskableSvg, `${OUT_ICONS}/icon-512-maskable.png`, 512, 512);
 await png(logoSvg, `${OUT_ICONS}/logo-512.png`, 512, 512);
+// apple-touch-icon: соглашение об именах Next принимает только растр, поэтому
+// файл кладётся прямо в src/app — SVG там молча игнорируется и отдаёт 404.
+// 192 вместо рекомендованных Apple 180: тот же размер, что у иконки PWA,
+// iOS масштабирует без потерь, а в репозитории не появляется третий вариант знака.
+await png(iconSvg, 'src/app/apple-icon.png', 192, 192);
 console.log('og:');
 await png(ogSvg, `${OUT_OG}/default.png`, 1200, 630);
 

@@ -34,6 +34,7 @@ import {
 } from '@/lib/calculators-data';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 import { ItemListSchema } from '@/components/seo/ItemListSchema';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 // Форма слова «калькулятор» под числительным (для title и H1 хаба).
 function pluralCalc(n: number): string {
@@ -189,6 +190,8 @@ export default function KalkulyatorPage() {
           — все расчёты выполняются автоматически при формировании актов.
         </div>
       </div>
+
+      <WaitlistSection source="kalkulyator" />
     </>
   );
 }

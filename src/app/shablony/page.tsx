@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllTemplates, type TemplateFrontmatter } from '@/content-loader/shablony';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
+import { WaitlistSection } from '@/components/blocks/WaitlistSection';
 
 export const metadata: Metadata = {
   title: 'Бесплатные шаблоны документов для стройки 2026 — 26 бланков',
@@ -118,6 +119,8 @@ export default async function ShablonyPage() {
           </div>
         )}
       </div>
+
+      <WaitlistSection source="shablony" />
     </>
   );
 }

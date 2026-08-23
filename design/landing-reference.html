@@ -71,11 +71,21 @@ input{font-family:'Onest',sans-serif}
   Их надо перенести в новую сборку, иначе эталон снова станет картинкой,
   по которой нельзя проверить ни одно состояние кроме исходного.
 
+  ПЕРВЫЙ ЭКРАН обновлён 22.08.2026 по прототипу «Komplid Landing» (файл
+  145dd4a7-Komplid_Landing.dc.html). Изменились только герой и счётчики под ним:
+  заголовок «Вся стройка на одном столе», десять буллетов вместо строки доверия,
+  справа — два снимка живого приложения вместо нарисованной цепочки документа,
+  счётчики про устройство контура (5 этапов, 10 ролей, 8 сторон по ГрК, 344/пр).
+  Остальные секции прототипа от эталона не отличаются.
+
   Отличия от прототипа, внесённые сознательно:
   · «ФГИС ЦС» → «справочники ФСНБ-2022»: живого хода во внешний реестр нет
     (docs/memory/app-feature-reality.md, правило честности CLAUDE.md §21);
   · счётчик мест беты — подстановка {seatsLeft} вместо захардкоженного «34»:
-    на сайте он считается из реальных заявок.
+    на сайте он считается из реальных заявок;
+  · в шапке почта вместо «Войти» — app.komplid.ru закрыт на пре-лонче;
+  · два буллета героя приведены к реальному состоянию продукта — см. комментарий
+    у самой секции «Герой».
 -->
 <!-- Обёртка страницы. data-theme здесь НЕ ставим: атрибут на этом узле перебивал бы
      переключатель темы на <html> — светлая палитра описана селектором [data-theme="light"],
@@ -114,81 +124,105 @@ input{font-family:'Onest',sans-serif}
   </div>
 </div>
 
+<!-- ГЕРОЙ обновлён по прототипу «Komplid Landing» от 22.08.2026. Отличия от него:
+     · {seatsLeft} вместо захардкоженного числа — счётчик мест считается из заявок;
+     · снимки приложения лежат в public/images/home/ (в прототипе — assets/);
+     · «323 СП и ГОСТ — ссылка в акте» → «открыты без регистрации»: перехода
+       на пункт норматива из акта в приложении не подтверждено, а открытый
+       раздел /normativ проверяется сегодня (CLAUDE.md §21);
+     · «АОСР пачкой + XSD Минстроя» → «XML по схемам Минстроя»: пакет мы
+       формируем, а подаёт его пользователь сам. -->
 <div data-screen-label="Герой" style="position:relative;overflow:hidden;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:48px 48px">
-  <div style="position:absolute;inset:0;background:radial-gradient(880px 420px at 78% -10%,var(--glow1),transparent 62%),radial-gradient(560px 320px at -6% 62%,var(--glow2),transparent 70%);pointer-events:none"></div>
-  <div style="position:relative;display:grid;grid-template-columns:minmax(560px,1.04fr) minmax(0,1fr);gap:36px;padding:66px 48px 60px;align-items:center">
+    <div style="position:absolute;inset:0;background:radial-gradient(880px 420px at 74% -12%,var(--glow1),transparent 62%),radial-gradient(560px 320px at -6% 66%,var(--glow2),transparent 70%);pointer-events:none"></div>
 
-    <div>
-      <div style="display:inline-flex;align-items:center;gap:10px;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)">
-        <span style="width:20px;height:1px;background:var(--acc)"></span>Управление стройкой в одном контуре
-        <span style="width:5px;height:5px;border-radius:50%;background:var(--acc);animation:k-pulse 1.8s ease-in-out infinite"></span>
-        <span style="color:var(--t4)">закрытая бета · {seatsLeft} мест</span>
+    <div style="position:relative;display:grid;grid-template-columns:minmax(560px,0.8fr) minmax(0,1fr);gap:34px;padding:56px 0 52px 48px;align-items:start">
+
+      <div style="max-width:560px">
+        <div style="display:inline-flex;align-items:center;gap:10px;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)">
+          <span style="width:20px;height:1px;background:var(--acc)"></span>Закрытая бета
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--acc);animation:k-pulse 1.8s ease-in-out infinite"></span>
+          <span style="color:var(--t4)">{seatsLeft} из 100</span>
+        </div>
+        <h1 style="margin:22px 0 18px;font:500 40px/1.05 'Geologica',sans-serif;letter-spacing:-.038em;color:var(--t1);white-space:nowrap">Вся стройка на одном столе.</h1>
+        <p style="margin:0 0 28px;font:16.5px/1.55 'Onest',sans-serif;color:var(--t3);text-wrap:pretty">«Комплид» ведёт объект от сметы до ввода в эксплуатацию: журнал смены с телефона превращается в АОСР, АОСР — в КС-2. Поля, подписи и связи между документами — как требует приказ Минстроя 344/пр.</p>
+        <div style="display:flex;gap:11px;align-items:center;flex-wrap:wrap">
+          <a href="#cta" style="display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 24px;border-radius:9px;background:var(--acc);color:var(--accT);font:600 15px 'Onest',sans-serif;white-space:nowrap" style-hover="background:var(--accH);color:var(--accT)">Получить ранний доступ<span style="font-family:'JetBrains Mono',monospace">→</span></a>
+          <a href="#base" style="display:inline-flex;align-items:center;height:50px;padding:0 22px;border-radius:9px;border:1px solid var(--line3);color:var(--t2);font:500 15px 'Onest',sans-serif;white-space:nowrap" style-hover="background:var(--panel3);color:var(--t1)">Открыть базу СП и ГОСТ</a>
+        </div>
+        <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;row-gap:11px">
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>21 модуль — во всех тарифах</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--acc)"></span>323 СП и ГОСТ — открыты без регистрации</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>Работает без связи</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>Маршруты подписания и ПЭП</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>Импорт из Гранд-Сметы и РИК</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>АОСР пачкой, XML по схемам Минстроя</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--acc)"></span>Гости без места в тарифе</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>Фото с координатами в акте</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>Данные в РФ · ФЗ-152 · без карты</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font:13px/1.35 'Onest',sans-serif;color:var(--t3)"><span style="flex:none;margin-top:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)"></span>Выгрузка архивом и XML для ИСУП</div>
+        </div>
       </div>
-      <h1 style="margin:22px 0 20px;font:500 50px/1.04 'Geologica',sans-serif;letter-spacing:-.035em;color:var(--t1);white-space:nowrap">Каждый акт — по СП.<br>Каждая подпись —<br>с координатами.</h1>
-      <p style="margin:0 0 30px;font:16.5px/1.55 'Onest',sans-serif;color:var(--t3);text-wrap:pretty">«Комплид» ведёт объект от сметы до ввода в эксплуатацию: журнал смены с телефона превращается в АОСР, АОСР — в КС-2. Поля, подписи и связи между документами — как требует приказ Минстроя 344/пр.</p>
-      <div style="display:flex;gap:11px;align-items:center">
-        <a href="#cta" style="display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 24px;border-radius:9px;background:var(--acc);color:var(--accT);font:600 15px 'Onest',sans-serif" style-hover="background:var(--accH);color:var(--accT)">Получить ранний доступ<span style="font-family:'JetBrains Mono',monospace">→</span></a>
-        <a href="#base" style="display:inline-flex;align-items:center;height:50px;padding:0 22px;border-radius:9px;border:1px solid var(--line3);color:var(--t2);font:500 15px 'Onest',sans-serif" style-hover="background:var(--panel3);color:var(--t1)">Открыть базу СП и ГОСТ</a>
-      </div>
-      <div style="margin-top:30px;padding-top:20px;border-top:1px solid var(--line);display:flex;gap:28px;font:11px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--t4)">
-        <span>Данные в РФ · ФЗ-152</span><span>Работает без связи на объекте</span><span>Без карты</span>
+
+      <!-- Правая колонка — два снимка живого приложения: мобильный экран с
+           офлайн-очередью и веб-обзор договора. Веб-снимок намеренно шире
+           колонки (calc(100% + 130px)) и уезжает за правый край экрана,
+           поэтому у секции нулевой правый отступ. -->
+      <div style="display:grid;grid-template-columns:184px minmax(0,1fr);column-gap:18px;row-gap:14px;align-items:start">
+
+        <div style="display:flex;align-items:center;gap:8px;min-width:0">
+          <span style="flex:none;display:grid;place-items:center;color:var(--acc)"><svg viewBox="0 0 16 16" width="13" height="13" style="display:block;fill:none;stroke:currentColor;stroke-width:1.4"><rect x="4.5" y="1.5" width="7" height="13" rx="2"></rect><path d="M7 3.4h2"></path></svg></span>
+          <span style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);white-space:nowrap">мобильный</span>
+          <span style="flex:1;height:1px;background:var(--line2)"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;min-width:0">
+          <span style="flex:none;display:grid;place-items:center;color:var(--acc)"><svg viewBox="0 0 16 16" width="13" height="13" style="display:block;fill:none;stroke:currentColor;stroke-width:1.4"><rect x="1.5" y="2.5" width="13" height="9" rx="1.6"></rect><path d="M6 14h4"></path><path d="M8 11.5V14"></path></svg></span>
+          <span style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);white-space:nowrap">веб · контур объекта</span>
+          <span style="flex:1;height:1px;background:var(--line2)"></span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:11px;width:184px">
+          <div style="width:184px;border-radius:22px;overflow:hidden;box-shadow:0 26px 60px var(--shadow);animation:k-rise .6s ease-out .15s both">
+            <img src="/images/home/hero-phone.png" alt="Мобильное приложение" style="width:184px;display:block">
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font:10.5px/1.5 'JetBrains Mono',monospace;letter-spacing:.05em;color:var(--t4)">
+            <span style="flex:none;margin-top:5px;width:5px;height:5px;border-radius:50%;background:var(--acc);animation:k-pulse 1.8s ease-in-out infinite"></span>без связи · 4 действия ждут отправки
+          </div>
+        </div>
+
+        <div style="position:relative;height:472px">
+          <div style="position:absolute;left:0;top:0;width:calc(100% + 130px);border:1px solid var(--line3);border-right:none;border-radius:12px 0 0 12px;background:var(--panel);box-shadow:0 34px 90px var(--shadow);overflow:hidden">
+            <div style="display:flex;align-items:center;gap:7px;height:34px;padding:0 14px;background:var(--panel3);border-bottom:1px solid var(--line2)">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--line3)"></span>
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--line3)"></span>
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--line3)"></span>
+              <span style="margin-left:10px;padding:3px 10px;border-radius:5px;background:var(--inset);font:10.5px 'JetBrains Mono',monospace;color:var(--t4);white-space:nowrap">komplid.ru / ЖК «Северный» корпус 2 / договор №2 · обзор</span>
+            </div>
+            <div style="position:relative;height:436px;overflow:hidden">
+              <img src="/images/home/hero-web.png" alt="Обзор объекта: модули и договор" style="position:absolute;left:0;top:0;width:1400px;display:block">
+              <div style="position:absolute;left:0;right:0;height:64px;background:linear-gradient(var(--glow1),transparent);animation:k-scan 5.4s cubic-bezier(.4,0,.6,1) infinite;pointer-events:none"></div>
+            </div>
+          </div>
+
+          <div style="position:absolute;left:110px;top:56px;display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:9px;white-space:nowrap;background:var(--bg2);border:1px solid var(--acc);box-shadow:0 14px 34px var(--shadow);animation:k-rise .6s ease-out .25s both">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--acc);animation:k-pulse 1.8s ease-in-out infinite"></span>
+            <span style="font:500 11.5px 'JetBrains Mono',monospace;color:var(--t1)">21 модуль объекта</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div style="position:relative;background:var(--panel);border:1px solid var(--line3);border-radius:14px;box-shadow:0 34px 90px var(--shadow);overflow:hidden">
-      <div style="position:absolute;left:0;right:0;height:52px;background:linear-gradient(var(--glow1),transparent);animation:k-scan 4.6s cubic-bezier(.4,0,.6,1) infinite;pointer-events:none"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line2);font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">
-        <span>Объект 04 · ЖК «Северный» · корпус 2</span><span style="color:var(--acc)">сейчас</span>
-      </div>
-      <div style="position:relative;padding:26px 24px 22px">
-        <div style="position:absolute;left:33px;top:48px;bottom:80px;width:1px;background:var(--line3)"></div>
-        <div style="position:absolute;left:30px;top:48px;width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 14px var(--acc);animation:k-travel 4.6s cubic-bezier(.5,0,.5,1) infinite"></div>
-        <div style="display:grid;gap:18px">
-          <div style="display:flex;gap:16px;align-items:flex-start">
-            <div style="width:20px;height:20px;border-radius:5px;border:1px solid var(--line3);background:var(--panel3);display:grid;place-items:center;font:500 9px 'JetBrains Mono',monospace;color:var(--t3);flex:none">01</div>
-            <div style="flex:1;min-width:0">
-              <div style="font:500 14.5px 'Onest',sans-serif;color:var(--t2)">Журнал смены · 12 марта</div>
-              <div style="margin-top:5px;font:12.5px 'Onest',sans-serif;color:var(--t4)">Бетонирование плиты, ось 4–7 · фото 6 · с координатами</div>
-              <div style="margin-top:10px;height:3px;border-radius:2px;background:var(--line);overflow:hidden"><div style="height:100%;background:var(--acc);animation:k-fill 1.1s ease-out .1s both"></div></div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start">
-            <div style="width:20px;height:20px;border-radius:5px;border:1px solid var(--line3);background:var(--panel3);display:grid;place-items:center;font:500 9px 'JetBrains Mono',monospace;color:var(--t3);flex:none">02</div>
-            <div style="flex:1;min-width:0">
-              <div style="font:500 14.5px 'Onest',sans-serif;color:var(--t2)">АОСР № 118 сформирован</div>
-              <div style="margin-top:5px;font:12.5px 'Onest',sans-serif;color:var(--t4)">Приложения подтянуты: паспорта, сертификаты, схема</div>
-              <div style="margin-top:10px;height:3px;border-radius:2px;background:var(--line);overflow:hidden"><div style="height:100%;background:var(--acc);animation:k-fill 1.1s ease-out 1.2s both"></div></div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;align-items:flex-start">
-            <div style="width:20px;height:20px;border-radius:5px;border:1px solid var(--line3);background:var(--panel3);display:grid;place-items:center;font:500 9px 'JetBrains Mono',monospace;color:var(--t3);flex:none">03</div>
-            <div style="flex:1;min-width:0">
-              <div style="font:500 14.5px 'Onest',sans-serif;color:var(--t2)">КС-2 за март · 4 812 640 ₽</div>
-              <div style="margin-top:5px;font:12.5px 'Onest',sans-serif;color:var(--t4)">Объёмы из журналов, расценки из сметы, редакция 4</div>
-              <div style="margin-top:10px;height:3px;border-radius:2px;background:var(--line);overflow:hidden"><div style="height:100%;background:var(--acc);animation:k-fill 1.1s ease-out 2.3s both"></div></div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:24px;padding:16px 18px;border-radius:10px;border:1px dashed var(--line3);background:var(--panel3);display:flex;align-items:center;justify-content:space-between;gap:16px">
-          <div>
-            <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--t4)">Подписано ПЭП</div>
-            <div style="margin-top:6px;font:12.5px 'JetBrains Mono',monospace;color:var(--t2)">55.7512, 37.6184 · геозона объекта</div>
-          </div>
-          <div style="flex:none;padding:8px 13px;border-radius:6px;border:1.5px solid var(--okLine);color:var(--ok);font:600 11.5px 'JetBrains Mono',monospace;letter-spacing:.08em;white-space:nowrap;transform-origin:right center;animation:k-stamp 4.6s cubic-bezier(.2,1.4,.4,1) infinite">ОК · ПТО</div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div style="height:10px;background-image:repeating-linear-gradient(115deg,var(--acc) 0 15px,var(--bg) 15px 30px)"></div>
 
-  <div style="height:10px;background-image:repeating-linear-gradient(115deg,var(--acc) 0 15px,var(--bg) 15px 30px)"></div>
-
+    <!-- Счётчики про устройство контура: 5 этапов, 10 ролей пространства и
+       8 сторон по ГрК берутся из длин STAGES / SPACE_ROLES / ORG_ROLES
+       в src/lib/home-data.ts, а не вписываются руками. -->
   <div data-screen-label="Счётчики" style="display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2)">
-    <div style="padding:30px 40px;border-right:1px solid var(--line)"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">323</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">свода правил в базе</div></div>
-    <div style="padding:30px 40px;border-right:1px solid var(--line)"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">13 042</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">страниц нормативки</div></div>
-    <div style="padding:30px 40px;border-right:1px solid var(--line)"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">22</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">калькулятора онлайн</div></div>
-    <div style="padding:30px 40px"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">21</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">модуля в двух контурах</div></div>
+      <div style="padding:30px 40px;border-right:1px solid var(--line)"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">5</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">этапов объекта — от сметы до ввода</div></div>
+      <div style="padding:30px 40px;border-right:1px solid var(--line)"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">10</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">ролей и матрица прав по разделам</div></div>
+      <div style="padding:30px 40px;border-right:1px solid var(--line)"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc);font-variant-numeric:tabular-nums">8</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">сторон по ГрК с правом подписи</div></div>
+      <div style="padding:30px 40px"><div style="font:500 38px/1 'Geologica',sans-serif;letter-spacing:-.03em;color:var(--acc)">344/пр</div><div style="margin-top:10px;font:11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)">формы по приказу минстроя</div></div>
+    </div>
   </div>
-</div>
 
 <div data-screen-label="Бегущая строка" style="padding:16px 0;background-image:repeating-linear-gradient(115deg,var(--acc) 0 20px,var(--tick) 20px 40px);overflow:hidden">
   <div style="display:flex;width:max-content;animation:k-ticker 28s linear infinite">
