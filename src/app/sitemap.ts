@@ -10,6 +10,12 @@ import { XSD_SCHEMAS } from '@/lib/isup-data';
 
 const BASE_URL = 'https://komplid.ru';
 
+// lastmod ставим только там, где знаем настоящую дату правки: статьи, шаблоны,
+// документы корпуса СП. Раньше у остальных ~100 адресов стояло new Date(),
+// то есть «изменено в момент сборки» — после каждого выката поисковик видел,
+// что поменялось всё сразу. Google такие даты перестаёт учитывать по всему
+// сайту, включая честные даты статей. Нет даты — нет тега, это допустимо.
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     { path: '', priority: 1.0, changeFrequency: 'weekly' as const },
@@ -35,7 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/legal/oferta', priority: 0.3, changeFrequency: 'yearly' as const },
   ].map(({ path, priority, changeFrequency }) => ({
     url: `${BASE_URL}${path}`,
-    lastModified: new Date(),
     changeFrequency,
     priority,
   }));
@@ -62,7 +67,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const calcPages: MetadataRoute.Sitemap = CALCULATORS.map(c => ({
     url: `${BASE_URL}/kalkulyator/${c.slug}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
@@ -70,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // тексты СП меняются только при пересборке корпуса → yearly
   const normativPages: MetadataRoute.Sitemap = normativDocs.map((doc) => ({
     url: `${BASE_URL}/normativ/${doc.slug}`,
-    lastModified: doc.publishedAt ? new Date(doc.publishedAt) : new Date(),
+    lastModified: doc.publishedAt ? new Date(doc.publishedAt) : undefined,
     changeFrequency: 'yearly',
     priority: 0.6,
   }));
@@ -78,28 +82,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Разборы отдельных пунктов СП — отвечают на запросы вида «СП 48 пункт 6.13»
   const clausePages: MetadataRoute.Sitemap = SP_CLAUSES.map((clause) => ({
     url: `${BASE_URL}${clauseUrl(clause)}`,
-    lastModified: new Date(),
     changeFrequency: 'yearly',
     priority: 0.6,
   }));
 
   const formPages: MetadataRoute.Sitemap = DOC_FORMS.map((form) => ({
     url: `${BASE_URL}/formy/${form.slug}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly',
     priority: 0.7,
   }));
 
   const termPages: MetadataRoute.Sitemap = GLOSSARY_TERMS.map((term) => ({
     url: `${BASE_URL}/glossariy/${term.slug}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
 
   const schemaPages: MetadataRoute.Sitemap = XSD_SCHEMAS.map((schema) => ({
     url: `${BASE_URL}/isup/${schema.slug}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
