@@ -22,7 +22,7 @@
 | Хаб-каталог | `src/app/normativ/page.tsx` — 9 категорий, ItemList + Breadcrumb | код сайта |
 | Чтение реестра, категоризация | `src/lib/normativ-data.ts` (+ тест) | код сайта |
 | Чистые URL | `next.config.mjs`: rewrite `/normativ/:slug` → `:slug.html`, 301 с `.html` | код сайта |
-| Записи в sitemap | `src/app/sitemap.ts` — хаб + 323 страницы | код сайта |
+| Записи в sitemap | `src/lib/sitemap.ts` — раздел `normativ` (`/sitemaps/normativ.xml`): хаб + 323 страницы; пункты — `/sitemaps/normativ-punkty.xml` | код сайта |
 
 Страницы документов **не проходят через роутер Next** — это статика из `public/`,
 отдаваемая по чистому URL через rewrite. Поэтому у них своя шапка и свои стили
@@ -89,5 +89,5 @@ npx next build                        # если менялся состав к�
 curl -sI http://localhost:3200/normativ/sp-48-13330-2019         # 200, статика корпуса
 curl -sI http://localhost:3200/normativ/sp-48-13330-2019.html    # 308 на чистый URL
 curl -sI http://localhost:3200/normativ/sp-48-13330-2019/p-6-13  # 200, страница пункта
-curl -s  http://localhost:3200/sitemap.xml | grep -c normativ/   # 323 + страницы пунктов
+curl -s  http://localhost:3200/sitemaps/normativ.xml | grep -c '<loc>'   # 324: хаб + 323 документа
 ```
