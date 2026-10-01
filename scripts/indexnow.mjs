@@ -19,6 +19,8 @@
  *                                              один раз, при первом подключении
  *   node scripts/indexnow.mjs <url> [<url>…]   только новые и изменённые
  *                                              страницы — так в дальнейшем
+ *   node scripts/indexnow.mjs --section=blog   один раздел sitemap (имя файла
+ *                                              из /sitemaps/: blog, formy, normativ…)
  *   node scripts/indexnow.mjs --dry-run        показать, что ушло бы, без отправки
  *   node scripts/indexnow.mjs --sitemap=http://localhost:3200/sitemap.xml --dry-run
  *
@@ -39,6 +41,8 @@ const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const sitemapArg = args.find((a) => a.startsWith('--sitemap='));
 const sitemapUrl = sitemapArg ? sitemapArg.slice('--sitemap='.length) : `https://${HOST}/sitemap.xml`;
+const sectionArg = args.find((a) => a.startsWith('--section='));
+const onlySection = sectionArg ? sectionArg.slice('--section='.length) : null;
 const explicitUrls = args.filter((a) => !a.startsWith('--'));
 
 /** Файл ключа в репозитории и константа выше не должны разъехаться. */
@@ -61,11 +65,27 @@ async function checkLiveKeyFile() {
   }
 }
 
+/**
+ * Адреса страниц из sitemap. /sitemap.xml — индекс: в нём не страницы,
+ * а файлы разделов, их разворачиваем. Без этого в Яндекс ушли бы адреса
+ * самих XML-файлов.
+ */
 async function urlsFromSitemap(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`sitemap ${url} ответил ${res.status}`);
   const xml = await res.text();
-  return [...xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => m[1].replaceAll('&amp;', '&'));
+  const locs = [...xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => m[1].replaceAll('&amp;', '&'));
+  if (!/<sitemapindex[\s>]/.test(xml)) return locs;
+
+  // Файлы разделов берём с того же сервера, что и индекс: при --sitemap=http://localhost…
+  // в индексе всё равно боевые адреса
+  const origin = new URL(url).origin;
+  let files = locs.map((loc) => origin + new URL(loc).pathname);
+  if (onlySection) {
+    files = files.filter((f) => f.endsWith(`/${onlySection}.xml`));
+    if (files.length === 0) throw new Error(`в индексе sitemap нет раздела «${onlySection}»`);
+  }
+  return (await Promise.all(files.map(urlsFromSitemap))).flat();
 }
 
 /** Только наш хост: один чужой адрес — и Яндекс отклоняет пакет целиком (422). */
