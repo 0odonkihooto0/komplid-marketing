@@ -19,7 +19,8 @@
 2. `git mv content/_otlozheno/sravnenie-komplid-cus.mdx content/blog/`
 3. Вернуть из истории git загрузчик `src/content-loader/sravneniya.ts`,
    роуты `src/app/sravnenie/**` и их тесты — коммит переноса.
-4. Вернуть записи в `src/app/sitemap.ts` и ссылку в подвале.
+4. Вернуть записи отдельным разделом в `src/lib/sitemap.ts` (даты — в
+   `src/lib/sitemap-dates.ts`) и ссылку в подвале.
 5. Восстановить в `CLAUDE.md` правила §8.2, §16.4 и пункт «Сравнения» в §17.
 
 Перед возвратом перечитать тексты: цены и возможности конкурентов в них

@@ -113,7 +113,7 @@ Tool results >50 000 символов обрезаются молча. Если 
 При переименовании компонента/типа/страницы искать ВСЁ:
 - Прямые imports в `src/`
 - Ссылки в MDX-файлах `content/`
-- Упоминания в sitemap.ts и robots.ts
+- Упоминания в `src/lib/sitemap.ts`, `src/lib/sitemap-dates.ts` и `robots.ts`
 - URL в HTML-лендинге (`design/landing-reference.html`)
 - Внутренние ссылки в других статьях (`/blog/old-slug`)
 - Редиректы в `next.config.mjs`
@@ -439,6 +439,14 @@ docker logs komplid-marketing-web-1 --tail 100
 7. **Реферальные коды** — приходят из URL `/ref/[code]`, сохраняются в cookie на 30 дней,
    прокидываются в UTM при клике на CTA.
 
+8. **Sitemap по разделам** — `/sitemap.xml` это индекс, страницы лежат в
+   `/sitemaps/<раздел>.xml` (`src/lib/sitemap.ts`). `lastmod` — только настоящая
+   дата правки текста, **никогда `new Date()`**: дата сборки объявляет изменённым
+   весь сайт на каждом выкате, и Google перестаёт верить датам. Статьи берут дату
+   из frontmatter (правили текст — проставь `modifiedAt`), шаблоны — `publishedAt`,
+   документы СП — реестр, остальные страницы — `src/lib/sitemap-dates.ts`.
+   Новая страница без даты валит тест.
+
 ---
 
 ## 16. ТИПОВЫЕ ПРОМПТЫ — ЧАСТЫЕ ЗАДАЧИ
@@ -474,7 +482,8 @@ docker logs komplid-marketing-web-1 --tail 100
    - `<Faq>` — 7-8 вопросов специфичных для роли
    - `<Cta>` финальный с UTM
 4. UTM-метки на всех CTA: `?utm_source=landing&utm_campaign={role}&role={role}`
-5. Добавь новую посадочную в `sitemap.ts` (приоритет 0.9)
+5. Добавь новую посадочную в раздел `osnovnoe` в `src/lib/sitemap.ts` (приоритет 0.9)
+   и её дату публикации в `src/lib/sitemap-dates.ts` — без даты упадёт тест
 6. Запусти `npx tsc --noEmit`
 
 ### 16.3. «Создай страницу шаблона {название}»
@@ -573,7 +582,7 @@ docker logs komplid-marketing-web-1 --tail 100
 - `src/app/normativ/page.tsx` — хаб-каталог по 9 категориям
 - `src/lib/normativ-data.ts` + тест — чтение реестра и категоризация
 - `next.config.mjs` — rewrite `/normativ/:slug` → `:slug.html` и 301 с `.html`
-- `src/app/sitemap.ts` — хаб + 323 записи
+- `src/lib/sitemap.ts` — раздел `normativ`: хаб + 323 записи в `/sitemaps/normativ.xml`
 
 **Обновление корпуса** (в репозитории генератора, сайт только принимает):
 ```bash

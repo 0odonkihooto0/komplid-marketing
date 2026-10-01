@@ -373,8 +373,8 @@ curl -sI https://www.komplid.ru/                               # 301 → komplid
 curl -sI https://komplid.ru/normativ/sp-48-13330-2019          # 200, статика корпуса
 curl -sI https://komplid.ru/normativ/sp-48-13330-2019.html     # 308 на чистый URL
 curl -sI https://komplid.ru/normativ/sp-48-13330-2019/p-6-13   # 200, страница пункта
-curl -s  https://komplid.ru/sitemap.xml | grep -c '<loc>'      # ~420 URL
-curl -s  https://komplid.ru/sitemap.xml | grep -c 'shablony/'  # 27: каталог и 26 бланков
+curl -s  https://komplid.ru/sitemap.xml | grep -c '<loc>'      # 9: индекс разделов
+curl -s  https://komplid.ru/sitemaps/shablony.xml | grep -c 'shablony/'  # 27: каталог и 26 бланков
 curl -s  https://komplid.ru/robots.txt | grep -c YandexGPT     # 1 — AI-боты пущены
 curl -s  https://komplid.ru/api/waitlist-seats                 # {"left":100,"total":100}
 curl -sI https://komplid.ru/ | grep -i 'x-frame-options'       # заголовки из next.config
